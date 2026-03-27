@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="pt-br" data-bs-theme="light">
+	{% block head %}
+		{% include "head.html" %}
+	{% endblock %}
+    <body>
+        <section class="section bg-secondary p-2">
+            <div class="container">
+                <nav class="navbar navbar-expand-lg" data-bs-theme="dark">
+					<div class="container-fluid">
+						<a class="navbar-brand" href="{% url 'index' %}">
+                          <img src="" alt="Logo" width="30" height="24">
+                          Biblioteca
+                        </a>
+						<div class="collapse navbar-collapse" id="navbarSupportedContent">
+							<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+								<li class="nav-item dropdown">
+									<a class="nav-link dropdown-toggle" href="#" id="navbarLivro" role="button"
+										data-bs-toggle="dropdown" aria-expanded="false">
+										Livros
+									</a>
+									<ul class="dropdown-menu">
+										<li><a class="dropdown-item" href="#">Cadastrar Livro</a></li>
+										<li><a class="dropdown-item" href="#">Listar Livros</a></li>
+									</ul>
+								</li>
+                                <li class="nav-item dropdown">
+									<a class="nav-link dropdown-toggle" href="#" id="navbarUsuario" role="button"
+										data-bs-toggle="dropdown" aria-expanded="false">
+										Usuários
+									</a>
+									<ul class="dropdown-menu">
+										<li><a class="dropdown-item" href="">Cadastrar Usuário</a></li>
+										<li><a class="dropdown-item" href="">Listar Usuários</a></li>
+									</ul>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</nav>
+            </div>
+        </section>
+	{% block content %} {% endblock %}
+
+	{% block footer %}
+		{% include "footer.html" %}
+	{% endblock %}
+    </body>
+</html>
