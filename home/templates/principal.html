@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 {% load static %}
+{% load django_bootstrap5 %}
 <html lang="pt-br" data-bs-theme="light">
 	{% block head %}
 		{% include "head.html" %}
 	{% endblock %}
     <body>
-        <section class="section bg-secondary p-2">
+        <section class="section bg-secondary p-2 bg-opacity-75">
             <div class="container">
                 <nav class="navbar navbar-expand-lg" data-bs-theme="dark">
 					<div class="container-fluid">
@@ -21,8 +22,8 @@
 										Livros
 									</a>
 									<ul class="dropdown-menu">
-										<li><a class="dropdown-item" href="#">Cadastrar Livro</a></li>
-										<li><a class="dropdown-item" href="#">Listar Livros</a></li>
+										<li><a class="dropdown-item" href="{% url 'livro_adicionar' %}">Cadastrar Livro</a></li>
+										<li><a class="dropdown-item" href="{% url 'livros' %}">Listar Livros</a></li>
 									</ul>
 								</li>
                                 <li class="nav-item dropdown">
@@ -41,6 +42,13 @@
 				</nav>
             </div>
         </section>
+
+	{% if messages %}
+		<div class="container-fluid p-3">
+			{% bootstrap_messages %}
+		</div>
+	{% endif %}
+
 	{% block content %} {% endblock %}
 
 	{% block footer %}
