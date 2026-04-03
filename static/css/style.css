@@ -1,0 +1,18 @@
+.banner {
+  height: 320px;
+  background: url('/static/img/banner.png') center/cover no-repeat;
+}
+
+.btn-vinho {
+  background-color: #800020;
+  transition: all 0.3s ease;
+}
+
+.btn-vinho:hover {
+  background-color: #66001a;
+  border-color: #66001a;
+}
+
+.btn-vinho:focus {
+  box-shadow: 0 0 0 0.2rem rgba(128, 0, 32, 0.4);
+}

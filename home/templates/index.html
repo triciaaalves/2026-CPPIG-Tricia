@@ -1,9 +1,23 @@
 {% extends "principal.html" %}
+{% load django_bootstrap5 %}
+{% load static %}
 {% block content %}
-    <section class="section bg-secondary p-2">
-        <div class="container text-center text-white">
-            <h1 class="display-1">Foto de uma biblioteca ou logo</h1>
-            <h1 class="display-4">Barra de pesquisa</h1>
+    <section class="d-flex align-items-center justify-content-center text-center text-white m-3 mx-5 shadow-lg rounded-4 banner">
+        <div class="container">
+            <h1 class="fw-bold display-5">Biblioteca Digital</h1>
+            <p class="lead">
+                Explore nosso acervo, reserve livros e gerencie seus empréstimos.
+            </p>
+            <div class="d-flex justify-content-center mt-4">
+                <div class="input-group w-50">
+                    <input type="text" class="form-control rounded-start-4 px-4 py-2 border-danger border-end-0"
+                        placeholder="Buscar livro">
+                    <button class="btn rounded-end-pill border-danger border-start-0"
+                        style="background-color: #ffffff;">
+                        <i class="bi bi-search" style="color: #800020;"></i>
+                    </button>
+                </div>
+            </div>
         </div>
     </section>
 {% endblock %}

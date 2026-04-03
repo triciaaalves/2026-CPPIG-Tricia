@@ -5,43 +5,23 @@
 	{% block head %}
 		{% include "head.html" %}
 	{% endblock %}
-    <body>
-        <section class="section bg-secondary p-2 bg-opacity-75">
-            <div class="container">
-                <nav class="navbar navbar-expand-lg" data-bs-theme="dark">
-					<div class="container-fluid">
+    <body class="bg-light">
+                <nav class="navbar">
+					<div class="container-fluid pt-3 px-5">
 						<a class="navbar-brand" href="{% url 'index' %}">
                           <img src="" alt="Logo" width="30" height="24">
-                          Biblioteca
                         </a>
-						<div class="collapse navbar-collapse" id="navbarSupportedContent">
-							<ul class="navbar-nav me-auto mb-2 mb-lg-0">
-								<li class="nav-item dropdown">
-									<a class="nav-link dropdown-toggle" href="#" id="navbarLivro" role="button"
-										data-bs-toggle="dropdown" aria-expanded="false">
-										Livros
-									</a>
-									<ul class="dropdown-menu">
-										<li><a class="dropdown-item" href="{% url 'livro_adicionar' %}">Cadastrar Livro</a></li>
-										<li><a class="dropdown-item" href="{% url 'livros' %}">Listar Livros</a></li>
-									</ul>
-								</li>
-                                <li class="nav-item dropdown">
-									<a class="nav-link dropdown-toggle" href="#" id="navbarUsuario" role="button"
-										data-bs-toggle="dropdown" aria-expanded="false">
-										Usuários
-									</a>
-									<ul class="dropdown-menu">
-										<li><a class="dropdown-item" href="">Cadastrar Usuário</a></li>
-										<li><a class="dropdown-item" href="">Listar Usuários</a></li>
-									</ul>
-								</li>
-							</ul>
+							<div class="d-flex">
+								<div class="navbar-expand-lg">
+                    				<a class="btn btn-vinho text-white rounded-3" href="{% url 'livros' %}">
+                        				<i class="bi bi-compass me-2"></i>Explorar</a>
+                    				<a class="btn btn-vinho text-white rounded-3" href="{% url 'painel' %}">
+                        				<i class="bi bi-person-gear me-2"></i>Painel Administrativo</a>
+                				</div>
+							</div>
 						</div>
 					</div>
 				</nav>
-            </div>
-        </section>
 
 	{% if messages %}
 		<div class="container-fluid p-3">
@@ -54,5 +34,7 @@
 	{% block footer %}
 		{% include "footer.html" %}
 	{% endblock %}
+
+
     </body>
 </html>
