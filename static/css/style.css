@@ -3,16 +3,16 @@
   background: url('/static/img/banner.png') center/cover no-repeat;
 }
 
-.btn-vinho {
-  background-color: #800020;
+.btn-azul {
+  background-color: #08AB9F;
   transition: all 0.3s ease;
 }
 
-.btn-vinho:hover {
-  background-color: #66001a;
-  border-color: #66001a;
+.btn-azul:hover {
+  background-color: #08AB9F;
+  border-color: #08AB9F;
 }
 
-.btn-vinho:focus {
-  box-shadow: 0 0 0 0.2rem rgba(128, 0, 32, 0.4);
+.btn-azul:focus {
+  box-shadow: 0 0 0 0.2rem rgba(0, 177, 196, 0.4);
 }
