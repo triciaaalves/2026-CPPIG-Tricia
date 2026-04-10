@@ -6,22 +6,22 @@
 		{% include "head.html" %}
 	{% endblock %}
     <body class="bg-light">
-                <nav class="navbar">
-					<div class="container-fluid pt-3 px-5">
-						<a class="navbar-brand" href="{% url 'index' %}">
-                          <img src="{% static 'img/logo.png' %}" alt="Logo" width="150">
-                        </a>
-							<div class="d-flex">
-								<div class="navbar-expand-lg">
-                    				<a class="btn btn-azul text-white rounded-3" href="{% url 'livros' %}">
-                        				<i class="bi bi-compass me-2"></i>Explorar</a>
-                    				<a class="btn btn-azul text-white rounded-3" href="{% url 'painel' %}">
-                        				<i class="bi bi-person-gear me-2"></i>Painel Administrativo</a>
-                				</div>
-							</div>
+		<nav class="navbar">
+			<div class="container-fluid pt-3 px-5">
+				<a class="navbar-brand px-4" href="{% url 'index' %}">
+				  <img src="{% static 'img/logo.png' %}" alt="Logo" width="150">
+				</a>
+					<div class="d-flex">
+						<div class="navbar-expand-lg">
+							<a class="btn btn-azul text-white rounded-3" href="">
+								<i class="bi bi-compass me-2"></i>Explorar</a>
+							<a class="btn btn-azul text-white rounded-3" href="{% url 'painel' %}">
+								<i class="bi bi-person-gear me-2"></i>Painel Administrativo</a>
 						</div>
 					</div>
-				</nav>
+				</div>
+			</div>
+		</nav>
 
 	{% if messages %}
 		<div class="container-fluid p-3">
@@ -29,12 +29,16 @@
 		</div>
 	{% endif %}
 
-	{% block content %} {% endblock %}
+	{% block main %}
+	<div class="col">
+	  {% block menu %}{% endblock %}
+	  {% block content %}{% endblock %}
+	</div>
+	{% endblock %}
 
 	{% block footer %}
 		{% include "footer.html" %}
 	{% endblock %}
-
 
     </body>
 </html>

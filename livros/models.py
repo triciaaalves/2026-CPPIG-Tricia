@@ -1,11 +1,12 @@
 from django.db import models
 
 class Livro(models.Model):
-    titulo = models.CharField('Título', max_length=70, help_text='Título do livro')
-    genero = models.CharField('Gênero', max_length=70, help_text='Gênero do livro')
-    autor = models.CharField('Autor', max_length=70, help_text='Autor do livro')
-    editora = models.CharField('Editora', max_length=70, help_text='Editora do livro')
-    status = models.CharField('Status', max_length=70, help_text='Status do livro')
+    titulo = models.CharField('Título', max_length=70)
+    genero = models.CharField('Gênero', max_length=70)
+    autor = models.CharField('Autor', max_length=70)
+    editora = models.CharField('Editora', max_length=70)
+    status = models.CharField('Status', max_length=70)
+
 
     class Meta:
         verbose_name = 'Livro'

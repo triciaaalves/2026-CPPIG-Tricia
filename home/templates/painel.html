@@ -1,34 +1,11 @@
-{% extends "principal.html" %}
-{% load static %}
-{% block content %}
-
-    <div class="container-fluid mt-4">
-        <nav class="navbar bg-white rounded shadow-sm">
-            <div class="container-fluid justify-content-center">
-                <ul class="nav nav-pills fw-semibold">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle text-secondary m-2" role="button" data-bs-toggle="dropdown"
-                           aria-expanded="false"><i class="bi bi-bookmarks-fill me-1"></i>
-                            Livros
-                        </a>
-                        <ul class="dropdown-menu p-2 rounded-3 mx-0 shadow w-220px">
-                            <li><a class="dropdown-item rounded-2" href="{% url 'livro_adicionar' %}">Cadastrar Livro</a></li>
-                            <li><a class="dropdown-item rounded-2" href="{% url 'livros' %}">Listar Livros</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle text-secondary m-2" role="button" data-bs-toggle="dropdown"
-                           aria-expanded="false"><i class="bi bi-people-fill me-1"></i>
-                            Usuários
-                        </a>
-                        <ul class="dropdown-menu p-2 rounded-3 mx-0 shadow w-220px">
-                            <li><a class="dropdown-item rounded-2" href="#">Cadastrar Usuário</a></li>
-                            <li><a class="dropdown-item rounded-2" href="#">Listar Usuários</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </nav>
+{% extends 'principal.html' %}
+{% load django_bootstrap5 %}
+{% block menu %}
+<div class="container-fluid min-vh-100">
+  <div class="row align-items-stretch h-100">
+    <div class="col-2">
+        {% include 'menu.html' %}
     </div>
-
+  </div>
+</div>
 {% endblock %}

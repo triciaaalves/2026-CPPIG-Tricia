@@ -1,63 +1,74 @@
 {% extends 'principal.html' %}
 {% load django_bootstrap5 %}
 {% load static %}
-{% block content %}
-    <section class="section">
-        <div class="container">
-            <form action="" method="GET">
-                <div class="d-flex justify-content-center m-4">
-                    <div class="input-group w-50">
-                        <input class="form-control rounded-start-pill px-4 py-2" type="text" name="buscar" value="{{ request.GET.buscar }}"
-                               placeholder="Digite o nome do livro">
-                    </div>
-                        <button type="submit" class="btn rounded-end-pill" style="background-color: #ec9d32; color: white">
-                            Buscar
-                        </button>
+{% block main %}
+<div class="container-fluid">
+	  <div class="row">
+		<div class="col-2">
+		  {% block menu %} {% include 'menu.html' %} {% endblock %}
+		</div>
+		<div class="col-9">
+		  {% block content %}
+            <section class="section">
+                <div class="container">
+                    <form action="" method="GET">
+                        <div class="d-flex justify-content-center m-4">
+                            <div class="input-group w-50">
+                                <input class="form-control rounded-start-pill px-4 py-2" type="text" name="buscar" value="{{ request.GET.buscar }}"
+                                       placeholder="Digite o nome do livro">
+                            </div>
+                                <button type="submit" class="btn rounded-end-pill" style="background-color: #ec9d32; color: white">
+                                    Buscar
+                                </button>
+                        </div>
+                    </form>
+                    {% if object_list %}
+                        <div class="card-body">
+                            <h3 class="text-center p-4">Livros Cadastrados</h3>
+                            <div class="table-responsive border border-light-subtle rounded-3 overflow-hidden">
+                                <table class="table table-hover ">
+                                    <thead class="table">
+                                        <th>Título</th>
+                                        <th>Gênero</th>
+                                        <th>Autor(a)</th>
+                                        <th>Editora</th>
+                                        <th>Status</th>
+                                        <th style="width: 100px; text-align: center">Ações</th>
+                                    </thead>
+                                    <tbody>
+                                    {% for livro in object_list %}
+                                            <tr>
+                                                <td> {{ livro.titulo }} </td>
+                                                <td> {{ livro.genero }} </td>
+                                                <td> {{ livro.autor }} </td>
+                                                <td> {{ livro.editora }} </td>
+                                                <td> {{ livro.status }} </td>
+                                                <td style="text-align: center">
+                                                    <a href="{% url 'livro_editar' livro.pk %}">
+                                                        <span class="icon">
+                                                            <i class="fa fa-edit"></i>
+                                                        </span>
+                                                    </a>
+                                                    <a href="{% url 'livro_apagar' livro.pk %}">
+                                                        <span class="icon">
+                                                            <i class="fa fa-trash"></i>
+                                                        </span>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="d-flex justify-content-end py-3">
+                                    {% bootstrap_pagination object_list url="/livros?page=1" size="sm" %}
+                            </div>
+                         </div>
+                    {% endif %}
                 </div>
-            </form>
-            {% if object_list %}
-                <div class="card-body">
-                    <h3 class="text-center p-4">Livros Cadastrados</h3>
-                    <div class="table-responsive">
-                        <table class="table table-hover bg-light">
-                            <thead class="table">
-                                <th>Título</th>
-                                <th>Gênero</th>
-                                <th>Autor(a)</th>
-                                <th>Editora</th>
-                                <th>Status</th>
-                                <th style="width: 100px; text-align: center">Ações</th>
-                            </thead>
-                            <tbody>
-                            {% for livro in object_list %}
-                                    <tr>
-                                        <td> {{ livro.titulo }} </td>
-                                        <td> {{ livro.genero }} </td>
-                                        <td> {{ livro.autor }} </td>
-                                        <td> {{ livro.editora }} </td>
-                                        <td> {{ livro.status }} </td>
-                                        <td style="text-align: center">
-                                            <a href="{% url 'livro_editar' livro.pk %}">
-                                                <span class="icon">
-                                                    <i class="fa fa-edit"></i>
-                                                </span>
-                                            </a>
-                                            <a href="{% url 'livro_apagar' livro.pk %}">
-                                                <span class="icon">
-                                                    <i class="fa fa-trash"></i>
-                                                </span>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="d-flex justify-content-center">
-                        {% bootstrap_pagination object_list url="/livros?page=1" size="sm" %}
-                    </div>
-                 </div>
-            {% endif %}
+            </section>
+        {% endblock %}
         </div>
-    </section>
+	  </div>
+	</div>
 {% endblock %}
