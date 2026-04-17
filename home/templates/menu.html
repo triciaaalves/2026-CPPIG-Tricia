@@ -23,13 +23,30 @@
                 </span>
                 <ul class="nav flex-column ms-4">
                     <li>
-                        <a class="nav-link text-secondary" href="#">
+                        <a class="nav-link text-secondary" href="{% url 'cliente_adicionar' %}">
                             Cadastrar Usuário
                         </a>
                     </li>
                     <li>
-                        <a class="nav-link text-secondary" href="#">
+                        <a class="nav-link text-secondary" href="{% url 'clientes' %}">
                             Listar Usuários
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item mt-3">
+                <span class="nav-link text-secondary fw-semibold">
+                    <i class="bi bi-person-vcard-fill me-1"></i> Secretários
+                </span>
+                <ul class="nav flex-column ms-4">
+                    <li>
+                        <a class="nav-link text-secondary" href="{% url 'secretario_adicionar' %}">
+                            Cadastrar Secretário
+                        </a>
+                    </li>
+                    <li>
+                        <a class="nav-link text-secondary" href="{% url 'secretarios' %}">
+                            Listar Secretários
                         </a>
                     </li>
                 </ul>

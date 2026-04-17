@@ -1,6 +1,4 @@
 from django.db import models
-from django.forms.fields import DateField
-
 
 class Pessoa(models.Model):
     nome = models.CharField('Nome', max_length=50)
