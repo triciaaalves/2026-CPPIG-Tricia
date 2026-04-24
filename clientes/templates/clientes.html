@@ -24,7 +24,7 @@
                 </form>
             {% if object_list %}
                 <div class="card-body">
-                    <h3 class="text-center p-4">Clientes Cadastrados</h3>
+                    <h3 class="text-center p-4">Usuários Cadastrados</h3>
                     <div class="table-responsive border border-light-subtle rounded-3 overflow-hidden">
                         <table class="table table-hover">
                             <thead class="table">
@@ -42,10 +42,10 @@
                                         <td> {{ cliente.telefone }} </td>
                                         <td> {{ cliente.email }} </td>
                                         <td style="text-align: center">
-                                            <a href="{% url 'cliente_editar' cliente.pk %}">
+                                            <a role="button" class="btn btn-sm" style="background-color: #08AB9F; color: white" href="{% url 'cliente_editar' cliente.pk %}">
                                                     <i class="bi bi-pencil-square"></i>
                                             </a>
-                                            <a href="{% url 'cliente_apagar' cliente.pk %}">
+                                            <a role="button" class="btn btn-sm" style="background-color: #ec9d32; color: white" href="{% url 'cliente_apagar' cliente.pk %}">
                                                     <i class="bi bi-trash-fill"></i>
                                             </a>
                                         </td>

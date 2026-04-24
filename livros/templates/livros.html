@@ -44,16 +44,12 @@
                                                 <td> {{ livro.editora }} </td>
                                                 <td> {{ livro.status }} </td>
                                                 <td style="text-align: center">
-                                                    <a href="{% url 'livro_editar' livro.pk %}">
-                                                        <span class="icon">
-                                                            <i class="bi bi-pencil-square"></i>
-                                                        </span>
-                                                    </a>
-                                                    <a href="{% url 'livro_apagar' livro.pk %}">
-                                                        <span class="icon">
-                                                            <i class="bi bi-trash-fill"></i>
-                                                        </span>
-                                                    </a>
+                                                <a role="button" class="btn btn-sm" style="background-color: #08AB9F; color: white" href="{% url 'livro_editar' livro.pk %}">
+                                                        <i class="bi bi-pencil-square"></i>
+                                                </a>
+                                                <a role="button" class="btn btn-sm" style="background-color: #ec9d32; color: white" href="{% url 'livro_apagar' livro.pk %}">
+                                                        <i class="bi bi-trash-fill"></i>
+                                                </a>
                                                 </td>
                                             </tr>
                                         {% endfor %}

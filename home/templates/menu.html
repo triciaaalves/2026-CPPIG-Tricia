@@ -3,7 +3,7 @@
         <ul class="nav flex-column p-3">
             <li class="nav-item">
                 <span class="nav-link text-secondary fw-semibold">
-                    <i class="bi bi-bookmarks-fill me-1"></i> Livros </span>
+                    <i class="bi bi-bookmark-fill me-1"></i> Livros </span>
                 <ul class="nav flex-column ms-4">
                     <li>
                         <a class="nav-link text-secondary" href="{% url 'livro_adicionar' %}">
@@ -13,6 +13,22 @@
                     <li>
                         <a class="nav-link text-secondary" href="{% url 'livros' %}">
                             Listar Livros
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item mt-3">
+                <span class="nav-link text-secondary fw-semibold">
+                    <i class="bi bi-bookmarks-fill me-1"></i> Cópias </span>
+                <ul class="nav flex-column ms-4">
+                    <li>
+                        <a class="nav-link text-secondary" href="{% url 'copia_adicionar' %}">
+                            Cadastrar Cópia
+                        </a>
+                    </li>
+                    <li>
+                        <a class="nav-link text-secondary" href="{% url 'copias' %}">
+                            Listar Cópias
                         </a>
                     </li>
                 </ul>

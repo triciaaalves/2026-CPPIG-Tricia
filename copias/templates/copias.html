@@ -1,0 +1,88 @@
+{% extends 'principal.html' %}
+{% load django_bootstrap5 %}
+{% load static %}
+{% block main %}
+<div class="container-fluid">
+	  <div class="row">
+		<div class="col-2">
+		  {% block menu %} {% include 'menu.html' %} {% endblock %}
+		</div>
+		<div class="col-9">
+		  {% block content %}
+            <section class="section">
+                <div class="container">
+            <form action="" method="GET">
+                    <div class="d-flex justify-content-center m-4">
+                        <div class="input-group w-50">
+                            <input class="form-control rounded-start-pill px-4 py-2" type="text" name="buscar" value="{{ request.GET.buscar }}"
+                                   placeholder="Digite o nome da cópia">
+                        </div>
+                            <button type="submit" class="btn rounded-end-pill" style="background-color: #ec9d32; color: white">
+                                Buscar
+                            </button>
+                    </div>
+                </form>
+            {% if object_list %}
+                <div class="card-body">
+                    <h3 class="text-center p-4">Cópias Cadastradas</h3>
+                    <div class="table-responsive border border-light-subtle rounded-3 overflow-hidden">
+                        <table class="table table-hover">
+                            <thead class="table">
+                                <th>ISBN</th>
+                                <th>Ano</th>
+                                <th style="width: 100px; text-align: center">Ações</th>
+                            </thead>
+                            <tbody>
+                                {% for copia in object_list %}
+                                    <tr>
+                                        <td><a href="#" data-bs-toggle="modal" data-bs-target="#modal{{copia.id}}">
+                                            {{ copia.isbn }} </a>
+                                        </td>
+                                        <td> {{ copia.ano }} </td>
+                                        <td style="text-align: center">
+                                            <a role="button" class="btn btn-sm" style="background-color: #08AB9F; color: white" href="{% url 'copia_editar' copia.pk %}">
+                                                    <i class="bi bi-pencil-square"></i>
+                                            </a>
+                                            <a role="button" class="btn btn-sm" style="background-color: #ec9d32; color: white" href="{% url 'copia_apagar' copia.pk %}">
+                                                    <i class="bi bi-trash-fill"></i>
+                                            </a>
+                                        </td>
+                                        <div class="modal fade" tabindex="-1" id="modal{{copia.id}}">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title fs-5">Cópia: {{ copia.isbn }}</h5>
+                                                    </div>
+                                                    <div class="modal-body d-flex justify-content-center">
+                                                        <div>
+                                                            {% if copia.foto.url is not empty %}
+                                                                <img src="{{ copia.foto.url }}" class="img-thumbnail" width="100" height="100" alt="">
+                                                            {% endif %}
+                                                            <h6><strong>Ano: </strong>{{ copia.ano }}</h6>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                            Fechar
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="d-flex justify-content-end py-3">
+                        {% bootstrap_pagination object_list url="/copias?page=1" size="sm" %}
+                    </div>
+                </div>
+            {% endif %}
+                </div>
+            </section>
+        {% endblock %}
+        </div>
+	  </div>
+	</div>
+{% endblock %}
