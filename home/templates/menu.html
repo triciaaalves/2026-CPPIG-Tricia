@@ -67,6 +67,40 @@
                     </li>
                 </ul>
             </li>
+            <li class="nav-item mt-3">
+                <span class="nav-link text-secondary fw-semibold">
+                    <i class="bi bi-calendar-check-fill me-1"></i> Empréstimos
+                </span>
+                <ul class="nav flex-column ms-4">
+                    <li>
+                        <a class="nav-link text-secondary" href="{% url 'emprestimo_adicionar' %}">
+                            Cadastrar Empréstimo
+                        </a>
+                    </li>
+                    <li>
+                        <a class="nav-link text-secondary" href="{% url 'emprestimos' %}">
+                            Listar Empréstimos
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item mt-3">
+                <span class="nav-link text-secondary fw-semibold">
+                    <i class="bi bi-briefcase-fill me-1"></i> Reservas
+                </span>
+                <ul class="nav flex-column ms-4">
+                    <li>
+                        <a class="nav-link text-secondary" href="{% url 'reserva_adicionar' %}">
+                            Cadastrar Reserva
+                        </a>
+                    </li>
+                    <li>
+                        <a class="nav-link text-secondary" href="{% url 'reservas' %}">
+                            Listar Reservas
+                        </a>
+                    </li>
+                </ul>
+            </li>
         </ul>
     </nav>
 </div>

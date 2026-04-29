@@ -11,5 +11,4 @@ class LivroModelForm(forms.ModelForm):
             'genero': {'required': 'O gênero do livro é um campo obrigatório'},
             'autor': {'required': 'O autor(a) do livro é um campo obrigatório'},
             'editora': {'required': 'A editora do livro é um campo obrigatório'},
-            'status': {'required': 'O status do livro é um campo obrigatório'},
         }

@@ -15,7 +15,7 @@
                     <div class="d-flex justify-content-center m-4">
                         <div class="input-group w-50">
                             <input class="form-control rounded-start-pill px-4 py-2" type="text" name="buscar" value="{{ request.GET.buscar }}"
-                                   placeholder="Digite o nome da cópia">
+                                   placeholder="Digite algo ??">
                         </div>
                             <button type="submit" class="btn rounded-end-pill" style="background-color: #ec9d32; color: white">
                                 Buscar
@@ -24,26 +24,22 @@
                 </form>
             {% if object_list %}
                 <div class="card-body">
-                    <h3 class="text-center p-4">Cópias Cadastradas</h3>
+                    <h3 class="text-center p-4">Reservas</h3>
                     <div class="table-responsive border border-light-subtle rounded-3 overflow-hidden">
                         <table class="table table-hover">
                             <thead class="table">
-                                <th>ISBN</th>
-                                <th>Ano</th>
-                                <th>Status</th>
+                                <th>Data prevista para retirada</th>
                                 <th style="width: 100px; text-align: center">Ações</th>
                             </thead>
                             <tbody>
-                                {% for copia in object_list %}
+                                {% for reserva in object_list %}
                                     <tr>
-                                        <td> {{ copia.isbn }} </td>
-                                        <td> {{ copia.ano }} </td>
-                                        <td> {{ copia.status }} </td>
+                                        <td> {{ reserva.data_prevista_reserva }} </td>
                                         <td style="text-align: center">
-                                            <a role="button" class="btn btn-sm" style="background-color: #08AB9F; color: white" href="{% url 'copia_editar' copia.pk %}">
+                                            <a role="button" class="btn btn-sm" style="background-color: #08AB9F; color: white" href="{% url 'reserva_editar' reserva.pk %}">
                                                     <i class="bi bi-pencil-square"></i>
                                             </a>
-                                            <a role="button" class="btn btn-sm" style="background-color: #ec9d32; color: white" href="{% url 'copia_apagar' copia.pk %}">
+                                            <a role="button" class="btn btn-sm" style="background-color: #ec9d32; color: white" href="{% url 'reserva_apagar' reserva.pk %}">
                                                     <i class="bi bi-trash-fill"></i>
                                             </a>
                                         </td>
@@ -53,7 +49,7 @@
                         </table>
                     </div>
                     <div class="d-flex justify-content-end py-3">
-                        {% bootstrap_pagination object_list url="/copias?page=1" size="sm" %}
+                        {% bootstrap_pagination object_list url="/reservas?page=1" size="sm" %}
                     </div>
                 </div>
             {% endif %}

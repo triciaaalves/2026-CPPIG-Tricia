@@ -32,17 +32,17 @@
                                         <th>Gênero</th>
                                         <th>Autor(a)</th>
                                         <th>Editora</th>
-                                        <th>Status</th>
                                         <th style="width: 100px; text-align: center">Ações</th>
                                     </thead>
                                     <tbody>
                                     {% for livro in object_list %}
                                             <tr>
-                                                <td> {{ livro.titulo }} </td>
+                                                <td><a href="#" data-bs-toggle="modal" data-bs-target="#modal{{livro.id}}">
+                                                    {{ livro.titulo }} </a>
+                                                </td>
                                                 <td> {{ livro.genero }} </td>
                                                 <td> {{ livro.autor }} </td>
                                                 <td> {{ livro.editora }} </td>
-                                                <td> {{ livro.status }} </td>
                                                 <td style="text-align: center">
                                                 <a role="button" class="btn btn-sm" style="background-color: #08AB9F; color: white" href="{% url 'livro_editar' livro.pk %}">
                                                         <i class="bi bi-pencil-square"></i>
@@ -51,6 +51,36 @@
                                                         <i class="bi bi-trash-fill"></i>
                                                 </a>
                                                 </td>
+                                                <div class="modal fade" tabindex="-1" id="modal{{livro.id}}">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title fs-5">Livro: {{ livro.nome }}</h5>
+                                                            </div>
+                                                            <div class="modal-body modal-lg">
+                                                                <div class="container-fluid">
+                                                                    <div class="row justify-content-start">
+                                                                        <div class="col-6">
+                                                                            {% if livro.foto.url is not empty %}
+                                                                                <img src="{{ livro.foto.url }}" class="rounded" width="200" alt="">
+                                                                            {% endif %}
+                                                                        </div>
+                                                                        <div class="col-6">
+                                                                            <h6><strong>Gênero: </strong>{{ livro.genero }}</h6>
+                                                                            <h6><strong>Autor: </strong>{{ livro.autor }}</h6>
+                                                                            <h6><strong>Editora: </strong>{{ livro.editora }}</h6>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                                    Fechar
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </tr>
                                         {% endfor %}
                                     </tbody>
