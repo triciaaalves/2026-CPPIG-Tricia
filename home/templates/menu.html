@@ -1,106 +1,82 @@
-<div class="h-100">
-    <nav class="bg-white shadow-sm rounded-4 position-sticky top-0 vh-100">
-        <ul class="nav flex-column p-3">
-            <li class="nav-item">
-                <span class="nav-link text-secondary fw-semibold">
-                    <i class="bi bi-bookmark-fill me-1"></i> Livros </span>
-                <ul class="nav flex-column ms-4">
-                    <li>
-                        <a class="nav-link text-secondary" href="{% url 'livro_adicionar' %}">
-                            Cadastrar Livro
+<div class="container d-flex justify-content-center mt-3">
+    <nav class="navbar navbar-expand-lg bg-white shadow-sm border border-success border-opacity-10 rounded-5 px-5 py-2">
+        <div class="container-fluid">
+
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav gap-3">
+
+                    <!-- Livros -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-secondary fw-semibold" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-bookmark-fill me-1"></i> Livros
                         </a>
+                        <ul class="dropdown-menu shadow border-0 mt-3">
+                            <li><a class="dropdown-item" href="{% url 'livro_adicionar' %}">Cadastrar Livro</a></li>
+                            <li><a class="dropdown-item" href="{% url 'livros' %}">Listar Livros</a></li>
+                        </ul>
                     </li>
-                    <li>
-                        <a class="nav-link text-secondary" href="{% url 'livros' %}">
-                            Listar Livros
+
+                    <!-- Cópias -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-secondary fw-semibold" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-bookmarks-fill me-1"></i> Cópias
                         </a>
+                        <ul class="dropdown-menu shadow border-0 mt-3">
+                            <li><a class="dropdown-item" href="{% url 'copia_adicionar' %}">Cadastrar Cópia</a></li>
+                            <li><a class="dropdown-item" href="{% url 'copias' %}">Listar Cópias</a></li>
+                        </ul>
                     </li>
+
+                    <!-- Usuários -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-secondary fw-semibold" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-people-fill me-1"></i> Usuários
+                        </a>
+                        <ul class="dropdown-menu shadow border-0 mt-3">
+                            <li><a class="dropdown-item" href="{% url 'cliente_adicionar' %}">Cadastrar Usuário</a></li>
+                            <li><a class="dropdown-item" href="{% url 'clientes' %}">Listar Usuários</a></li>
+                        </ul>
+                    </li>
+
+                    <!-- Secretários -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-secondary fw-semibold" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-person-vcard-fill me-1"></i> Secretários
+                        </a>
+                        <ul class="dropdown-menu shadow border-0 mt-3">
+                            <li><a class="dropdown-item" href="{% url 'secretario_adicionar' %}">Cadastrar Secretário</a></li>
+                            <li><a class="dropdown-item" href="{% url 'secretarios' %}">Listar Secretários</a></li>
+                        </ul>
+                    </li>
+
+                    <!-- Empréstimos -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-secondary fw-semibold" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-calendar-check-fill me-1"></i> Empréstimos
+                        </a>
+                        <ul class="dropdown-menu shadow border-0 mt-3">
+                            <li><a class="dropdown-item" href="{% url 'emprestimo_adicionar' %}">Cadastrar Empréstimo</a></li>
+                            <li><a class="dropdown-item" href="{% url 'emprestimos' %}">Listar Empréstimos</a></li>
+                        </ul>
+                    </li>
+
+                    <!-- Reservas -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-secondary fw-semibold" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-briefcase-fill me-1"></i> Reservas
+                        </a>
+                        <ul class="dropdown-menu shadow border-0 mt-3">
+                            <li><a class="dropdown-item" href="{% url 'reserva_adicionar' %}">Cadastrar Reserva</a></li>
+                            <li><a class="dropdown-item" href="{% url 'reservas' %}">Listar Reservas</a></li>
+                        </ul>
+                    </li>
+
                 </ul>
-            </li>
-            <li class="nav-item mt-3">
-                <span class="nav-link text-secondary fw-semibold">
-                    <i class="bi bi-bookmarks-fill me-1"></i> Cópias </span>
-                <ul class="nav flex-column ms-4">
-                    <li>
-                        <a class="nav-link text-secondary" href="{% url 'copia_adicionar' %}">
-                            Cadastrar Cópia
-                        </a>
-                    </li>
-                    <li>
-                        <a class="nav-link text-secondary" href="{% url 'copias' %}">
-                            Listar Cópias
-                        </a>
-                    </li>
-                </ul>
-            </li>
-            <li class="nav-item mt-3">
-                <span class="nav-link text-secondary fw-semibold">
-                    <i class="bi bi-people-fill me-1"></i> Usuários
-                </span>
-                <ul class="nav flex-column ms-4">
-                    <li>
-                        <a class="nav-link text-secondary" href="{% url 'cliente_adicionar' %}">
-                            Cadastrar Usuário
-                        </a>
-                    </li>
-                    <li>
-                        <a class="nav-link text-secondary" href="{% url 'clientes' %}">
-                            Listar Usuários
-                        </a>
-                    </li>
-                </ul>
-            </li>
-            <li class="nav-item mt-3">
-                <span class="nav-link text-secondary fw-semibold">
-                    <i class="bi bi-person-vcard-fill me-1"></i> Secretários
-                </span>
-                <ul class="nav flex-column ms-4">
-                    <li>
-                        <a class="nav-link text-secondary" href="{% url 'secretario_adicionar' %}">
-                            Cadastrar Secretário
-                        </a>
-                    </li>
-                    <li>
-                        <a class="nav-link text-secondary" href="{% url 'secretarios' %}">
-                            Listar Secretários
-                        </a>
-                    </li>
-                </ul>
-            </li>
-            <li class="nav-item mt-3">
-                <span class="nav-link text-secondary fw-semibold">
-                    <i class="bi bi-calendar-check-fill me-1"></i> Empréstimos
-                </span>
-                <ul class="nav flex-column ms-4">
-                    <li>
-                        <a class="nav-link text-secondary" href="{% url 'emprestimo_adicionar' %}">
-                            Cadastrar Empréstimo
-                        </a>
-                    </li>
-                    <li>
-                        <a class="nav-link text-secondary" href="{% url 'emprestimos' %}">
-                            Listar Empréstimos
-                        </a>
-                    </li>
-                </ul>
-            </li>
-            <li class="nav-item mt-3">
-                <span class="nav-link text-secondary fw-semibold">
-                    <i class="bi bi-briefcase-fill me-1"></i> Reservas
-                </span>
-                <ul class="nav flex-column ms-4">
-                    <li>
-                        <a class="nav-link text-secondary" href="{% url 'reserva_adicionar' %}">
-                            Cadastrar Reserva
-                        </a>
-                    </li>
-                    <li>
-                        <a class="nav-link text-secondary" href="{% url 'reservas' %}">
-                            Listar Reservas
-                        </a>
-                    </li>
-                </ul>
-            </li>
-        </ul>
+            </div>
+        </div>
     </nav>
 </div>
