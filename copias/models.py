@@ -18,4 +18,4 @@ class Copia(models.Model):
         verbose_name_plural = 'Cópias'
 
     def __str__(self):
-        return self.isbn
+        return f"{self.livro.titulo}"

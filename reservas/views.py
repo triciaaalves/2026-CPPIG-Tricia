@@ -30,17 +30,17 @@ class ReservaAddView(SuccessMessageMixin, CreateView):
     form_class = ReservaModelForm
     template_name = 'reserva_form.html'
     success_url = reverse_lazy('reservas')
-    success_message = 'Reserva cadastrado com sucesso!'
+    success_message = 'Reserva cadastrada com sucesso!'
 
 class ReservaUpdateView(SuccessMessageMixin, UpdateView):
     model = Reserva
     form_class = ReservaModelForm
     template_name = 'reserva_form.html'
     success_url = reverse_lazy('reservas')
-    success_message = 'Reserva alterado com sucesso!'
+    success_message = 'Reserva alterada com sucesso!'
 
 class ReservaDeleteView(SuccessMessageMixin, DeleteView):
     model = Reserva
     template_name = 'reserva_apagar.html'
     success_url = reverse_lazy('reservas')
-    success_message = 'Reserva apagado com sucesso!'
+    success_message = 'Reserva apagada com sucesso!'

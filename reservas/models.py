@@ -1,10 +1,13 @@
 from django.db import models
 
 from clientes.models import Cliente
+from copias.models import Copia
+
 
 class Reserva(models.Model):
     data_prevista_reserva = models.DateField()
     cliente = models.ForeignKey(Cliente, verbose_name='Clientes', on_delete=models.PROTECT)
+    copia = models.ForeignKey(Copia, verbose_name='Cópias', on_delete=models.PROTECT)
 
     class Meta:
         verbose_name = 'Reserva'

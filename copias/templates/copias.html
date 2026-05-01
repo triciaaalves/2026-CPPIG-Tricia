@@ -36,7 +36,7 @@
                             <tbody>
                                 {% for copia in object_list %}
                                     <tr>
-                                        <td> {{ copia.isbn }} </td>
+                                        <td> {{ copia.isbn }} | {{ copia.livro.titulo }} </td>
                                         <td> {{ copia.ano }} </td>
                                         <td> {{ copia.status }} </td>
                                         <td style="text-align: center">

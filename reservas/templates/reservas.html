@@ -29,12 +29,14 @@
                         <table class="table table-hover">
                             <thead class="table">
                                 <th>Data prevista para retirada</th>
+                                <th>Cópia</th>
                                 <th style="width: 100px; text-align: center">Ações</th>
                             </thead>
                             <tbody>
                                 {% for reserva in object_list %}
                                     <tr>
                                         <td> {{ reserva.data_prevista_reserva }} </td>
+                                        <td> {{ reserva.copia.livro.titulo }} </td>
                                         <td style="text-align: center">
                                             <a role="button" class="btn btn-sm" style="background-color: #08AB9F; color: white" href="{% url 'reserva_editar' reserva.pk %}">
                                                     <i class="bi bi-pencil-square"></i>

@@ -29,12 +29,24 @@
                         <table class="table table-hover">
                             <thead class="table">
                                 <th>Data de retirada</th>
+                                <th>Cópias</th>
                                 <th style="width: 100px; text-align: center">Ações</th>
                             </thead>
                             <tbody>
                                 {% for emprestimo in object_list %}
                                     <tr>
                                         <td> {{ emprestimo.data_retirada }} </td>
+                                        <td>
+                                            {% for copia in emprestimo.copias.all %}
+                                                {% if forloop.last %}
+                                                    {{ copia }}
+                                                {% else %}
+                                                    {{ copia }},
+                                                {% endif %}
+                                            {% empty %}
+                                                Nenhuma cópia registrada para este empréstimo
+                                            {% endfor %}
+                                        </td>
                                         <td style="text-align: center">
                                             <a role="button" class="btn btn-sm" style="background-color: #08AB9F; color: white" href="{% url 'emprestimo_editar' emprestimo.pk %}">
                                                     <i class="bi bi-pencil-square"></i>
