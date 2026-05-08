@@ -25,6 +25,7 @@
                         <table class="table table-hover">
                             <thead class="table">
                                 <th>ISBN</th>
+                                <th>Livro</th>
                                 <th>Ano</th>
                                 <th>Status</th>
                                 <th style="width: 100px; text-align: center">Ações</th>
@@ -32,7 +33,8 @@
                             <tbody>
                                 {% for copia in object_list %}
                                     <tr>
-                                        <td> {{ copia.isbn }} | {{ copia.livro.titulo }} </td>
+                                        <td> {{ copia.isbn }} </td>
+                                        <td> {{ copia.livro.titulo }} </td>
                                         <td> {{ copia.ano }} </td>
                                         <td> {{ copia.status }} </td>
                                         <td style="text-align: center">

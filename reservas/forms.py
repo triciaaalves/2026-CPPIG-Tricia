@@ -1,5 +1,10 @@
 from django import forms
+
+from clientes.models import Cliente
 from .models import Reserva
+
+class ReservaListForm(forms.Form):
+    cliente = forms.ModelChoiceField(label='Usuário', queryset=Cliente.objects.all(), required=False)
 
 class ReservaModelForm(forms.ModelForm):
 

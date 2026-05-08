@@ -12,6 +12,7 @@ class Reserva(models.Model):
     class Meta:
         verbose_name = 'Reserva'
         verbose_name_plural = 'Reservas'
+        ordering = ['data_prevista_reserva']
 
     def __str__(self):
         return self.data_prevista_reserva

@@ -4,7 +4,7 @@ from django.db import transaction
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.contrib import messages
 
-from emprestimos.forms import EmprestimoModelForm, CopiasEmprestimoInLine
+from emprestimos.forms import EmprestimoModelForm, CopiasEmprestimoInLine, EmprestimoListForm
 from emprestimos.models import Emprestimo
 from django.urls import reverse_lazy
 
@@ -12,13 +12,26 @@ class EmprestimosView(ListView):
     model = Emprestimo
     template_name = 'emprestimos.html'
 
+    def get_context_data(self, **kwargs):
+        context = super(EmprestimosView, self).get_context_data(**kwargs)
+        if self.request.GET:
+            form = EmprestimoListForm(self.request.GET)
+        else:
+            form = EmprestimoListForm()
+        context['form'] = form
+        return context
+
     def get_queryset(self):
-        buscar = self.request.GET.get('buscar')
         qs = super(EmprestimosView, self).get_queryset()
-
-        if buscar:
-            qs = qs.filter(titulo__icontains=buscar)
-
+        if self.request.GET:
+            form = EmprestimoListForm(self.request.GET)
+            if form.is_valid():
+                cliente = form.cleaned_data.get('cliente')
+                secretario = form.cleaned_data.get('secretario')
+                if cliente:
+                    qs = qs.filter(cliente=cliente)
+                if secretario:
+                    qs = qs.filter(secretario=secretario)
         if qs.count() > 0:
             paginator = Paginator(qs, 20)
             listagem = paginator.get_page(self.request.GET.get('page'))
@@ -65,6 +78,7 @@ class EmprestimoUpdateView(SuccessMessageMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
+
         if self.request.POST:
             data['frm_inline'] = CopiasEmprestimoInLine(self.request.POST, instance=self.object)
         else:
