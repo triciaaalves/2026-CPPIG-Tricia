@@ -36,7 +36,7 @@
                                         <td> {{ copia.isbn }} </td>
                                         <td> {{ copia.livro.titulo }} </td>
                                         <td> {{ copia.ano }} </td>
-                                        <td> {{ copia.status }} </td>
+                                        <td> {{ copia.get_status_display }} </td>
                                         <td style="text-align: center">
                                             <a role="button" class="btn btn-sm" style="background-color: #08AB9F; color: white" href="{% url 'copia_editar' copia.pk %}">
                                                     <i class="bi bi-pencil-square"></i>

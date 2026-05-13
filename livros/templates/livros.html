@@ -28,6 +28,7 @@
                                         <th>Gênero</th>
                                         <th>Autor(a)</th>
                                         <th>Editora</th>
+                                        <th>Quantidade de cópias</th>
                                         <th style="width: 100px; text-align: center">Ações</th>
                                     </thead>
                                     <tbody>
@@ -39,6 +40,7 @@
                                                 <td> {{ livro.genero }} </td>
                                                 <td> {{ livro.autor }} </td>
                                                 <td> {{ livro.editora }} </td>
+                                                <td> {{ livro.livro.count }} </td>
                                                 <td style="text-align: center">
                                                 <a role="button" class="btn btn-sm" style="background-color: #08AB9F; color: white" href="{% url 'livro_editar' livro.pk %}">
                                                         <i class="bi bi-pencil-square"></i>

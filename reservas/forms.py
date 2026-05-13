@@ -1,4 +1,5 @@
 from django import forms
+from django.utils import timezone
 
 from clientes.models import Cliente
 from .models import Reserva
@@ -13,7 +14,8 @@ class ReservaModelForm(forms.ModelForm):
         fields = '__all__'
         widgets = {
             'data_prevista_reserva': forms.DateInput(
-                attrs={'type': 'date', 'class': 'form-control'}
+                attrs={'type': 'date', 'class': 'form-control'},
+                format='%d/%m/%Y'
             ),
         }
 

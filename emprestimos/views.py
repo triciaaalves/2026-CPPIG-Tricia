@@ -4,6 +4,7 @@ from django.db import transaction
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.contrib import messages
 
+from copias.models import Copia
 from emprestimos.forms import EmprestimoModelForm, CopiasEmprestimoInLine, EmprestimoListForm
 from emprestimos.models import Emprestimo
 from django.urls import reverse_lazy
@@ -62,6 +63,10 @@ class EmprestimoAddView(SuccessMessageMixin, CreateView):
                 self.object = form.save()
                 frm_inline.instance = self.object
                 frm_inline.save()
+                for form in frm_inline:
+                    copia = Copia.objects.get(id=form.instance.copia.id)
+                    copia.status = 'E'
+                    copia.save()
                 return super().form_valid(form)
             else:
                 return self.render_to_response(self.get_context_data(form=form))

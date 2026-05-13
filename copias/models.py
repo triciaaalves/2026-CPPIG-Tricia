@@ -4,9 +4,9 @@ import livros.models
 
 class Copia(models.Model):
     STATUS_CHOICE = [
-        ('1', 'Disponível'),
-        ('2', 'Emprestado'),
-        ('3', 'Reservado'),
+        ('D', 'Disponível'),
+        ('E', 'Emprestado'),
+        ('R', 'Reservado'),
     ]
     isbn = models.CharField('ISBN', max_length=13, unique=True)
     ano = models.CharField('Ano', max_length=4)

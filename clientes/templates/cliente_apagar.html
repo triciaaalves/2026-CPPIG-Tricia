@@ -12,7 +12,7 @@
                         <p class="p-2 mt-2"><strong>Data de nascimento: </strong>{{ object.data_nascimento }}</p>
                         <p class="p-2 mt-2"><strong>E-mail: </strong>{{ object.email }}</p>
                         <p class="p-2 mt-2"><strong>Telefone: </strong>{{ object.telefone }}</p>
-                        <p class="p-2 mt-2">Confirma a exclusão do cliente: <strong>{{ object }}</strong>?</p>
+                        <p class="p-2 mt-2">Confirma a exclusão do usuário: <strong>{{ object }}</strong>?</p>
                         <form method="POST" enctype="multipart/form-data">
                             {% csrf_token %}
                             {% bootstrap_form form %}
