@@ -1,7 +1,8 @@
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.paginator import Paginator
 from django.db import transaction
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.utils import timezone
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from django.contrib import messages
 
 from copias.models import Copia
@@ -102,8 +103,15 @@ class EmprestimoUpdateView(SuccessMessageMixin, UpdateView):
             else:
                 return self.render_to_response(self.get_context_data(form=form))
 
-class EmprestimoDeleteView(SuccessMessageMixin, DeleteView):
+class EmprestimoDevolucao(DetailView):
     model = Emprestimo
-    template_name = 'emprestimo_apagar.html'
-    success_url = reverse_lazy('emprestimos')
-    success_message = 'Empréstimo apagado com sucesso!'
+    template_name = 'emprestimo_exibir.html'
+
+    def get_object(self, queryset=None):
+        emprestimo = Emprestimo.objects.get(pk=self.kwargs.get('pk'))
+        emprestimo.data_devolucao = timezone.now()
+        # copias = emprestimo.copias
+        # for copia in copias:
+        #     copia.status = 'D'
+        emprestimo.save()
+        return emprestimo

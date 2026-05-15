@@ -4,7 +4,7 @@
     <div class="container-fluid">
 		  {% block menu %} {% include 'menu.html' %}{% endblock %}
 		  {% block content %}
-            <h3 class="text-center m-2 py-4">Cadastro de empréstimo</h3>
+            <h3 class="text-center m-2 py-4">Cadastro de Empréstimo</h3>
             <div class="card shadow-sm border-light-subtle col-md-7 mx-auto mb-5">
                 <div class="card-body">
                     <div class="row">
@@ -19,7 +19,6 @@
                                         <thead class="table-light">
                                             <tr>
                                                 <th style="width: 300px">Cópia</th>
-                                                <th>Data de devolução</th>
                                                 <th class="text-center">Remover</th>
                                             </tr>
                                         </thead>
@@ -30,7 +29,6 @@
                                                         {{ hidden }}
                                                     {% endfor %}
                                                     <td>{% bootstrap_field campo.copia show_label=False %}</td>
-                                                    <td>{% bootstrap_field campo.data_devolucao show_label=False %}</td>
                                                     <td class="text-center text-danger">
                                                         {% if campo.instance.pk %}
                                                             {{ campo.DELETE }}

@@ -8,15 +8,15 @@
             <section class="section">
                 <div class="container">
                     <form action="" method="GET">
-                        <div>
-                            <div class="col-sm-5">
+                        <div class="d-flex pt-4">
+                            <div class="col-sm me-3">
                                 {% bootstrap_field form.cliente layout='horizontal' %}
                             </div>
-                            <div class="col-sm-5">
+                            <div class="col-sm me-3">
                                 {% bootstrap_field form.secretario layout='horizontal' %}
                             </div>
                             <div class="col-sm-2">
-                                <button type="submit" class="btn btn-primary">
+                                <button type="submit" class="btn rounded-pill" style="background-color: #ec9d32; color: white">
                                     Buscar
                                 </button>
                             </div>
@@ -50,11 +50,11 @@
                                         </td>
                                         <td>{{ emprestimo.cliente }}</td>
                                         <td style="text-align: center">
-                                            <a role="button" class="btn btn-sm" style="background-color: #08AB9F; color: white" href="{% url 'emprestimo_editar' emprestimo.pk %}">
-                                                    <i class="bi bi-pencil-square"></i>
+                                            <a role="button" class="btn btn-sm" style="background-color: #08AB9F; color: white" href="{% url 'emprestimo_exibir' emprestimo.pk %}">
+                                                    <i class="bi bi-eye-fill"></i>
                                             </a>
-                                            <a role="button" class="btn btn-sm" style="background-color: #ec9d32; color: white" href="{% url 'emprestimo_apagar' emprestimo.pk %}">
-                                                    <i class="bi bi-trash-fill"></i>
+                                            <a role="button" class="btn btn-sm" style="background-color: #ec9d32; color: white" href="{% url 'emprestimo_editar' emprestimo.pk %}">
+                                                    <i class="bi bi-pencil-square"></i>
                                             </a>
                                         </td>
                                     </tr>

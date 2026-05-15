@@ -18,7 +18,7 @@ class SecretariosView(ListView):
         qs = super(SecretariosView, self).get_queryset()
 
         if buscar:
-            qs = qs.filter(titulo__icontains=buscar)
+            qs = qs.filter(nome__icontains=buscar)
 
         if qs.count() > 0:
             paginator = Paginator(qs, 20)

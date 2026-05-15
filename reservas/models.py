@@ -5,7 +5,7 @@ from copias.models import Copia
 
 
 class Reserva(models.Model):
-    data_prevista_reserva = models.DateField()
+    data_prevista_reserva = models.DateTimeField()
     cliente = models.ForeignKey(Cliente, verbose_name='Clientes', on_delete=models.PROTECT)
     copia = models.ForeignKey(Copia, verbose_name='Cópias', on_delete=models.PROTECT)
 

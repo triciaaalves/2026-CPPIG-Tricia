@@ -17,7 +17,7 @@ class ClientesView(ListView):
         qs = super(ClientesView, self).get_queryset()
 
         if buscar:
-            qs = qs.filter(titulo__icontains=buscar)
+            qs = qs.filter(nome__icontains=buscar)
 
         if qs.count() > 0:
             paginator = Paginator(qs, 20)

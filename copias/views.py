@@ -18,7 +18,7 @@ class CopiasView(ListView):
         qs = super(CopiasView, self).get_queryset()
 
         if buscar:
-            qs = qs.filter(titulo__icontains=buscar)
+            qs = qs.filter(isbn__icontains=buscar)
 
         if qs.count() > 0:
             paginator = Paginator(qs, 20)
