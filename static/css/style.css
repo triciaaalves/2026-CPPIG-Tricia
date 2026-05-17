@@ -5,4 +5,14 @@
 
 .btn-azul {
   background-color: #08AB9F;
+  transition: all 0.3s ease;
+}
+
+.btn-azul:hover {
+  background-color: #08AB9F;
+  border-color: #08AB9F;
+}
+
+.btn-azul:focus {
+  box-shadow: 0 0 0 0.2rem rgba(0, 177, 196, 0.4);
 }
