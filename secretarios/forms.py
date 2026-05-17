@@ -1,4 +1,6 @@
 from django import forms
+from django.utils import timezone
+
 from .models import Secretario
 
 class SecretarioModelForm(forms.ModelForm):
@@ -20,3 +22,11 @@ class SecretarioModelForm(forms.ModelForm):
                       'unique': 'E-mail já cadastrado'},
             'senha': {'required': 'A senha do secretário é um campo obrigatório'}
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['data_nascimento'].input_formats=['%Y-%m-%d']
+        if self.instance and self.instance.data_nascimento:
+            self.initial['data_nascimento'] = (
+                self.instance.data_nascimento
+            ).strftime('%Y-%m-%d')

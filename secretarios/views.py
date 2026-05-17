@@ -2,8 +2,9 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.core.paginator import Paginator
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.contrib import messages
+from django.db.models import ProtectedError
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
-
 from secretarios.forms import SecretarioModelForm
 from secretarios.models import Secretario
 
@@ -17,7 +18,7 @@ class SecretariosView(ListView):
         qs = super(SecretariosView, self).get_queryset()
 
         if buscar:
-            qs = qs.filter(titulo__icontains=buscar)
+            qs = qs.filter(nome__icontains=buscar)
 
         if qs.count() > 0:
             paginator = Paginator(qs, 20)
@@ -45,3 +46,12 @@ class SecretarioDeleteView(SuccessMessageMixin, DeleteView):
     template_name = 'secretario_apagar.html'
     success_url = reverse_lazy('secretarios')
     success_message = 'Secretário apagado com sucesso!'
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        success_url = self.get_success_url()
+        try:
+            return super().post(request, *args, **kwargs)
+        except ProtectedError:
+            messages.error(request, f'O secretário {self.object} não pode ser excluído. ' f'Esse secretário está registrado em algum empréstimo')
+        return redirect(success_url)

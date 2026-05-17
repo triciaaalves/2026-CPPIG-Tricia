@@ -8,7 +8,7 @@
             <section class="section">
                 <div class="container">
             <form action="" method="GET">
-                    <div class="d-flex justify-content-center m-4">
+                    <div class="d-flex justify-content-center m-4 pt-3">
                         <div class="input-group w-50">
                             <input class="form-control rounded-start-pill px-4 py-2" type="text" name="buscar" value="{{ request.GET.buscar }}"
                                    placeholder="Digite o nome da cópia">
@@ -25,6 +25,7 @@
                         <table class="table table-hover">
                             <thead class="table">
                                 <th>ISBN</th>
+                                <th>Livro</th>
                                 <th>Ano</th>
                                 <th>Status</th>
                                 <th style="width: 100px; text-align: center">Ações</th>
@@ -32,9 +33,10 @@
                             <tbody>
                                 {% for copia in object_list %}
                                     <tr>
-                                        <td> {{ copia.isbn }} | {{ copia.livro.titulo }} </td>
+                                        <td> {{ copia.isbn }} </td>
+                                        <td> {{ copia.livro.titulo }} </td>
                                         <td> {{ copia.ano }} </td>
-                                        <td> {{ copia.status }} </td>
+                                        <td> {{ copia.get_status_display }} </td>
                                         <td style="text-align: center">
                                             <a role="button" class="btn btn-sm" style="background-color: #08AB9F; color: white" href="{% url 'copia_editar' copia.pk %}">
                                                     <i class="bi bi-pencil-square"></i>

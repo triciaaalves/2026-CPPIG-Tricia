@@ -7,17 +7,21 @@
 		  {% block content %}
             <section class="section">
                 <div class="container">
-            <form action="" method="GET">
-                    <div class="d-flex justify-content-center m-4">
-                        <div class="input-group w-50">
-                            <input class="form-control rounded-start-pill px-4 py-2" type="text" name="buscar" value="{{ request.GET.buscar }}"
-                                   placeholder="Digite algo ??">
+                    <form action="" method="GET">
+                        <div class="d-flex pt-4">
+                            <div class="col-sm me-3">
+                                {% bootstrap_field form.cliente layout='horizontal' %}
+                            </div>
+                            <div class="col-sm me-3">
+                                {% bootstrap_field form.secretario layout='horizontal' %}
+                            </div>
+                            <div class="col-sm-2">
+                                <button type="submit" class="btn rounded-pill" style="background-color: #ec9d32; color: white">
+                                    Buscar
+                                </button>
+                            </div>
                         </div>
-                            <button type="submit" class="btn rounded-end-pill" style="background-color: #ec9d32; color: white">
-                                Buscar
-                            </button>
-                    </div>
-                </form>
+                    </form>
             {% if object_list %}
                 <div class="card-body">
                     <h3 class="text-center p-4">Empréstimos</h3>
@@ -26,6 +30,7 @@
                             <thead class="table">
                                 <th>Data de retirada</th>
                                 <th>Cópias</th>
+                                <th>Usuário</th>
                                 <th style="width: 100px; text-align: center">Ações</th>
                             </thead>
                             <tbody>
@@ -43,12 +48,13 @@
                                                 Nenhuma cópia registrada para este empréstimo
                                             {% endfor %}
                                         </td>
+                                        <td>{{ emprestimo.cliente }}</td>
                                         <td style="text-align: center">
-                                            <a role="button" class="btn btn-sm" style="background-color: #08AB9F; color: white" href="{% url 'emprestimo_editar' emprestimo.pk %}">
-                                                    <i class="bi bi-pencil-square"></i>
+                                            <a role="button" class="btn btn-sm" style="background-color: #08AB9F; color: white" href="{% url 'emprestimo_exibir' emprestimo.pk %}">
+                                                    <i class="bi bi-eye-fill"></i>
                                             </a>
-                                            <a role="button" class="btn btn-sm" style="background-color: #ec9d32; color: white" href="{% url 'emprestimo_apagar' emprestimo.pk %}">
-                                                    <i class="bi bi-trash-fill"></i>
+                                            <a role="button" class="btn btn-sm" style="background-color: #ec9d32; color: white" href="{% url 'emprestimo_editar' emprestimo.pk %}">
+                                                    <i class="bi bi-pencil-square"></i>
                                             </a>
                                         </td>
                                     </tr>
