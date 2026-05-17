@@ -19,7 +19,6 @@
                                         <thead class="table-light">
                                             <tr>
                                                 <th style="width: 300px">Cópia</th>
-                                                <th class="text-center">Remover</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -29,11 +28,6 @@
                                                         {{ hidden }}
                                                     {% endfor %}
                                                     <td>{% bootstrap_field campo.copia show_label=False %}</td>
-                                                    <td class="text-center text-danger">
-                                                        {% if campo.instance.pk %}
-                                                            {{ campo.DELETE }}
-                                                        {% endif %}
-                                                    </td>
                                                 </tr>
                                             {% endfor %}
                                         </tbody>
@@ -48,7 +42,6 @@
                             </div>
                         </form>
                     </div>
-
                 </div>
             </div>
           {% endblock %}

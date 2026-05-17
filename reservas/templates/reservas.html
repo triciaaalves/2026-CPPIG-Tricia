@@ -1,62 +1,62 @@
-{% extends 'principal.html' %}
-{% load django_bootstrap5 %}
-{% load static %}
-{% block main %}
-    <div class="container-fluid">
-		  {% block menu %} {% include 'menu.html' %}{% endblock %}
-		  {% block content %}
-            <section class="section">
-                <div class="container">
-                    <form action="" method="GET">
-                        <div class="d-flex justify-content-center pt-4">
-                            <div class="col-sm me-4">
-                                {% bootstrap_field form.cliente layout='horizontal' %}
+    {% extends 'principal.html' %}
+    {% load django_bootstrap5 %}
+    {% load static %}
+    {% block main %}
+        <div class="container-fluid">
+              {% block menu %} {% include 'menu.html' %}{% endblock %}
+              {% block content %}
+                <section class="section">
+                    <div class="container">
+                        <form action="" method="GET">
+                            <div class="d-flex justify-content-center align-items-center gap-3 pt-4">
+                                <div style="max-width: 450px; width: 100%;">
+                                    {% bootstrap_field form.cliente layout='horizontal' label_class='col-auto' field_class='col' wrapper_class='mb-0 align-items-center' %}
+                                </div>
+                                <div>
+                                    <button type="submit" class="btn rounded-pill" style="background-color: #ec9d32; color: white">
+                                        Buscar
+                                    </button>
+                                </div>
                             </div>
-                            <div class="col-sm me-2">
-                                <button type="submit" class="btn rounded-pill" style="background-color: #ec9d32; color: white">
-                                    Buscar
-                                </button>
-                            </div>
+                        </form>
+                {% if object_list %}
+                    <div class="card-body">
+                        <h3 class="text-center p-4">Reservas</h3>
+                        <div class="table-responsive border border-light-subtle rounded-3 overflow-hidden">
+                            <table class="table table-hover">
+                                <thead class="table">
+                                    <th>Data prevista para retirada</th>
+                                    <th>Cópia</th>
+                                    <th>Usuário</th>
+                                    <th style="width: 100px; text-align: center">Ações</th>
+                                </thead>
+                                <tbody>
+                                    {% for reserva in object_list %}
+                                        <tr>
+                                            <td> {{ reserva.data_prevista_reserva }} </td>
+                                            <td> {{ reserva.copia.livro.titulo }} </td>
+                                            <td> {{ reserva.cliente }} </td>
+                                            <td style="text-align: center">
+                                                <a role="button" class="btn btn-sm" style="background-color: #08AB9F; color: white" href="{% url 'reserva_editar' reserva.pk %}">
+                                                        <i class="bi bi-pencil-square"></i>
+                                                </a>
+                                                <a role="button" class="btn btn-sm" style="background-color: #ec9d32; color: white" href="{% url 'reserva_apagar' reserva.pk %}">
+                                                        <i class="bi bi-trash-fill"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
                         </div>
-                    </form>
-            {% if object_list %}
-                <div class="card-body">
-                    <h3 class="text-center p-4">Reservas</h3>
-                    <div class="table-responsive border border-light-subtle rounded-3 overflow-hidden">
-                        <table class="table table-hover">
-                            <thead class="table">
-                                <th>Data prevista para retirada</th>
-                                <th>Cópia</th>
-                                <th>Usuário</th>
-                                <th style="width: 100px; text-align: center">Ações</th>
-                            </thead>
-                            <tbody>
-                                {% for reserva in object_list %}
-                                    <tr>
-                                        <td> {{ reserva.data_prevista_reserva }} </td>
-                                        <td> {{ reserva.copia.livro.titulo }} </td>
-                                        <td> {{ reserva.cliente }} </td>
-                                        <td style="text-align: center">
-                                            <a role="button" class="btn btn-sm" style="background-color: #08AB9F; color: white" href="{% url 'reserva_editar' reserva.pk %}">
-                                                    <i class="bi bi-pencil-square"></i>
-                                            </a>
-                                            <a role="button" class="btn btn-sm" style="background-color: #ec9d32; color: white" href="{% url 'reserva_apagar' reserva.pk %}">
-                                                    <i class="bi bi-trash-fill"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
+                        <div class="d-flex justify-content-end py-3">
+                            {% bootstrap_pagination object_list url="/reservas?page=1" size="sm" %}
+                        </div>
                     </div>
-                    <div class="d-flex justify-content-end py-3">
-                        {% bootstrap_pagination object_list url="/reservas?page=1" size="sm" %}
+                {% endif %}
                     </div>
-                </div>
-            {% endif %}
-                </div>
-            </section>
-        {% endblock %}
+                </section>
+            {% endblock %}
+            </div>
         </div>
-	</div>
-{% endblock %}
+    {% endblock %}

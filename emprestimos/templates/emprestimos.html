@@ -8,14 +8,14 @@
             <section class="section">
                 <div class="container">
                     <form action="" method="GET">
-                        <div class="d-flex pt-4">
-                            <div class="col-sm me-3">
-                                {% bootstrap_field form.cliente layout='horizontal' %}
+                        <div class="d-flex justify-content-center align-items-center gap-3 pt-4">
+                            <div style="max-width: 450px; width: 100%;">
+                                {% bootstrap_field form.cliente layout='horizontal' label_class='col-auto' field_class='col' wrapper_class='mb-0 align-items-center' %}
                             </div>
-                            <div class="col-sm me-3">
-                                {% bootstrap_field form.secretario layout='horizontal' %}
+                            <div style="max-width: 450px; width: 100%;">
+                                {% bootstrap_field form.secretario layout='horizontal' label_class='col-auto' field_class='col' wrapper_class='mb-0 align-items-center' %}
                             </div>
-                            <div class="col-sm-2">
+                            <div>
                                 <button type="submit" class="btn rounded-pill" style="background-color: #ec9d32; color: white">
                                     Buscar
                                 </button>

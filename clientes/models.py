@@ -13,7 +13,7 @@ class Pessoa(models.Model):
         return self.nome
 
 class Cliente(Pessoa):
-    telefone = models.CharField('Telefone', max_length=15)
+    telefone = models.CharField('Telefone', max_length=11)
 
     class Meta:
         verbose_name = 'Cliente'
