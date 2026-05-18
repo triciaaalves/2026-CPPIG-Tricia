@@ -23,20 +23,11 @@
 			</div>
 		</nav>
 
-       {% if messages %}
-       <div class="toast-container bottom-0 p-4" style="z-index: 1055;">
-          {% for message in messages %}
-             <div class="toast align-items-center text-bg-{{ message.tags }} border-0" role="alert" aria-live="assertive" aria-atomic="true">
-                <div class="d-flex">
-                   <div class="toast-body text-white fs-6">
-                      {{ message }}
-                   </div>
-                   <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Fechar"></button>
-                </div>
-             </div>
-          {% endfor %}
-       </div>
-       {% endif %}
+	{% if messages %}
+		<div class="container-fluid p-3">
+			{% bootstrap_messages %}
+		</div>
+	{% endif %}
 
 	{% block main %}
 	  {% block menu %}{% endblock %}
@@ -46,20 +37,6 @@
 	{% block footer %}
 		{% include "footer.html" %}
 	{% endblock %}
-
-	<!-- Script toasts -->
-       <script>
-          document.addEventListener("DOMContentLoaded", function() {
-             // Seleciona todos os elementos com a classe .toast na página
-             var toastElList = [].slice.call(document.querySelectorAll('.toast'))
-             // Inicializa e mostra cada um deles
-             var toastList = toastElList.map(function(toastEl) {
-                var toast = new bootstrap.Toast(toastEl)
-                toast.show()
-                return toast
-             });
-          });
-       </script>
 
     </body>
 </html>

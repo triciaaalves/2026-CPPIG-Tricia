@@ -21,83 +21,81 @@
         </div>
     </section>
 
-    <section class="container my-5 position-relative">
-        <h3 class="mb-4 text-secondary">Livros em Destaque</h3>
-        <div class="position-relative carrossel-wrapper">
+    <section class="container my-5 px-5 position-relative">
+        <div class="mb-4">
+            <h3 class="fw-bold mb-1 text-dark">Livros em Destaque</h3>
+        </div>
+
+        <div class="position-relative">
+
             <button class="btn btn-light border position-absolute top-50 start-0 translate-middle shadow-sm rounded-circle d-flex align-items-center justify-content-center z-3"
                     id="btn-scroll-left"
-                    style="width: 40px; height: 40px; background: rgba(255,255,255,0.9);">
+                    style="width: 45px; height: 45px; background: rgba(255,255,255,0.95);">
                 <i class="bi bi-chevron-left fw-bold"></i>
             </button>
 
-            <div class="d-flex gap-4 overflow-x-auto pb-3 scroll-suave" id="lista-livros" style="scrollbar-width: none; -ms-overflow-style: none;">
+            <div class="d-flex gap-4 overflow-x-auto pb-4 pt-2 scroll-suave" id="lista-livros" style="scrollbar-width: none; -ms-overflow-style: none;">
 
                 <!--
                   depois substituir tudo isso aqui por um:
                   {% for livro in livros_destaque %} ... {% endfor %}
                 -->
 
-                <!-- Livro 1 -->
-                <div class="livro-item flex-shrink-0 text-center" style="width: 160px;">
-                    <div class="card border-0 shadow-sm rounded-3 overflow-hidden mb-2 efeito-hover">
-                        <img src="https://images.unsplash.com/photo-1543002588-bfa74002ed7e?q=80&w=160&h=240&fit=crop" class="img-fluid" alt="Capa" style="height: 240px; object-fit: cover;">
+                <div class="card border border-light-subtle rounded-4 p-3 bg-white flex-shrink-0 efeito-card" style="width: 240px;">
+                    <div class="rounded-3 overflow-hidden mb-3 shadow-sm" style="height: 310px;">
+                        <img src="https://images.unsplash.com/photo-1543002588-bfa74002ed7e?q=80&w=240&h=310&fit=crop" class="w-100 h-100" style="object-fit: cover;" alt="Capa Dom Casmurro">
                     </div>
-                    <small class="fw-bold text-dark d-block text-truncate" title="A Jornada do Saber">A Jornada do Saber</small>
+                    <div class="px-1">
+                        <h6 class="fw-bold text-dark mb-1 text-truncate" title="Dom Casmurro">Dom Casmurro</h6>
+                        <p class="text-secondary small mb-0 text-truncate">Machado de Assis</p>
+                    </div>
                 </div>
 
-                <!-- Livro 2 -->
-                <div class="livro-item flex-shrink-0 text-center" style="width: 160px;">
-                    <div class="card border-0 shadow-sm rounded-3 overflow-hidden mb-2 efeito-hover">
-                        <img src="https://images.unsplash.com/photo-1532012197267-da84d127e765?q=80&w=160&h=240&fit=crop" class="img-fluid" alt="Capa" style="height: 240px; object-fit: cover;">
+                <div class="card border border-light-subtle rounded-4 p-3 bg-white flex-shrink-0 efeito-card" style="width: 240px;">
+                    <div class="rounded-3 overflow-hidden mb-3 shadow-sm" style="height: 310px;">
+                        <img src="https://images.unsplash.com/photo-1532012197267-da84d127e765?q=80&w=240&h=310&fit=crop" class="w-100 h-100" style="object-fit: cover;" alt="Capa O Alquimista">
                     </div>
-                    <small class="fw-bold text-dark d-block text-truncate" title="O Mistério da Biblioteca">O Mistério da Biblioteca</small>
+                    <div class="px-1">
+                        <h6 class="fw-bold text-dark mb-1 text-truncate" title="O Alquimista">O Alquimista</h6>
+                        <p class="text-secondary small mb-0 text-truncate">Paulo Coelho</p>
+                    </div>
                 </div>
 
-                <!-- Livro 3 -->
-                <div class="livro-item flex-shrink-0 text-center" style="width: 160px;">
-                    <div class="card border-0 shadow-sm rounded-3 overflow-hidden mb-2 efeito-hover">
-                        <img src="https://images.unsplash.com/photo-1512820790803-83ca734da794?q=80&w=160&h=240&fit=crop" class="img-fluid" alt="Capa" style="height: 240px; object-fit: cover;">
+                <div class="card border border-light-subtle rounded-4 p-3 bg-white flex-shrink-0 efeito-card" style="width: 240px;">
+                    <div class="rounded-3 overflow-hidden mb-3 shadow-sm" style="height: 310px;">
+                        <img src="https://images.unsplash.com/photo-1512820790803-83ca734da794?q=80&w=240&h=310&fit=crop" class="w-100 h-100" style="object-fit: cover;" alt="Capa O Senhor dos Anéis">
                     </div>
-                    <small class="fw-bold text-dark d-block text-truncate" title="Histórias Perdidas">Histórias Perdidas</small>
+                    <div class="px-1">
+                        <h6 class="fw-bold text-dark mb-1 text-truncate" title="O Senhor dos Anéis">O Senhor dos Anéis</h6>
+                        <p class="text-secondary small mb-0 text-truncate">J.R.R. Tolkien</p>
+                    </div>
                 </div>
 
-                <!-- Livro 4 -->
-                <div class="livro-item flex-shrink-0 text-center" style="width: 160px;">
-                    <div class="card border-0 shadow-sm rounded-3 overflow-hidden mb-2 efeito-hover">
-                        <img src="https://images.unsplash.com/photo-1495640388908-05fa85288e61?q=80&w=160&h=240&fit=crop" class="img-fluid" alt="Capa" style="height: 240px; object-fit: cover;">
+                <div class="card border border-light-subtle rounded-4 p-3 bg-white flex-shrink-0 efeito-card" style="width: 240px;">
+                    <div class="rounded-3 overflow-hidden mb-3 shadow-sm" style="height: 310px;">
+                        <img src="https://images.unsplash.com/photo-1495640388908-05fa85288e61?q=80&w=240&h=310&fit=crop" class="w-100 h-100" style="object-fit: cover;" alt="Capa Sapiens">
                     </div>
-                    <small class="fw-bold text-dark d-block text-truncate" title="Crônicas de Tecnologia">Crônicas de Tecnologia</small>
+                    <div class="px-1">
+                        <h6 class="fw-bold text-dark mb-1 text-truncate" title="Sapiens">Sapiens</h6>
+                        <p class="text-secondary small mb-0 text-truncate">Yuval Noah Harari</p>
+                    </div>
                 </div>
 
-                <!-- Livro 5 -->
-                <div class="livro-item flex-shrink-0 text-center" style="width: 160px;">
-                    <div class="card border-0 shadow-sm rounded-3 overflow-hidden mb-2 efeito-hover">
-                        <img src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?q=80&w=160&h=240&fit=crop" class="img-fluid" alt="Capa" style="height: 240px; object-fit: cover;">
+                <div class="card border border-light-subtle rounded-4 p-3 bg-white flex-shrink-0 efeito-card" style="width: 240px;">
+                    <div class="rounded-3 overflow-hidden mb-3 shadow-sm" style="height: 310px;">
+                        <img src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?q=80&w=240&h=310&fit=crop" class="w-100 h-100" style="object-fit: cover;" alt="Capa">
                     </div>
-                    <small class="fw-bold text-dark d-block text-truncate" title="Poesias ao Vento">Poesias ao Vento</small>
-                </div>
-
-                <!-- Livro 6 -->
-                <div class="livro-item flex-shrink-0 text-center" style="width: 160px;">
-                    <div class="card border-0 shadow-sm rounded-3 overflow-hidden mb-2 efeito-hover">
-                        <img src="https://images.unsplash.com/photo-1497633762265-9d179a990aa6?q=80&w=160&h=240&fit=crop" class="img-fluid" alt="Capa" style="height: 240px; object-fit: cover;">
+                    <div class="px-1">
+                        <h6 class="fw-bold text-dark mb-1 text-truncate" title="1984">1984</h6>
+                        <p class="text-secondary small mb-0 text-truncate">George Orwell</p>
                     </div>
-                    <small class="fw-bold text-dark d-block text-truncate" title="Design Educacional">Design Educacional</small>
-                </div>
-
-                <!-- Livro 7 -->
-                <div class="livro-item flex-shrink-0 text-center" style="width: 160px;">
-                    <div class="card border-0 shadow-sm rounded-3 overflow-hidden mb-2 efeito-hover">
-                        <img src="https://images.unsplash.com/photo-1506880018603-83d5b814b5a6?q=80&w=160&h=240&fit=crop" class="img-fluid" alt="Capa" style="height: 240px; object-fit: cover;">
-                    </div>
-                    <small class="fw-bold text-dark d-block text-truncate" title="O Último Capítulo">O Último Capítulo</small>
                 </div>
 
             </div>
 
             <button class="btn btn-light border position-absolute top-50 start-100 translate-middle shadow-sm rounded-circle d-flex align-items-center justify-content-center z-3"
                     id="btn-scroll-right"
-                    style="width: 40px; height: 40px; background: rgba(255,255,255,0.9);">
+                    style="width: 45px; height: 45px; background: rgba(255,255,255,0.95);">
                 <i class="bi bi-chevron-right fw-bold"></i>
             </button>
         </div>

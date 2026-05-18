@@ -3,24 +3,34 @@
 {% load static %}
 {% block main %}
     <div class="container-fluid">
-		  {% block menu %} {% include 'menu.html' %}{% endblock %}
-		  {% block content %}
-            <section class="section">
+         {% block menu %} {% include 'menu.html' %}{% endblock %}
+         {% block content %}
+            <section class="section py-4">
                 <div class="container">
-                    <form action="" method="GET">
-                        <div class="d-flex justify-content-center m-4 pt-3">
-                            <div class="input-group w-50">
-                                <input class="form-control rounded-start-pill px-4 py-2" type="text" name="buscar" value="{{ request.GET.buscar }}"
-                                       placeholder="Digite o nome do livro">
-                            </div>
-                                <button type="submit" class="btn rounded-end-pill" style="background-color: #ec9d32; color: white">
-                                    Buscar
-                                </button>
+
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <h1 class="fw-bold mb-1" style="font-size: 2.2rem;">Livros</h1>
+                        </div>
+                        <div>
+                            <a href="{% url 'livro_adicionar' %}" class="btn text-white px-3 py-2 rounded-3 shadow-sm" style="background-color: #ec9d32;">
+                                <i class="bi bi-plus-lg me-2"></i>Novo Livro
+                            </a>
+                        </div>
+                    </div>
+
+                    <form action="" method="GET" class="mb-4">
+                        <div class="input-group shadow-sm rounded-4 overflow-hidden">
+                            <span class="input-group-text bg-white border-end-0 text-secondary ps-3">
+                                <i class="bi bi-search"></i>
+                            </span>
+                            <input class="form-control border-start-0 py-2" type="text" name="buscar" value="{{ request.GET.buscar }}"
+                                   placeholder="Digite o título do livro...">
                         </div>
                     </form>
+
+                    <div class="card-body">
                     {% if object_list %}
-                        <div class="card-body">
-                            <h3 class="text-center p-4">Livros Cadastrados</h3>
                             <div class="table-responsive border border-light-subtle rounded-3 overflow-hidden">
                                 <table class="table table-hover ">
                                     <thead class="table">
@@ -49,6 +59,7 @@
                                                         <i class="bi bi-trash-fill"></i>
                                                 </a>
                                                 </td>
+
                                                 <div class="modal fade" tabindex="-1" id="modal{{livro.id}}">
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
@@ -93,5 +104,5 @@
             </section>
         {% endblock %}
         </div>
-	  </div>
+      </div>
 {% endblock %}
