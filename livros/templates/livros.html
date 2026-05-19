@@ -64,32 +64,55 @@
                                             </a>
                                         </td>
 
-                                        <div class="modal fade" tabindex="-1" id="modal{{livro.id}}">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title fs-5">Livro: {{ livro.titulo }}</h5>
+                                        <div class="modal fade" tabindex="-1" id="modal{{livro.id}}" aria-hidden="true">
+                                            <div class="modal-dialog modal-lg modal-dialog-centered">
+                                                <div class="modal-content border-0 shadow-lg rounded-3 overflow-hidden">
+
+                                                    <div class="modal-header bg-white border-bottom border-light-subtle py-3 px-4">
+                                                        <h5 class="modal-title fs-5 fw-bold text-dark d-flex align-items-center"> {{ livro.titulo }} </h5>
+                                                        <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
-                                                    <div class="modal-body modal-lg">
-                                                        <div class="container-fluid">
-                                                            <div class="row justify-content-start">
-                                                                <div class="col-6">
+                                                    <div class="modal-body p-4 bg-white">
+                                                        <div class="container-fluid p-0">
+                                                            <div class="row g-4 align-items-start">
+                                                                <div class="col-12 col-md-4 text-center text-md-start">
                                                                     {% if livro.foto.url is not empty %}
-                                                                        <img src="{{ livro.foto.url }}" class="rounded" width="200" alt="">
+                                                                    <img src="{{ livro.foto.url }}"
+                                                                             class="rounded shadow border border-light-subtle"
+                                                                             style="width: 100%; max-width: 220px; height: 300px; object-fit: cover;"
+                                                                             alt="">
+                                                                    {% else %}
+                                                                        <div class="rounded d-flex flex-column align-items-center justify-content-center bg-light border border-dashed border-secondary-subtle"
+                                                                             style="width: 100%; max-width: 220px; height: 300px;">
+                                                                            <i class="bi bi-image text-muted fs-1 mb-2"></i>
+                                                                            <span class="text-muted small fw-medium">Sem capa disponível</span>
+                                                                        </div>
                                                                     {% endif %}
                                                                 </div>
-                                                                <div class="col-6">
-                                                                    <h6><strong>Gênero: </strong>{{ livro.genero }}</h6>
-                                                                    <h6><strong>Autor: </strong>{{ livro.autor }}</h6>
-                                                                    <h6><strong>Editora: </strong>{{ livro.editora }}</h6>
+                                                                <div class="col-12 col-md-8">
+                                                                    <div class="row g-3">
+                                                                        <div class="col-12">
+                                                                            <div class="bg-light p-3 rounded-3 border border-light-subtle">
+                                                                                <span class="text-muted small d-block fw-semibold text-uppercase mb-1">Autor(a)</span>
+                                                                                <span class="fw-bold text-dark fs-5">{{ livro.autor }}</span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-12 col-sm-6">
+                                                                            <div class="bg-light p-3 rounded-3 border border-light-subtle h-100">
+                                                                                <span class="text-muted small d-block fw-semibold text-uppercase mb-1">Gênero</span>
+                                                                                <span class="fw-semibold text-secondary">{{ livro.genero }}</span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-12 col-sm-6">
+                                                                            <div class="bg-light p-3 rounded-3 border border-light-subtle h-100">
+                                                                                <span class="text-muted small d-block fw-semibold text-uppercase mb-1">Editora</span>
+                                                                                <span class="fw-semibold text-secondary">{{ livro.editora }}</span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                                            Fechar
-                                                        </button>
                                                     </div>
                                                 </div>
                                             </div>
