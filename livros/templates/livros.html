@@ -21,81 +21,85 @@
 
                     <form action="" method="GET" class="mb-4">
                         <div class="input-group shadow-sm rounded-4 overflow-hidden">
-                            <span class="input-group-text bg-white border rounded-start-4 text-secondary ps-3">
+                            <span class="input-group-text bg-white border border-light-subtle rounded-start-4 text-secondary ps-3">
                                 <i class="bi bi-search"></i>
                             </span>
-                            <input class="form-control border-start-0 rounded-end-4 py-2" type="text" name="buscar" value="{{ request.GET.buscar }}"
+                            <input class="form-control border-start-0 border-light-subtle rounded-end-4 py-2" type="text" name="buscar" value="{{ request.GET.buscar }}"
                                    placeholder="Digite o título do livro...">
                         </div>
                     </form>
 
                     <div class="card-body">
                     {% if object_list %}
-                            <div class="table-responsive border border-light-subtle rounded-3 overflow-hidden">
-                                <table class="table table-hover ">
-                                    <thead class="table">
-                                        <th>Título</th>
-                                        <th>Gênero</th>
-                                        <th>Autor(a)</th>
-                                        <th>Editora</th>
-                                        <th>Quantidade de cópias</th>
-                                        <th style="width: 100px; text-align: center">Ações</th>
-                                    </thead>
-                                    <tbody>
-                                    {% for livro in object_list %}
-                                            <tr>
-                                                <td><a href="#" data-bs-toggle="modal" data-bs-target="#modal{{livro.id}}">
-                                                    {{ livro.titulo }} </a>
-                                                </td>
-                                                <td> {{ livro.genero }} </td>
-                                                <td> {{ livro.autor }} </td>
-                                                <td> {{ livro.editora }} </td>
-                                                <td> {{ livro.livro.count }} </td>
-                                                <td style="text-align: center">
-                                                    <a role="button" class="btn btn-sm rounded-3" style="background-color: rgba(8, 171, 159, 0.15); color: #08AB9F" href="{% url 'livro_editar' livro.pk %}">
-                                                            <i class="bi bi-pencil-fill"></i>
-                                                    </a>
-                                                    <a role="button" class="btn btn-sm rounded-3" style="background-color: rgba(236, 157, 50, 0.15) ; color: #ec9d32;" href="{% url 'livro_apagar' livro.pk %}">
-                                                            <i class="bi bi-trash-fill"></i>
-                                                    </a>
-                                                </td>
+                    <div class="table-responsive border border-light-subtle rounded-3 shadow-sm bg-white">
+                        <table class="table table-hover align-middle mb-0 custom-table">
+                            <thead>
+                                <tr>
+                                    <th>Título</th>
+                                    <th>Gênero</th>
+                                    <th>Autor(a)</th>
+                                    <th>Editora</th>
+                                    <th>Quantidade de cópias</th>
+                                    <th style="width: 120px; text-align: center">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for livro in object_list %}
+                                    <tr>
+                                        <td>
+                                            <a href="#" data-bs-toggle="modal" data-bs-target="#modal{{livro.id}}" class="fw-semibold text-dark text-decoration-none">
+                                                {{ livro.titulo }}
+                                            </a>
+                                        </td>
+                                        <td class="text-secondary"> {{ livro.genero }} </td>
+                                        <td class="text-secondary fw-medium"> {{ livro.autor }} </td>
+                                        <td class="text-secondary"> {{ livro.editora }} </td>
+                                        <td class="text-secondary fw-semibold"> {{ livro.livro.count }} </td>
+                                        <td style="text-align: center">
+                                            <a role="button" class="btn btn-sm rounded-3 me-1" style="background-color: rgba(8, 171, 159, 0.15); color: #08AB9F" href="{% url 'livro_editar' livro.pk %}">
+                                                    <i class="bi bi-pencil-fill"></i>
+                                            </a>
+                                            <a role="button" class="btn btn-sm rounded-3" style="background-color: rgba(236, 157, 50, 0.15) ; color: #ec9d32;" href="{% url 'livro_apagar' livro.pk %}">
+                                                    <i class="bi bi-trash-fill"></i>
+                                            </a>
+                                        </td>
 
-                                                <div class="modal fade" tabindex="-1" id="modal{{livro.id}}">
-                                                    <div class="modal-dialog">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title fs-5">Livro: {{ livro.titulo }}</h5>
-                                                            </div>
-                                                            <div class="modal-body modal-lg">
-                                                                <div class="container-fluid">
-                                                                    <div class="row justify-content-start">
-                                                                        <div class="col-6">
-                                                                            {% if livro.foto.url is not empty %}
-                                                                                <img src="{{ livro.foto.url }}" class="rounded" width="200" alt="">
-                                                                            {% endif %}
-                                                                        </div>
-                                                                        <div class="col-6">
-                                                                            <h6><strong>Gênero: </strong>{{ livro.genero }}</h6>
-                                                                            <h6><strong>Autor: </strong>{{ livro.autor }}</h6>
-                                                                            <h6><strong>Editora: </strong>{{ livro.editora }}</h6>
-                                                                        </div>
-                                                                    </div>
+                                        <div class="modal fade" tabindex="-1" id="modal{{livro.id}}">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title fs-5">Livro: {{ livro.titulo }}</h5>
+                                                    </div>
+                                                    <div class="modal-body modal-lg">
+                                                        <div class="container-fluid">
+                                                            <div class="row justify-content-start">
+                                                                <div class="col-6">
+                                                                    {% if livro.foto.url is not empty %}
+                                                                        <img src="{{ livro.foto.url }}" class="rounded" width="200" alt="">
+                                                                    {% endif %}
                                                                 </div>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                                                    Fechar
-                                                                </button>
+                                                                <div class="col-6">
+                                                                    <h6><strong>Gênero: </strong>{{ livro.genero }}</h6>
+                                                                    <h6><strong>Autor: </strong>{{ livro.autor }}</h6>
+                                                                    <h6><strong>Editora: </strong>{{ livro.editora }}</h6>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                            Fechar
+                                                        </button>
+                                                    </div>
                                                 </div>
-                                            </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="d-flex justify-content-end py-3">
+                                            </div>
+                                        </div>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                            <div class="d-flex justify-content-end py-3 custom-pagination">
                                     {% bootstrap_pagination object_list url="/livros?page=1" size="sm" %}
                             </div>
                          </div>

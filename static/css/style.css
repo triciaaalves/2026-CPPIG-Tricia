@@ -1,3 +1,4 @@
+/* Página inicial */
 .banner {
   height: 320px;
   background: url('/static/img/banner.png') center/cover no-repeat;
@@ -12,15 +13,16 @@
 .btn-azul:hover {
   background-color: #05756D;
   border-color: #05756D;
-  color: white !important;
+  color: white;
 }
 
 .btn-azul:focus {
   box-shadow: 0 0 0 0.2rem rgba(8, 171, 159, 0.4);
 }
 
+/* Livros em destaque */
 #lista-livros::-webkit-scrollbar {
-    display: none; /* Oculta barra no Chrome/Safari */
+    display: none;
 }
 
 .scroll-suave {
@@ -34,7 +36,66 @@
 
 .efeito-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08) !important;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
 
 }
 
+/* Tabelas */
+.custom-table thead th {
+    background-color: #f8f9fa;
+    color: #5c677d;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 700;
+    padding-top: 14px;
+    padding-bottom: 14px;
+    padding-left: 14px;
+    border-bottom: 2px solid #ebd9d900;
+}
+
+.custom-table tbody tr td {
+    padding-top: 16px;
+    padding-bottom: 16px;
+    padding-left: 14px;
+    border-bottom: 1px solid #f1f3f5;
+}
+
+.custom-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Paginação */
+.custom-pagination .pagination {
+    gap: 6px;
+}
+
+.custom-pagination .page-link {
+    color: #5c677d;
+    background-color: #ffffff;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.custom-pagination .page-link:hover {
+    color: #ec9d32;
+    background-color: rgba(236, 157, 50, 0.08);
+    border-color: rgba(236, 157, 50, 0.3);
+}
+
+.custom-pagination .page-item.active .page-link {
+    color: #ffffff;
+    background-color: #ec9d32;
+    border-color: #ec9d32 ;
+    font-weight: 600;
+    box-shadow: 0 4px 10px rgba(236, 157, 50, 0.2);
+}
+
+.custom-pagination .page-item.disabled .page-link {
+    color: #adb5bd;
+    background-color: #f8f9fa;
+    border-color: #e9ecef;
+}

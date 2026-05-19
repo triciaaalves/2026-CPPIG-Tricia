@@ -20,31 +20,32 @@
 
                 <form action="" method="GET" class="mb-4">
                     <div class="input-group shadow-sm rounded-4 overflow-hidden">
-                        <span class="input-group-text bg-white border rounded-start-4 text-secondary ps-3">
+                        <span class="input-group-text bg-white border border-light-subtle rounded-start-4 text-secondary ps-3">
                             <i class="bi bi-search"></i>
                         </span>
-                        <input class="form-control border-start-0 rounded-end-4 py-2" type="text" name="buscar" value="{{ request.GET.buscar }}"
+                        <input class="form-control border-start-0 border-light-subtle rounded-end-4 py-2" type="text" name="buscar" value="{{ request.GET.buscar }}"
                                placeholder="Digite o ISBN da cópia...">
                     </div>
                 </form>
-            <div class="card-body">
-            {% if object_list %}
-                <div class="card-body">
-                    <div class="table-responsive border border-light-subtle rounded-3 overflow-hidden">
-                        <table class="table table-hover">
-                            <thead class="table">
-                                <th>ISBN</th>
-                                <th>Livro</th>
-                                <th>Ano</th>
-                                <th>Status</th>
-                                <th style="width: 100px; text-align: center">Ações</th>
+                <div class="card-body p-0">
+                {% if object_list %}
+                    <div class="table-responsive border border-light-subtle rounded-3 shadow-sm bg-white">
+                        <table class="table table-hover align-middle mb-0 custom-table">
+                            <thead>
+                                <tr>
+                                    <th>ISBN</th>
+                                    <th>Livro</th>
+                                    <th>Ano</th>
+                                    <th>Status</th>
+                                    <th style="width: 120px; text-align: center">Ações</th>
+                                </tr>
                             </thead>
                             <tbody>
                                 {% for copia in object_list %}
                                     <tr>
-                                        <td> {{ copia.isbn }} </td>
-                                        <td> {{ copia.livro.titulo }} </td>
-                                        <td> {{ copia.ano }} </td>
+                                        <td class="text-secondary fw-medium"> {{ copia.isbn }} </td>
+                                        <td class="fw-semibold text-dark"> {{ copia.livro.titulo }} </td>
+                                        <td class="text-secondary"> {{ copia.ano }} </td>
                                         <td>
                                             {% if copia.status == 'D' %}
                                                 <span class="badge bg-success-subtle text-success-emphasis rounded-pill px-3 py-2 fw-semibold">{{ copia.get_status_display }}</span>
@@ -55,7 +56,7 @@
                                             {% endif %}
                                         </td>
                                         <td style="text-align: center">
-                                            <a role="button" class="btn btn-sm rounded-3" style="background-color: rgba(8, 171, 159, 0.15); color: #08AB9F" href="{% url 'copia_editar' copia.pk %}">
+                                            <a role="button" class="btn btn-sm rounded-3 me-1" style="background-color: rgba(8, 171, 159, 0.15); color: #08AB9F" href="{% url 'copia_editar' copia.pk %}">
                                                     <i class="bi bi-pencil-fill"></i>
                                             </a>
                                             <a role="button" class="btn btn-sm rounded-3" style="background-color: rgba(236, 157, 50, 0.15) ; color: #ec9d32;" href="{% url 'copia_apagar' copia.pk %}">
@@ -67,11 +68,10 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="d-flex justify-content-end py-3">
+                    <div class="d-flex justify-content-end py-3 custom-pagination">
                         {% bootstrap_pagination object_list url="/copias?page=1" size="sm" %}
                     </div>
-                </div>
-            {% endif %}
+                {% endif %}
                 </div>
             </section>
         {% endblock %}

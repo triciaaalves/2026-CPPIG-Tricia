@@ -20,10 +20,10 @@
                 <form action="" method="GET" class="mb-4">
                     <div class="row g-3 align-items-center">
                         <div class="col-12 col-md-5">
-                            {% bootstrap_field form.cliente layout='horizontal' label_class='col-auto text-secondary fw-semibold' field_class='col shadow-sm' wrapper_class='mb-0 align-items-center' %}
+                            {% bootstrap_field form.cliente layout='horizontal' label_class='col-auto text-secondary fw-semibold' field_class='col shadow-sm rounded-3' wrapper_class='mb-0 align-items-center' %}
                         </div>
                         <div class="col-12 col-md-5">
-                            {% bootstrap_field form.secretario layout='horizontal' label_class='col-auto text-secondary fw-semibold' field_class='col shadow-sm' wrapper_class='mb-0 align-items-center' %}
+                            {% bootstrap_field form.secretario layout='horizontal' label_class='col-auto text-secondary fw-semibold' field_class='col shadow-sm rounded-3' wrapper_class='mb-0 align-items-center' %}
                         </div>
                         <div class="col-12 col-md-2">
                             <button type="submit" class="btn text-white w-100 py-2 rounded-3 shadow-sm" style="background-color: #ec9d32;">
@@ -35,44 +35,46 @@
 
             <div class="card-body">
             {% if object_list %}
-                    <div class="table-responsive border border-light-subtle rounded-3 overflow-hidden">
-                        <table class="table table-hover">
-                            <thead class="table">
+                <div class="table-responsive border border-light-subtle rounded-3 shadow-sm bg-white">
+                    <table class="table table-hover align-middle mb-0 custom-table">
+                        <thead>
+                            <tr>
                                 <th>Data de retirada</th>
                                 <th>Cópias</th>
                                 <th>Usuário</th>
-                                <th style="width: 100px; text-align: center">Ações</th>
-                            </thead>
-                            <tbody>
-                                {% for emprestimo in object_list %}
-                                    <tr>
-                                        <td> {{ emprestimo.data_retirada }} </td>
-                                        <td>
-                                            {% for copia in emprestimo.copias.all %}
-                                                {% if forloop.last %}
-                                                    {{ copia }}
-                                                {% else %}
-                                                    {{ copia }},
-                                                {% endif %}
-                                            {% empty %}
-                                                Nenhuma cópia registrada para este empréstimo
-                                            {% endfor %}
-                                        </td>
-                                        <td>{{ emprestimo.cliente }}</td>
-                                        <td style="text-align: center">
-                                           <a role="button" class="btn btn-sm rounded-3" style="background-color: rgba(8, 171, 159, 0.15); color: #08AB9F" href="{% url 'emprestimo_exibir' emprestimo.pk %}">
-                                                    <i class="bi bi-eye-fill"></i>
-                                            </a>
-                                            <a role="button" class="btn btn-sm rounded-3" style="background-color: rgba(236, 157, 50, 0.15) ; color: #ec9d32;" href="{% url 'emprestimo_editar' emprestimo.pk %}">
-                                                    <i class="bi bi-pencil-fill"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="d-flex justify-content-end py-3">
+                                <th style="width: 120px; text-align: center">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for emprestimo in object_list %}
+                                <tr>
+                                    <td class="text-secondary fw-medium"> {{ emprestimo.data_retirada }} </td>
+                                    <td class="text-secondary small">
+                                        {% for copia in emprestimo.copias.all %}
+                                            {% if forloop.last %}
+                                                {{ copia }}
+                                            {% else %}
+                                                {{ copia }},
+                                            {% endif %}
+                                        {% empty %}
+                                            <span class="text-muted italic">Nenhuma cópia registrada</span>
+                                        {% endfor %}
+                                    </td>
+                                    <td class="fw-semibold text-dark">{{ emprestimo.cliente }}</td>
+                                    <td style="text-align: center">
+                                       <a role="button" class="btn btn-sm rounded-3 me-1" style="background-color: rgba(8, 171, 159, 0.15); color: #08AB9F" href="{% url 'emprestimo_exibir' emprestimo.pk %}">
+                                                <i class="bi bi-eye-fill"></i>
+                                        </a>
+                                        <a role="button" class="btn btn-sm rounded-3" style="background-color: rgba(236, 157, 50, 0.15) ; color: #ec9d32;" href="{% url 'emprestimo_editar' emprestimo.pk %}">
+                                                <i class="bi bi-pencil-fill"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                    <div class="d-flex justify-content-end py-3 custom-pagination">
                         {% bootstrap_pagination object_list url="/emprestimos?page=1" size="sm" %}
                     </div>
                 </div>
