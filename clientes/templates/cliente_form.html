@@ -2,26 +2,58 @@
 {% load django_bootstrap5 %}
 {% block main %}
     <div class="container-fluid">
-		  {% block menu %} {% include 'menu.html' %}{% endblock %}
-		  {% block content %}
-            <h3 class="text-center m-2 py-4">Cadastro de Usuários</h3>
-            <div class="card shadow-sm border-light-subtle col-md-7 mx-auto mb-5">
-                <div class="card-body">
-                     <div class="row">
-                        <form method="POST" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        {% bootstrap_form form %}
-                            <div class="text-end">
-                                {% bootstrap_button button_type="submit" content="Salvar" %}
-                                <a href="{% url 'clientes' %}" class="btn btn-secondary text-white" type="button">
-                                   <span class="text">Cancelar</span>
-                                </a>
-                            </div>
-                        </form>
+         {% block menu %} {% include 'menu.html' %}{% endblock %}
+         {% block content %}
+            <section class="py-4">
+                <div class="container">
+                    <div class="mb-4">
+                        <h1 class="fw-bold mb-1 text-dark" style="font-size: 2.2rem;">Cadastro de Usuários</h1>
+                    </div>
+                    <div class="card shadow-sm border-light-subtle rounded-3 bg-white mb-5">
+                        <div class="card-body p-4">
+                            <form method="POST" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                {% if form.non_field_errors %}
+                                    <div class="alert alert-danger rounded-3">
+                                        {{ form.non_field_errors }}
+                                    </div>
+                                {% endif %}
+                                <div class="row g-3">
+                                    <div class="col-12">
+                                        {% bootstrap_field form.nome wrapper_class='mb-2 fw-semibold text-secondary' %}
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        {% bootstrap_field form.email wrapper_class='mb-2 fw-semibold text-secondary' %}
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        {% bootstrap_field form.telefone wrapper_class='mb-2 fw-semibold text-secondary' %}
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        {% bootstrap_field form.data_nascimento wrapper_class='mb-2 fw-semibold text-secondary' %}
+                                    </div>
+                                    {% for field in form %}
+                                        {% if field.name != 'nome' and field.name != 'email' and field.name != 'telefone' and field.name != 'data_nascimento' %}
+                                            <div class="col-12 col-md-6">
+                                                {% bootstrap_field field wrapper_class='mb-2 fw-semibold text-secondary' %}
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <hr class="text-light-subtle my-4">
+                                <div class="d-flex justify-content-end gap-2">
+                                    <a href="{% url 'clientes' %}" class="btn btn-light border fw-medium px-4 py-2 rounded-3 text-secondary shadow-sm">
+                                       Cancelar
+                                    </a>
+                                    <button type="submit" class="btn text-white fw-bold px-4 py-2 rounded-3 shadow-sm" style="background-color: #ec9d32;">
+                                        <i class="bi bi-check-lg me-1"></i> Salvar Registro
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </section>
           {% endblock %}
-		</div>
-	</div>
+       </div>
+    </div>
 {% endblock %}

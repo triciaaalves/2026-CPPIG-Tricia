@@ -1,53 +1,48 @@
-<div class="container d-flex justify-content-center mt-3">
-    <nav class="navbar navbar-expand-lg bg-white shadow-sm border border-success border-opacity-10 rounded-5 px-5 py-2">
+<div class="container d-flex justify-content-center mt-3 custom-menu-container">
+    <nav class="navbar navbar-expand-lg bg-white shadow-sm border border-light-subtle rounded-5 px-5 py-2">
         <div class="container-fluid">
-
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
-
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav gap-3">
-
-                    <!-- Livros -->
-                    <li class="nav-item">
-                        <a class="nav-link text-secondary fw-semibold" href="{% url 'livros' %}">
-                            <i class="bi bi-bookmark-fill me-1"></i> Livros
+                <ul class="navbar-nav gap-2"> <li class="nav-item">
+                        <a class="nav-link text-secondary fw-semibold px-3 py-2 rounded-4" href="{% url 'livros' %}">
+                            <i class="bi bi-book-fill me-1"></i> Livros
                         </a>
                     </li>
 
-                    <!-- Cópias -->
+                    <!--Cópias-->
                     <li class="nav-item">
-                        <a class="nav-link text-secondary fw-semibold" href="{% url 'copias' %}">
+                        <a class="nav-link text-secondary fw-semibold px-3 py-2 rounded-4" href="{% url 'copias' %}">
                             <i class="bi bi-bookmarks-fill me-1"></i> Cópias
                         </a>
                     </li>
 
-                    <!-- Usuários -->
+                    <!--Usuários-->
                     <li class="nav-item">
-                        <a class="nav-link text-secondary fw-semibold" href="{% url 'clientes' %}">
+                        <a class="nav-link text-secondary fw-semibold px-3 py-2 rounded-4" href="{% url 'clientes' %}">
                             <i class="bi bi-people-fill me-1"></i> Usuários
                         </a>
                     </li>
 
-                    <!-- Secretários -->
+                    <!--Secretários-->
                     <li class="nav-item">
-                        <a class="nav-link text-secondary fw-semibold" href="{% url 'secretarios' %}">
-                            <i class="bi bi-person-vcard-fill me-1"></i> Secretários
+                        <a class="nav-link text-secondary fw-semibold px-3 py-2 rounded-4" href="{% url 'secretarios' %}">
+                            <i class="bi bi-person-badge-fill me-1"></i> Secretários
                         </a>
                     </li>
 
-                    <!-- Empréstimos -->
+                    <!--Empréstimos-->
                     <li class="nav-item">
-                        <a class="nav-link text-secondary fw-semibold" href="{% url 'emprestimos' %}">
-                            <i class="bi bi-person-vcard-fill me-1"></i> Empréstimos
+                        <a class="nav-link text-secondary fw-semibold px-3 py-2 rounded-4" href="{% url 'emprestimos' %}">
+                            <i class="bi bi-arrow-left-right me-1"></i> Empréstimos
                         </a>
                     </li>
 
-                    <!-- Reservas -->
+                    <!--Reservas-->
                     <li class="nav-item">
-                        <a class="nav-link text-secondary fw-semibold" href="{% url 'reservas' %}">
-                            <i class="bi bi-briefcase-fill me-1"></i> Reservas
+                        <a class="nav-link text-secondary fw-semibold px-3 py-2 rounded-4" href="{% url 'reservas' %}">
+                            <i class="bi bi-calendar-check-fill me-1"></i> Reservas
                         </a>
                     </li>
 

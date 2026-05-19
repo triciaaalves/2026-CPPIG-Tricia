@@ -2,31 +2,76 @@
 {% load django_bootstrap5 %}
 {% block main %}
     <div class="container-fluid">
-		  {% block menu %} {% include 'menu.html' %}{% endblock %}
-		  {% block content %}
-                <h3 class="text-center m-2 py-3">Dados do Livro</h3>
-                <div class="card shadow m-3 col-md-6 mx-auto">
-                    <div class="card-body">
-                        <div class="row">
-                            <p class="p-2 mt-2"><strong>Título: </strong>{{ object.titulo }}</p>
-                            <p class="p-2 mt-2"><strong>Gênero: </strong>{{ object.genero }}</p>
-                            <p class="p-2 mt-2"><strong>Autor: </strong>{{ object.autor }}</p>
-                            <p class="p-2 mt-2"><strong>Editora: </strong>{{ object.editora }}</p>
-                            <p class="p-2 mt-2">Confirma a exclusão do livro: <strong>{{ object }}</strong>?</p>
+         {% block menu %} {% include 'menu.html' %}{% endblock %}
+         {% block content %}
+
+            <section class="py-4">
+                <div class="container">
+
+                    <div class="mb-4">
+                        <h1 class="fw-bold mb-1" style="font-size: 2.2rem;">Confirmar Exclusão de Livro</h1>
+                    </div>
+
+                    <div class="card shadow-sm border-light-subtle rounded-3 bg-white mb-5">
+                        <div class="card-body p-4">
+
+                            <div class="alert alert-warning border-0 rounded-3 d-flex align-items-center mb-4">
+                                <i class="bi bi-exclamation-triangle-fill fs-4 me-3 text-warning"></i>
+                                <div>
+                                    <h6 class="fw-bold mb-0 text-dark">Atenção!</h6>
+                                    <span class="small text-secondary">Certifique-se de que não existem cópias físicas ou reservas associadas a este livro antes de prosseguir.</span>
+                                </div>
+                            </div>
+                            <div class="p-3 bg-light rounded-3 border border-light-subtle mb-4">
+                                <div class="row g-3 align-items-center">
+                                    {% if object.foto and object.foto.url %}
+                                    <div class="col-12 col-md-2 text-center text-md-start">
+                                        <img src="{{ object.foto.url }}" class="rounded shadow-sm border" style="width: 90px; height: 130px; object-fit: cover;" alt="Capa">
+                                    </div>
+                                    {% endif %}
+                                    <div class="col-12 {% if object.foto and object.foto.url %}col-md-10{% endif %}">
+                                        <div class="row g-3">
+                                            <div class="col-12 col-md-6">
+                                                <span class="text-muted small d-block fw-semibold text-uppercase">Título da Obra</span>
+                                                <span class="fw-bold text-dark fs-5">{{ object.titulo }}</span>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <span class="text-muted small d-block fw-semibold text-uppercase">Autor(a)</span>
+                                                <span class="fw-semibold text-secondary">{{ object.autor }}</span>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <span class="text-muted small d-block fw-semibold text-uppercase">Gênero</span>
+                                                <span class="fw-semibold text-secondary">{{ object.genero }}</span>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <span class="text-muted small d-block fw-semibold text-uppercase">Editora</span>
+                                                <span class="fw-semibold text-secondary">{{ object.editora }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <p class="text-dark fw-medium mb-4">
+                                Confirma a exclusão definitiva do livro <strong>{{ object }}</strong>?
+                            </p>
                             <form method="POST" enctype="multipart/form-data">
                                 {% csrf_token %}
                                 {% bootstrap_form form %}
-                                <div class="text-end">
-                                    {% bootstrap_button button_type="submit" content="Sim" %}
-                                    <a href="{% url 'livros' %}" class="btn btn-secondary text-white" type="button">
-                                       <span class="text">Cancelar</span>
+                                <hr class="text-light-subtle my-4">
+                                <div class="d-flex justify-content-end gap-2">
+                                    <a href="{% url 'livros' %}" class="btn btn-light border fw-medium px-4 py-2 rounded-3 text-secondary shadow-sm">
+                                       Cancelar, manter registro
                                     </a>
+                                    <button type="submit" class="btn btn-danger fw-bold px-4 py-2 rounded-3 shadow-sm">
+                                        <i class="bi bi-trash3-fill me-1"></i> Sim, excluir livro
+                                    </button>
                                 </div>
                             </form>
                         </div>
                     </div>
                 </div>
-            {% endblock %}
-        </div>
-	</div>
+            </section>
+        {% endblock %}
+    </div>
 {% endblock %}
