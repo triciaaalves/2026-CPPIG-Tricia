@@ -1,12 +1,14 @@
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.paginator import Paginator
 from django.db import transaction
+from django.shortcuts import render, redirect
 from django.utils import timezone
+from django.views import View
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from django.contrib import messages
 
 from copias.models import Copia
-from emprestimos.forms import EmprestimoModelForm, CopiasEmprestimoInLine, EmprestimoListForm
+from emprestimos.forms import EmprestimoModelForm, EmprestimoListForm # CopiasEmprestimoInLine
 from emprestimos.models import Emprestimo
 from django.urls import reverse_lazy
 
@@ -48,29 +50,29 @@ class EmprestimoAddView(SuccessMessageMixin, CreateView):
     success_url = reverse_lazy('emprestimos')
     success_message = 'Empréstimo cadastrado com sucesso!'
 
-    def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        if self.request.POST:
-            data['frm_inline'] = CopiasEmprestimoInLine(self.request.POST)
-        else:
-            data['frm_inline'] = CopiasEmprestimoInLine()
-        return data
+    # def get_context_data(self, **kwargs):
+    #     data = super().get_context_data(**kwargs)
+    #     if self.request.POST:
+    #         data['frm_inline'] = CopiasEmprestimoInLine(self.request.POST)
+    #     else:
+    #         data['frm_inline'] = CopiasEmprestimoInLine()
+    #     return data
 
-    def form_valid(self, form):
-        context = self.get_context_data()
-        frm_inline = context['frm_inline']
-        with transaction.atomic():
-            if frm_inline.is_valid():
-                self.object = form.save()
-                frm_inline.instance = self.object
-                frm_inline.save()
-                for form in frm_inline:
-                    copia = Copia.objects.get(id=form.instance.copia.id)
-                    copia.status = 'E'
-                    copia.save()
-                return super().form_valid(form)
-            else:
-                return self.render_to_response(self.get_context_data(form=form))
+    # def form_valid(self, form):
+    #     context = self.get_context_data()
+    #     frm_inline = context['frm_inline']
+    #     with transaction.atomic():
+    #         if frm_inline.is_valid():
+    #             self.object = form.save()
+    #             frm_inline.instance = self.object
+    #             frm_inline.save()
+    #             for form in frm_inline:
+    #                 copia = Copia.objects.get(id=form.instance.copia.id)
+    #                 copia.status = 'E'
+    #                 copia.save()
+    #             return super().form_valid(form)
+    #         else:
+    #             return self.render_to_response(self.get_context_data(form=form))
 
 class EmprestimoUpdateView(SuccessMessageMixin, UpdateView):
     model = Emprestimo
@@ -79,39 +81,42 @@ class EmprestimoUpdateView(SuccessMessageMixin, UpdateView):
     success_url = reverse_lazy('emprestimos')
     success_message = 'Empréstimo alterado com sucesso!'
 
-    def get_queryset(self):
-        return super().get_queryset().prefetch_related('copias_emprestimo_emprestimo')
+    # def get_queryset(self):
+    #     return super().get_queryset().prefetch_related('copias_emprestimo_emprestimo')
 
-    def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
+    # def get_context_data(self, **kwargs):
+    #     data = super().get_context_data(**kwargs)
+    #
+    #     if self.request.POST:
+    #         data['frm_inline'] = CopiasEmprestimoInLine(self.request.POST, instance=self.object)
+    #     else:
+    #         data['frm_inline'] = CopiasEmprestimoInLine(instance=self.object)
+    #     return data
+    #
+    # def form_valid(self, form):
+    #     context = self.get_context_data()
+    #     frm_inline = context['frm_inline']
+    #     with transaction.atomic():
+    #         if frm_inline.is_valid():
+    #             self.object = form.save()
+    #             frm_inline.instance = self.object
+    #             frm_inline.save()
+    #             return super().form_valid(form)
+    #         else:
+    #             return self.render_to_response(self.get_context_data(form=form))
 
-        if self.request.POST:
-            data['frm_inline'] = CopiasEmprestimoInLine(self.request.POST, instance=self.object)
-        else:
-            data['frm_inline'] = CopiasEmprestimoInLine(instance=self.object)
-        return data
+class EmprestimoDevolucao(View):
+    template_name = 'emprestimo_devolver.html'
 
-    def form_valid(self, form):
-        context = self.get_context_data()
-        frm_inline = context['frm_inline']
-        with transaction.atomic():
-            if frm_inline.is_valid():
-                self.object = form.save()
-                frm_inline.instance = self.object
-                frm_inline.save()
-                return super().form_valid(form)
-            else:
-                return self.render_to_response(self.get_context_data(form=form))
+    def get(self, request, pk):
+        emprestimo = Emprestimo.objects.get(pk=pk)
+        return render(request, self.template_name, {
+            'emprestimo': emprestimo
+        })
 
-class EmprestimoDevolucao(DetailView):
-    model = Emprestimo
-    template_name = 'emprestimo_exibir.html'
-
-    def get_object(self, queryset=None):
-        emprestimo = Emprestimo.objects.get(pk=self.kwargs.get('pk'))
+    def post(self, request, pk):
+        emprestimo = Emprestimo.objects.get(pk=pk)
         emprestimo.data_devolucao = timezone.now()
-        # copias = emprestimo.copias
-        # for copia in copias:
-        #     copia.status = 'D'
+        emprestimo.copias.update(status='D')
         emprestimo.save()
-        return emprestimo
+        return redirect('emprestimos')

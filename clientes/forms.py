@@ -6,7 +6,7 @@ from .models import Cliente
 class ClienteModelForm(forms.ModelForm):
     class Meta:
         model = Cliente
-        fields = ['nome', 'data_nascimento', 'telefone', 'email', 'senha']
+        fields = ['nome', 'data_nascimento', 'telefone', 'email']
         widgets = {
             'data_nascimento': forms.DateInput(
                 attrs={'type': 'date', 'class': 'form-control'}
@@ -20,7 +20,6 @@ class ClienteModelForm(forms.ModelForm):
             'email': {'required': 'O e-mail do cliente é um campo obrigatório',
                       'invalid': 'Formato inválido para o e-mail',
                       'unique': 'E-mail já cadastrado'},
-            'senha': {'required': 'A senha do cliente é um campo obrigatório'}
         }
 
     def __init__(self, *args, **kwargs):

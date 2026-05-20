@@ -31,13 +31,6 @@
                                     <div class="col-12 col-md-6">
                                         {% bootstrap_field form.status wrapper_class='mb-2 fw-semibold text-secondary' %}
                                     </div>
-                                    {% for field in form %}
-                                        {% if field.name != 'livro' and field.name != 'isbn' and field.name != 'ano' and field.name != 'status' %}
-                                            <div class="col-12 col-md-6">
-                                                {% bootstrap_field field wrapper_class='mb-2 fw-semibold text-secondary' %}
-                                            </div>
-                                        {% endif %}
-                                    {% endfor %}
                                 </div>
                                 <hr class="text-light-subtle my-4">
                                 <div class="d-flex justify-content-end gap-2">

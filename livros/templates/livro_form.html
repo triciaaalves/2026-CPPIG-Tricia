@@ -42,13 +42,6 @@
                                         </div>
                                     </div>
                                     {% endif %}
-                                    {% for field in form %}
-                                        {% if field.name != 'titulo' and field.name != 'autor' and field.name != 'genero' and field.name != 'editora' and field.name != 'foto' %}
-                                            <div class="col-12 col-md-6">
-                                                {% bootstrap_field field wrapper_class='mb-2 fw-semibold text-secondary' %}
-                                            </div>
-                                        {% endif %}
-                                    {% endfor %}
                                 </div>
                                 <hr class="text-light-subtle my-4">
                                 <div class="d-flex justify-content-end gap-2">

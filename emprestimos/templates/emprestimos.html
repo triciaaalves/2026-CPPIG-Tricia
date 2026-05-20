@@ -42,31 +42,35 @@
                                 <th>Data de retirada</th>
                                 <th>Cópias</th>
                                 <th>Usuário</th>
+                                <th>Secretário</th>
+                                <th>Data de devolução prevista</th>
+                                <th>Data devolução</th>
                                 <th style="width: 120px; text-align: center">Ações</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for emprestimo in object_list %}
                                 <tr>
-                                    <td class="text-secondary fw-medium"> {{ emprestimo.data_retirada }} </td>
-                                    <td class="text-secondary small">
+                                    <td class="fw-semibold text-dark"> {{ emprestimo.data_retirada }} </td>
+                                    <td class="text-secondary">
                                         {% for copia in emprestimo.copias.all %}
                                             {% if forloop.last %}
                                                 {{ copia }}
                                             {% else %}
                                                 {{ copia }},
                                             {% endif %}
-                                        {% empty %}
-                                            <span class="text-muted italic">Nenhuma cópia registrada</span>
                                         {% endfor %}
                                     </td>
-                                    <td class="fw-semibold text-dark">{{ emprestimo.cliente }}</td>
+                                    <td class="text-secondary fw-medium">{{ emprestimo.cliente }}</td>
+                                    <td class="text-secondary">{{ emprestimo.secretario }}</td>
+                                    <td></td>
+                                    <td>{{ emprestimo.data_devolucao }}</td>
                                     <td style="text-align: center">
-                                       <a role="button" class="btn btn-sm rounded-3 me-1" style="background-color: rgba(8, 171, 159, 0.15); color: #08AB9F" href="{% url 'emprestimo_exibir' emprestimo.pk %}">
-                                                <i class="bi bi-eye-fill"></i>
+                                       <a role="button" class="btn btn-sm rounded-3 me-1" style="background-color: rgba(8, 171, 159, 0.15); color: #08AB9F" href="{% url 'emprestimo_devolver' emprestimo.pk %}">
+                                                <i class="bi bi-check-circle-fill"></i>
                                         </a>
                                         <a role="button" class="btn btn-sm rounded-3" style="background-color: rgba(236, 157, 50, 0.15) ; color: #ec9d32;" href="{% url 'emprestimo_editar' emprestimo.pk %}">
-                                                <i class="bi bi-pencil-fill"></i>
+                                                <i class="bi bi-eye-fill"></i>
                                         </a>
                                     </td>
                                 </tr>
