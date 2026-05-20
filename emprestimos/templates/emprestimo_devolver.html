@@ -15,18 +15,21 @@
                                 <i class="bi bi-exclamation-triangle-fill fs-4 me-3 text-warning"></i>
                                 <div>
                                     <h6 class="fw-bold mb-0 text-dark">Atenção!</h6>
-                                    <span class="small text-secondary">Excluir este empréstimo pode alterar as estatísticas de leitura e logs de devolução do sistema.</span>
                                 </div>
                             </div>
                             <div class="p-3 bg-light rounded-3 border border-light-subtle mb-4">
                                 <div class="row g-3">
-                                    <div class="col-12 col-md-6">
+                                    <div class="col-12 col-md-5">
                                         <span class="text-muted small d-block fw-semibold text-uppercase">Data de Retirada</span>
                                         <span class="fw-bold text-dark fs-5">{{ emprestimo.data_retirada }}</span>
                                     </div>
-                                    <div class="col-12 col-md-6">
+                                    <div class="col-12 col-md-3">
                                         <span class="text-muted small d-block fw-semibold text-uppercase">Usuário</span>
                                         <span class="fw-semibold text-secondary">{{ emprestimo.cliente }}</span>
+                                    </div>
+                                    <div class="col-12 col-md-3">
+                                        <span class="text-muted small d-block fw-semibold text-uppercase">Secretário</span>
+                                        <span class="fw-semibold text-secondary">{{ emprestimo.secretario }}</span>
                                     </div>
                                 </div>
                             </div>

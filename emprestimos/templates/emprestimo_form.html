@@ -27,10 +27,11 @@
                                     </div>
                                 </div>
                                 <div class="mt-4">
-                                    <h4 class="fw-bold text-dark mb-3" style="font-size: 1.25rem;">
-                                        <i class="bi bi-book me-1 text-secondary"></i> Cópias retiradas no empréstimo
+                                    <h4 class="fw-bold text-dark mb-2" style="font-size: 1.25rem;">
+                                        <i class="bi bi-book me-1 text-secondary"></i> Cópias disponíveis para empréstimo
                                     </h4>
-                                    {% bootstrap_field form.copias wrapper_class='mb-2 fw-semibold text-secondary' %}
+                                   <span class="small text-secondary">Selecione a(s) cópia(s) retiradas no empréstimo.</span>
+                                    {% bootstrap_field form.copias show_label=False wrapper_class='mb-2 mt-3 fw-semibold text-secondary' %}
                                 </div>
                                 <hr class="text-light-subtle my-4">
                                 <div class="d-flex justify-content-end gap-2">

@@ -74,37 +74,6 @@ class EmprestimoAddView(SuccessMessageMixin, CreateView):
     #         else:
     #             return self.render_to_response(self.get_context_data(form=form))
 
-class EmprestimoUpdateView(SuccessMessageMixin, UpdateView):
-    model = Emprestimo
-    form_class = EmprestimoModelForm
-    template_name = 'emprestimo_form.html'
-    success_url = reverse_lazy('emprestimos')
-    success_message = 'Empréstimo alterado com sucesso!'
-
-    # def get_queryset(self):
-    #     return super().get_queryset().prefetch_related('copias_emprestimo_emprestimo')
-
-    # def get_context_data(self, **kwargs):
-    #     data = super().get_context_data(**kwargs)
-    #
-    #     if self.request.POST:
-    #         data['frm_inline'] = CopiasEmprestimoInLine(self.request.POST, instance=self.object)
-    #     else:
-    #         data['frm_inline'] = CopiasEmprestimoInLine(instance=self.object)
-    #     return data
-    #
-    # def form_valid(self, form):
-    #     context = self.get_context_data()
-    #     frm_inline = context['frm_inline']
-    #     with transaction.atomic():
-    #         if frm_inline.is_valid():
-    #             self.object = form.save()
-    #             frm_inline.instance = self.object
-    #             frm_inline.save()
-    #             return super().form_valid(form)
-    #         else:
-    #             return self.render_to_response(self.get_context_data(form=form))
-
 class EmprestimoDevolucao(View):
     template_name = 'emprestimo_devolver.html'
 

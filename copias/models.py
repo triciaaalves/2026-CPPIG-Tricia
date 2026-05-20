@@ -10,7 +10,7 @@ class Copia(models.Model):
     ]
     isbn = models.CharField('ISBN', max_length=13, unique=True)
     ano = models.CharField('Ano', max_length=4)
-    status = models.CharField('Status', max_length=70, choices=STATUS_CHOICE, default='1')
+    status = models.CharField('Status', max_length=70, choices=STATUS_CHOICE, default='D')
     livro = models.ForeignKey(livros.models.Livro, verbose_name='Livros', on_delete=models.PROTECT, related_name='livro')
 
     class Meta:

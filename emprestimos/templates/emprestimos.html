@@ -64,12 +64,12 @@
                                     <td class="text-secondary fw-medium">{{ emprestimo.cliente }}</td>
                                     <td class="text-secondary">{{ emprestimo.secretario }}</td>
                                     <td></td>
-                                    <td>{{ emprestimo.data_devolucao }}</td>
+                                    <td class="text-secondary">{{ emprestimo.data_devolucao }}</td>
                                     <td style="text-align: center">
                                        <a role="button" class="btn btn-sm rounded-3 me-1" style="background-color: rgba(8, 171, 159, 0.15); color: #08AB9F" href="{% url 'emprestimo_devolver' emprestimo.pk %}">
                                                 <i class="bi bi-check-circle-fill"></i>
                                         </a>
-                                        <a role="button" class="btn btn-sm rounded-3" style="background-color: rgba(236, 157, 50, 0.15) ; color: #ec9d32;" href="{% url 'emprestimo_editar' emprestimo.pk %}">
+                                        <a role="button" class="btn btn-sm rounded-3" style="background-color: rgba(236, 157, 50, 0.15) ; color: #ec9d32;" href="">
                                                 <i class="bi bi-eye-fill"></i>
                                         </a>
                                     </td>
