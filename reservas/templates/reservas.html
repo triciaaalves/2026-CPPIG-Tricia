@@ -39,16 +39,19 @@
                                 <th>Data prevista para retirada</th>
                                 <th>Cópia</th>
                                 <th>Usuário</th>
-                                <th style="width: 120px; text-align: center">Ações</th>
+                                <th style="width: 150px; text-align: center">Ações</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for reserva in object_list %}
                                 <tr>
-                                    <td class="text-secondary fw-medium"> {{ reserva.data_prevista_reserva }} </td>
+                                    <td class="text-secondary fw-medium"> {{ reserva.data_prevista_reserva | date:"d/m/Y - h:m" }} </td>
                                     <td class="fw-semibold text-dark"> {{ reserva.copia.livro.titulo }} </td>
                                     <td class="text-secondary"> {{ reserva.cliente }} </td>
                                     <td style="text-align: center">
+                                         <a role="button" class="btn btn-sm rounded-3 me-1" style="background-color: rgba(8, 171, 159, 0.15); color: #08AB9F" href="{% url 'reservas' %}">
+                                                <i class="bi bi-eye-fill"></i>
+                                        </a>
                                          <a role="button" class="btn btn-sm rounded-3 me-1" style="background-color: rgba(8, 171, 159, 0.15); color: #08AB9F" href="{% url 'reserva_editar' reserva.pk %}">
                                                 <i class="bi bi-pencil-fill"></i>
                                         </a>

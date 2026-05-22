@@ -50,41 +50,36 @@ class EmprestimoAddView(SuccessMessageMixin, CreateView):
     success_url = reverse_lazy('emprestimos')
     success_message = 'Empréstimo cadastrado com sucesso!'
 
-    # def get_context_data(self, **kwargs):
-    #     data = super().get_context_data(**kwargs)
-    #     if self.request.POST:
-    #         data['frm_inline'] = CopiasEmprestimoInLine(self.request.POST)
-    #     else:
-    #         data['frm_inline'] = CopiasEmprestimoInLine()
-    #     return data
-
-    # def form_valid(self, form):
-    #     context = self.get_context_data()
-    #     frm_inline = context['frm_inline']
-    #     with transaction.atomic():
-    #         if frm_inline.is_valid():
-    #             self.object = form.save()
-    #             frm_inline.instance = self.object
-    #             frm_inline.save()
-    #             for form in frm_inline:
-    #                 copia = Copia.objects.get(id=form.instance.copia.id)
-    #                 copia.status = 'E'
-    #                 copia.save()
-    #             return super().form_valid(form)
-    #         else:
-    #             return self.render_to_response(self.get_context_data(form=form))
+    def form_valid(self, form):
+        resposta = super().form_valid(form)
+        ids = list(
+            self.object.copias.values_list('id', flat=True)
+        )
+        for id in ids:
+            copia = Copia.objects.get(id=id)
+            copia.status = 'E'
+            copia.save()
+        return resposta
 
 class EmprestimoDevolucao(View):
     template_name = 'emprestimo_devolver.html'
 
     def get(self, request, pk):
         emprestimo = Emprestimo.objects.get(pk=pk)
+        # Se o usuário tentar colocar a URL de empréstimos já devolvidos
+        if emprestimo.data_devolucao:
+            messages.warning(request, 'Este empréstimo já foi devolvido anteriormente!')
+            return redirect('emprestimos')
         return render(request, self.template_name, {
             'emprestimo': emprestimo
         })
 
     def post(self, request, pk):
         emprestimo = Emprestimo.objects.get(pk=pk)
+        # Se o usuário tentar colocar a URL de empréstimos já devolvidos
+        if emprestimo.data_devolucao:
+            messages.warning(request, 'Este empréstimo já foi devolvido anteriormente!')
+            return redirect('emprestimos')
         emprestimo.data_devolucao = timezone.now()
         emprestimo.copias.update(status='D')
         emprestimo.save()

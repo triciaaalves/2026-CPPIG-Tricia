@@ -72,3 +72,5 @@ class ReservaDeleteView(SuccessMessageMixin, DeleteView):
         copia.status = 'D'
         copia.save()
         return super().form_valid(form)
+
+    # talvez aqui que coloca pra se passar 15 minutos

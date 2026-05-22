@@ -3,8 +3,8 @@
 {% load static %}
 {% block main %}
     <div class="container-fluid">
-		  {% block menu %} {% include 'menu.html' %}{% endblock %}
-		  {% block content %}
+         {% block menu %} {% include 'menu.html' %}{% endblock %}
+         {% block content %}
             <section class="section py-4">
                 <div class="container">
                   <div class="d-flex justify-content-between align-items-center mb-4">
@@ -44,14 +44,13 @@
                                 <th>Usuário</th>
                                 <th>Secretário</th>
                                 <th>Data de devolução prevista</th>
-                                <th>Data devolução</th>
                                 <th style="width: 120px; text-align: center">Ações</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for emprestimo in object_list %}
                                 <tr>
-                                    <td class="fw-semibold text-dark"> {{ emprestimo.data_retirada }} </td>
+                                    <td class="fw-semibold text-dark"> {{ emprestimo.data_retirada | date:"d/m/Y" }} </td>
                                     <td class="text-secondary">
                                         {% for copia in emprestimo.copias.all %}
                                             {% if forloop.last %}
@@ -63,15 +62,101 @@
                                     </td>
                                     <td class="text-secondary fw-medium">{{ emprestimo.cliente }}</td>
                                     <td class="text-secondary">{{ emprestimo.secretario }}</td>
-                                    <td></td>
-                                    <td class="text-secondary">{{ emprestimo.data_devolucao }}</td>
+                                    <td></td> <!-- Data de devolução prevista -->
                                     <td style="text-align: center">
-                                       <a role="button" class="btn btn-sm rounded-3 me-1" style="background-color: rgba(8, 171, 159, 0.15); color: #08AB9F" href="{% url 'emprestimo_devolver' emprestimo.pk %}">
+                                         {% if emprestimo.data_devolucao %}
+                                            <span class="btn btn-sm rounded-3 me-1 disabled" style="background-color: rgba(108, 117, 125, 0.1); color: #6c757d; border: none; cursor: not-allowed;">
                                                 <i class="bi bi-check-circle-fill"></i>
-                                        </a>
-                                        <a role="button" class="btn btn-sm rounded-3" style="background-color: rgba(236, 157, 50, 0.15) ; color: #ec9d32;" href="">
+                                            </span>
+                                        {% else %}
+                                            <a role="button" class="btn btn-sm rounded-3 me-1" style="background-color: rgba(8, 171, 159, 0.15); color: #08AB9F" href="{% url 'emprestimo_devolver' emprestimo.pk %}">
+                                                <i class="bi bi-check-circle-fill"></i>
+                                            </a>
+                                        {% endif %}
+                                            <a href="#" data-bs-toggle="modal" data-bs-target="#modal{{emprestimo.id}}" role="button" class="btn btn-sm rounded-3" style="background-color: rgba(236, 157, 50, 0.15) ; color: #ec9d32;">
                                                 <i class="bi bi-eye-fill"></i>
-                                        </a>
+                                            </a>
+                                        <div class="modal fade text-start" tabindex="-1" id="modal{{emprestimo.id}}" aria-hidden="true">
+                                            <div class="modal-dialog modal-lg modal-dialog-centered">
+                                                <div class="modal-content border-0 shadow-lg rounded-3 overflow-hidden">
+                                                    <div class="modal-header bg-light border-bottom border-light-subtle py-3 px-4">
+                                                        <h5 class="modal-title fs-5 fw-bold text-dark">
+                                                            <i class="bi bi-info-circle-fill text-secondary me-2"></i>Detalhes do Empréstimo
+                                                        </h5>
+                                                        <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body p-4 bg-white">
+                                                        <div class="container-fluid p-0">
+                                                            <div class="row g-3">
+                                                                <div class="col-12 col-md-6">
+                                                                    <div class="bg-light p-3 rounded-3 border border-light-subtle">
+                                                                        <span class="text-muted small d-block fw-semibold text-uppercase mb-1">Usuário</span>
+                                                                        <span class="fw-bold text-dark fs-5">{{ emprestimo.cliente }}</span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-12 col-md-6">
+                                                                    <div class="bg-light p-3 rounded-3 border border-light-subtle">
+                                                                        <span class="text-muted small d-block fw-semibold text-uppercase mb-1">Secretário</span>
+                                                                        <span class="fw-semibold text-secondary fs-5">{{ emprestimo.secretario }}</span>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col-12 col-md-4">
+                                                                    <div class="bg-light p-3 rounded-3 border border-light-subtle h-100">
+                                                                        <span class="text-muted small d-block fw-semibold text-uppercase mb-1">Data de Retirada</span>
+                                                                        <span class="fw-semibold text-dark fs-5">{{ emprestimo.data_retirada | date:"d/m/Y" }}</span>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col-12 col-md-4">
+                                                                    <div class="bg-light p-3 rounded-3 border border-light-subtle h-100">
+                                                                        <span class="text-muted small d-block fw-semibold text-uppercase mb-1">Prazo Limite</span>
+                                                                        <span class="fw-bold text-primary fs-5">{{ emprestimo.data_prevista | date:"d/m/Y" }}</span>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col-12 col-md-4">
+                                                                    <div class="bg-light p-3 rounded-3 border border-light-subtle h-100">
+                                                                        <span class="text-muted small d-block fw-semibold text-uppercase mb-1">Status da Entrega</span>
+
+                                                                        {% if emprestimo.data_devolucao %}
+                                                                            {% if emprestimo.data_devolucao > emprestimo.data_prevista %}
+                                                                                <span class="fw-bold text-danger fs-5 d-block">{{ emprestimo.data_devolucao | date:"d/m/Y" }}</span>
+                                                                                <span class="badge bg-danger-subtle text-danger border border-danger mt-1">
+                                                                                    <i class="bi bi-exclamation-triangle-fill me-1"></i>Com Atraso
+                                                                                </span>
+                                                                            {% else %}
+                                                                                <span class="fw-bold text-success fs-5 d-block">{{ emprestimo.data_devolucao | date:"d/m/Y" }}</span>
+                                                                                <span class="badge bg-success-subtle text-success border mt-1">
+                                                                                    <i class="bi bi-check-circle-fill me-1"></i>No Prazo
+                                                                                </span>
+                                                                            {% endif %}
+                                                                        {% else %}
+                                                                            <span class="text-secondary d-block fs-5 fw-medium">—</span>
+                                                                            <span class="badge bg-warning text-dark border border-warning mt-1">
+                                                                                <i class="bi bi-clock-history me-1"></i>Pendente
+                                                                            </span>
+                                                                        {% endif %}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-12">
+                                                                    <div class="bg-light p-3 rounded-3 border border-light-subtle">
+                                                                        <span class="text-muted small d-block fw-semibold text-uppercase mb-2">Cópias Emprestadas</span>
+                                                                        <div class="d-flex flex-wrap gap-2">
+                                                                            {% for copia in emprestimo.copias.all %}
+                                                                                <span class="badge bg-white text-secondary border border-light-subtle p-2 rounded-2 fw-medium shadow-sm">
+                                                                                    {{ copia }}
+                                                                                </span>
+                                                                            {% endfor %}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -86,6 +171,6 @@
                 </div>
             </section>
         {% endblock %}
-	  </div>
-	</div>
+      </div>
+    </div>
 {% endblock %}

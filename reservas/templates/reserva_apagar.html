@@ -22,7 +22,7 @@
                                 <div class="row g-3">
                                     <div class="col-12 col-md-6">
                                         <span class="text-muted small d-block fw-semibold text-uppercase">Data Prevista para Retirada</span>
-                                        <span class="fw-bold text-dark fs-5">{{ object.data_prevista_reserva }}</span>
+                                        <span class="fw-bold text-dark fs-5">{{ object.data_prevista_reserva | date:"d/m/Y - h:m" }}</span>
                                     </div>
                                     <div class="col-12 col-md-6">
                                         <span class="text-muted small d-block fw-semibold text-uppercase">Usuário da Reserva</span>
