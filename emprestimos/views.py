@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.paginator import Paginator
 from django.db import transaction
@@ -51,12 +53,9 @@ class EmprestimoAddView(SuccessMessageMixin, CreateView):
     success_message = 'Empréstimo cadastrado com sucesso!'
 
     def form_valid(self, form):
+        form.instance.data_prevista = timezone.now() + timedelta(days=7)
         resposta = super().form_valid(form)
-        ids = list(
-            self.object.copias.values_list('id', flat=True)
-        )
-        for id in ids:
-            copia = Copia.objects.get(id=id)
+        for copia in self.object.copias.all():
             copia.status = 'E'
             copia.save()
         return resposta

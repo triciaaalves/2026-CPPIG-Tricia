@@ -16,7 +16,7 @@ class Emprestimo(models.Model):
     class Meta:
         verbose_name = 'Empréstimo'
         verbose_name_plural = 'Empréstimos'
-        ordering = ['data_retirada']
+        ordering = ['-data_retirada']
 
     def __str__(self):
         return self.data_retirada

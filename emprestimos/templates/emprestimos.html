@@ -62,7 +62,7 @@
                                     </td>
                                     <td class="text-secondary fw-medium">{{ emprestimo.cliente }}</td>
                                     <td class="text-secondary">{{ emprestimo.secretario }}</td>
-                                    <td></td> <!-- Data de devolução prevista -->
+                                    <td class="text-secondary">{{ emprestimo.data_prevista }}</td>
                                     <td style="text-align: center">
                                          {% if emprestimo.data_devolucao %}
                                             <span class="btn btn-sm rounded-3 me-1 disabled" style="background-color: rgba(108, 117, 125, 0.1); color: #6c757d; border: none; cursor: not-allowed;">
