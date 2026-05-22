@@ -3,10 +3,17 @@ from django.core.paginator import Paginator
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.contrib import messages
 
+from datetime import timedelta
+from django.db import transaction
+from django.shortcuts import render, redirect
+from django.utils import timezone
+from django.views import View
 from copias.models import Copia
 from reservas.forms import ReservaModelForm, ReservaListForm
 from reservas.models import Reserva
+from emprestimos.models import Emprestimo
 from django.urls import reverse_lazy
+from django.contrib.auth.models import User
 
 class ReservasView(ListView):
     model = Reserva
@@ -22,6 +29,23 @@ class ReservasView(ListView):
         return context
 
     def get_queryset(self):
+        # Calculamos o limite tolerável (Hora atual menos 15 minutos)
+        limite_atraso = timezone.now() - timedelta(minutes=15)
+
+        # Buscamos reservas não retiradas que já passaram desse limite
+        reservas_expiradas = Reserva.objects.filter(
+            data_retirada__isnull=True,
+            # __lt = less than
+            # Ele tá pegando a data prevista do usuário e vendo se é menor que o limite atraso
+            data_prevista_reserva__lt=limite_atraso
+        )
+
+        # Liberamos as cópias e deletamos as reservas expiradas
+        for r in reservas_expiradas:
+            r.copia.status = 'D'
+            r.copia.save()
+            r.delete()
+
         qs = super(ReservasView, self).get_queryset()
         if self.request.GET:
             form = ReservaListForm(self.request.GET)
@@ -66,11 +90,39 @@ class ReservaDeleteView(SuccessMessageMixin, DeleteView):
     def form_valid(self, form):
         reserva_id = self.kwargs.get('pk')
         copia_id = Reserva.objects.get(id=reserva_id).copia.id
-        print(copia_id)
         copia = Copia.objects.get(id=copia_id)
-        print(copia.status)
         copia.status = 'D'
         copia.save()
         return super().form_valid(form)
 
-    # talvez aqui que coloca pra se passar 15 minutos
+class ReservaRetirada(View):
+    template_name = 'reserva_retirar.html'
+
+    def get(self, request, pk):
+        reserva = Reserva.objects.get(pk=pk)
+        if reserva.data_retirada:
+            messages.warning(request, 'Esta retirada já foi realizada anteriormente!')
+            return redirect('reservas')
+        return render(request, self.template_name, {
+            'reserva': reserva
+        })
+
+    def post(self, request, pk):
+        reserva = Reserva.objects.get(pk=pk)
+        if reserva.data_retirada:
+            messages.warning(request, 'Esta retirada já foi realizada anteriormente!')
+            return redirect('reservas')
+
+        reserva.data_retirada = timezone.now()
+        reserva.save()
+        copia = reserva.copia
+        copia.status = 'E'
+        copia.save()
+        novo_emprestimo = Emprestimo.objects.create(
+            cliente=reserva.cliente,
+            data_retirada=timezone.now(),
+            data_prevista=timezone.now() + timedelta(days=7)
+            # como faço para o secretário???
+        )
+        novo_emprestimo.copias.add(copia)
+        return redirect('reservas')

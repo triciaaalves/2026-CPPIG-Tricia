@@ -9,8 +9,8 @@ class Emprestimo(models.Model):
     data_retirada = models.DateField(default=timezone.now)
     data_devolucao = models.DateField(null=True, blank=True)
     data_prevista = models.DateField(null=True, blank=True)
-    cliente = models.ForeignKey(Cliente, verbose_name='Clientes', on_delete=models.PROTECT)
-    secretario = models.ForeignKey(Secretario, verbose_name='Secretários', on_delete=models.PROTECT)
+    cliente = models.ForeignKey(Cliente, verbose_name='Usuários', on_delete=models.PROTECT)
+    secretario = models.ForeignKey(Secretario, on_delete=models.SET_NULL, null=True, blank=True)
     copias = models.ManyToManyField(Copia)
 
     class Meta:

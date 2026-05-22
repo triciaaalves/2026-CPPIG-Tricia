@@ -1,0 +1,57 @@
+{% extends 'principal.html' %}
+{% load django_bootstrap5 %}
+{% block main %}
+    <div class="container-fluid">
+         {% block menu %} {% include 'menu.html' %}{% endblock %}
+         {% block content %}
+            <section class="py-4">
+                <div class="container">
+                    <div class="mb-4">
+                        <h1 class="fw-bold mb-1" style="font-size: 2.2rem;">Confirmar Retirada</h1>
+                    </div>
+                    <div class="card shadow-sm border-light-subtle rounded-3 bg-white mb-5">
+                        <div class="card-body p-4">
+                            <div class="alert alert-warning border-0 rounded-3 d-flex align-items-center mb-4">
+                                <i class="bi bi-exclamation-triangle-fill fs-4 me-3 text-warning"></i>
+                                <div>
+                                    <h6 class="fw-bold mb-0 text-dark">Atenção!</h6>
+                                </div>
+                            </div>
+                            <div class="p-3 bg-light rounded-3 border border-light-subtle mb-4">
+                                <div class="row g-3">
+                                    <div class="col-12 col-md-5">
+                                        <span class="text-muted small d-block fw-semibold text-uppercase">Data Prevista para Retirada</span>
+                                        <span class="fw-bold text-dark fs-5">{{ reserva.data_prevista_reserva | date:"d/m/Y - h:i" }}</span>
+                                    </div>
+                                    <div class="col-12 col-md-3">
+                                        <span class="text-muted small d-block fw-semibold text-uppercase">Usuário</span>
+                                        <span class="fw-semibold text-secondary">{{ reserva.cliente }}</span>
+                                    </div>
+                                    <div class="col-12 col-md-4">
+                                        <span class="text-muted small d-block fw-semibold text-uppercase">Livro / Cópia</span>
+                                        <span class="fw-semibold text-secondary">{{ reserva.copia.livro.titulo }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="text-dark fw-medium mb-4">
+                                Confirma a retirada definitiva desta cópia reservada?
+                            </p>
+                            <form method="POST" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <hr class="text-light-subtle my-4">
+                                <div class="d-flex justify-content-end gap-2">
+                                    <a href="{% url 'reservas' %}" class="btn btn-light border fw-medium px-4 py-2 rounded-3 text-secondary shadow-sm">
+                                       Cancelar, manter reserva
+                                    </a>
+                                    <button type="submit" class="btn btn-success fw-bold px-4 py-2 rounded-3 shadow-sm">
+                                        Sim, realizar retirada
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        {% endblock %}
+    </div>
+{% endblock %}
