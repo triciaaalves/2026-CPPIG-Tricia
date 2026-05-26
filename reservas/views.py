@@ -68,6 +68,19 @@ class ReservaAddView(SuccessMessageMixin, CreateView):
     success_message = 'Reserva cadastrada com sucesso!'
 
     def form_valid(self, form):
+        # Bloqueia criação de reserva se possuir livro em atraso
+        cliente = form.cleaned_data.get('cliente')
+        tem_atraso = Emprestimo.objects.filter(
+            cliente=cliente,
+            data_devolucao__isnull=True,
+            data_prevista__lt=timezone.now()
+        ).exists()
+
+        if tem_atraso:
+            # Mostra o erro direto no campo "cliente" do formulário HTML
+            form.add_error('cliente', 'Este usuário possui empréstimos em atraso e não pode reservar livros.')
+            return self.form_invalid(form)
+
         copia = form.cleaned_data['copia']
         copia = Copia.objects.get(id=copia.id)
         copia.status = 'R'
@@ -103,6 +116,17 @@ class ReservaRetirada(View):
         if reserva.data_retirada:
             messages.warning(request, 'Esta retirada já foi realizada anteriormente!')
             return redirect('reservas')
+
+        tem_atraso = Emprestimo.objects.filter(
+            cliente=reserva.cliente,
+            data_devolucao__isnull=True,
+            data_prevista__lt=timezone.now()
+        ).exists()
+
+        if tem_atraso:
+            messages.error(request, f'Operação cancelada! O usuário "{reserva.cliente}" possui livros em atraso.')
+            return redirect('reservas')
+
         return render(request, self.template_name, {
             'reserva': reserva
         })
@@ -111,6 +135,16 @@ class ReservaRetirada(View):
         reserva = Reserva.objects.get(pk=pk)
         if reserva.data_retirada:
             messages.warning(request, 'Esta retirada já foi realizada anteriormente!')
+            return redirect('reservas')
+
+        tem_atraso = Emprestimo.objects.filter(
+            cliente=reserva.cliente,
+            data_devolucao__isnull=True,
+            data_prevista__lt=timezone.now()
+        ).exists()
+
+        if tem_atraso:
+            messages.error(request, 'Operação cancelada! O usuário possui livros em atraso.')
             return redirect('reservas')
 
         reserva.data_retirada = timezone.now()

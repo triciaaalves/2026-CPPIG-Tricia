@@ -1,14 +1,12 @@
 from datetime import timedelta
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.paginator import Paginator
-from django.db import transaction
 from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.views import View
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
+from django.views.generic import ListView, CreateView
 from django.contrib import messages
 
-from copias.models import Copia
 from emprestimos.forms import EmprestimoModelForm, EmprestimoListForm
 from emprestimos.models import Emprestimo
 from django.urls import reverse_lazy
@@ -52,7 +50,19 @@ class EmprestimoAddView(SuccessMessageMixin, CreateView):
     success_message = 'Empréstimo cadastrado com sucesso!'
 
     def form_valid(self, form):
-        form.instance.data_prevista = timezone.now() + timedelta(days=7)
+        cliente = form.cleaned_data.get('cliente')
+        tem_atraso = Emprestimo.objects.filter(
+            cliente=cliente,
+            data_devolucao__isnull=True,
+            data_prevista__lt=timezone.now()
+        ).exists()
+
+        if tem_atraso:
+            form.add_error('cliente', 'Operação cancelada! O usuário possui livros em atraso.')
+            return self.form_invalid(form)
+
+        # MUDEII
+        form.instance.data_prevista = timezone.now() + timedelta(days=1)
         resposta = super().form_valid(form)
         for copia in self.object.copias.all():
             copia.status = 'E'

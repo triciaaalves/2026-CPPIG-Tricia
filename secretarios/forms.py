@@ -1,3 +1,5 @@
+from datetime import date
+
 from django import forms
 from django.utils import timezone
 
@@ -9,7 +11,7 @@ class SecretarioModelForm(forms.ModelForm):
         fields = ['nome', 'data_nascimento', 'email']
         widgets = {
             'data_nascimento': forms.DateInput(
-                attrs={'type': 'date', 'class': 'form-control'}
+                attrs={'type': 'date', 'max': date.today().strftime("%Y-%m-%d"), 'class': 'form-control'}
             ),
         }
 

@@ -1,3 +1,4 @@
+from datetime import datetime
 from django import forms
 from django.utils import timezone
 
@@ -15,8 +16,8 @@ class ReservaModelForm(forms.ModelForm):
         fields = '__all__'
         widgets = {
             'data_prevista_reserva': forms.DateTimeInput(
-                attrs={'type': 'datetime-local', 'class': 'form-control'},
-                format='%Y/%m/%dT%H:%M'
+                attrs={'type': 'datetime-local', 'min': datetime.today().strftime("%Y-%m-%dT%H:%M"), 'class': 'form-control',},
+                format='%Y/%m/%dT%H:%M',
             ),
         }
 

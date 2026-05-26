@@ -24,7 +24,7 @@ class ClientesView(ListView):
             listagem = paginator.get_page(self.request.GET.get('page'))
             return listagem
         else:
-            return messages.info(self.request, 'Não existem clientes cadastrados!')
+            return messages.info(self.request, 'Não existem usuários cadastrados!')
 
 class ClienteAddView(SuccessMessageMixin, CreateView):
     model = Cliente
