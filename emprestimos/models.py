@@ -1,6 +1,5 @@
 from django.db import models
 from django.utils import timezone
-
 from clientes.models import Cliente
 from copias.models import Copia
 from secretarios.models import Secretario

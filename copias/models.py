@@ -16,6 +16,7 @@ class Copia(models.Model):
     class Meta:
         verbose_name = 'Cópia'
         verbose_name_plural = 'Cópias'
+        ordering = ['livro__titulo']
 
     def __str__(self):
-        return f"{self.livro.titulo}"
+        return f"{self.isbn} - {self.livro.titulo}"

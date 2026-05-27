@@ -19,6 +19,7 @@ class ReservaModelForm(forms.ModelForm):
                 attrs={'type': 'datetime-local', 'min': datetime.today().strftime("%Y-%m-%dT%H:%M"), 'class': 'form-control',},
                 format='%Y/%m/%dT%H:%M',
             ),
+            'copias': forms.CheckboxSelectMultiple()
         }
 
         error_messages = {
@@ -27,7 +28,7 @@ class ReservaModelForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['copia'].queryset=Copia.objects.filter(status='D')
+        self.fields['copias'].queryset=Copia.objects.filter(status='D')
         self.fields['data_prevista_reserva'].input_formats=['%Y-%m-%dT%H:%M']
         if self.instance and self.instance.data_prevista_reserva:
             self.initial['data_prevista_reserva'] = timezone.localtime(

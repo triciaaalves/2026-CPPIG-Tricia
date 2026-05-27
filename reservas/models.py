@@ -1,13 +1,11 @@
 from django.db import models
-
 from clientes.models import Cliente
 from copias.models import Copia
-
 
 class Reserva(models.Model):
     data_prevista_reserva = models.DateTimeField()
     cliente = models.ForeignKey(Cliente, verbose_name='Usuários', on_delete=models.PROTECT)
-    copia = models.ForeignKey(Copia, verbose_name='Cópias', on_delete=models.PROTECT)
+    copias = models.ManyToManyField(Copia)
     data_retirada = models.DateTimeField(null=True, blank=True)
 
     class Meta:

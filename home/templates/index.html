@@ -21,70 +21,36 @@
         </div>
     </section>
 
-    <section class="container my-5 px-2 position-relative">
-        <div class="mb-4">
-            <h3 class="fw-bold mb-1 text-dark">Livros em Destaque</h3>
-        </div>
-
-        <div class="position-relative">
-            <div class="d-flex gap-4 overflow-x-auto pb-4 pt-2 scroll-suave" id="lista-livros" style="scrollbar-width: none; -ms-overflow-style: none;">
-                <!--
-                  depois substituir tudo isso aqui por um:
-                  {% for livro in livros_destaque %} ... {% endfor %}
-                -->
-
-                <div class="card border border-light-subtle rounded-4 p-3 bg-white flex-shrink-0 efeito-card" style="width: 240px;">
+    <section class="container my-5 px-1">
+    <div class="mb-4">
+        <h3 class="fw-bold mb-1">Livros em Destaque</h3>
+    </div>
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-4">
+        {% for livro in livros_destaque %}
+            <div class="col">
+                <div class="card h-100 border border-light-subtle rounded-4 p-3 bg-white efeito-card shadow-sm">
                     <div class="rounded-3 overflow-hidden mb-3 shadow-sm" style="height: 310px;">
-                        <img src="https://images.unsplash.com/photo-1543002588-bfa74002ed7e?q=80&w=240&h=310&fit=crop" class="w-100 h-100" style="object-fit: cover;" alt="Capa Dom Casmurro">
+                        {% if livro.foto %}
+                            <img src="{{ livro.foto.url }}" class="w-100 h-100" style="object-fit: cover;" alt="Capa {{ livro.titulo }}">
+                        {% else %}
+                            <img src="https://images.unsplash.com/photo-1543002588-bfa74002ed7e?q=80&w=240&h=310&fit=crop" class="w-100 h-100" style="object-fit: cover;" alt="Capa padrão">
+                        {% endif %}
                     </div>
                     <div class="px-1">
-                        <h6 class="fw-bold text-dark mb-1 text-truncate" title="Dom Casmurro">Dom Casmurro</h6>
-                        <p class="text-secondary small mb-0 text-truncate">Machado de Assis</p>
+                        <h6 class="fw-bold text-dark mb-1 text-truncate" title="{{ livro.titulo }}">
+                            {{ livro.titulo }}
+                        </h6>
+                        <p class="text-secondary small mb-0 text-truncate">
+                            {{ livro.autor }} </p>
                     </div>
                 </div>
-
-                <div class="card border border-light-subtle rounded-4 p-3 bg-white flex-shrink-0 efeito-card" style="width: 240px;">
-                    <div class="rounded-3 overflow-hidden mb-3 shadow-sm" style="height: 310px;">
-                        <img src="https://images.unsplash.com/photo-1532012197267-da84d127e765?q=80&w=240&h=310&fit=crop" class="w-100 h-100" style="object-fit: cover;" alt="Capa O Alquimista">
-                    </div>
-                    <div class="px-1">
-                        <h6 class="fw-bold text-dark mb-1 text-truncate" title="O Alquimista">O Alquimista</h6>
-                        <p class="text-secondary small mb-0 text-truncate">Paulo Coelho</p>
-                    </div>
-                </div>
-
-                <div class="card border border-light-subtle rounded-4 p-3 bg-white flex-shrink-0 efeito-card" style="width: 240px;">
-                    <div class="rounded-3 overflow-hidden mb-3 shadow-sm" style="height: 310px;">
-                        <img src="https://images.unsplash.com/photo-1512820790803-83ca734da794?q=80&w=240&h=310&fit=crop" class="w-100 h-100" style="object-fit: cover;" alt="Capa O Senhor dos Anéis">
-                    </div>
-                    <div class="px-1">
-                        <h6 class="fw-bold text-dark mb-1 text-truncate" title="O Senhor dos Anéis">O Senhor dos Anéis</h6>
-                        <p class="text-secondary small mb-0 text-truncate">J.R.R. Tolkien</p>
-                    </div>
-                </div>
-
-                <div class="card border border-light-subtle rounded-4 p-3 bg-white flex-shrink-0 efeito-card" style="width: 240px;">
-                    <div class="rounded-3 overflow-hidden mb-3 shadow-sm" style="height: 310px;">
-                        <img src="https://images.unsplash.com/photo-1495640388908-05fa85288e61?q=80&w=240&h=310&fit=crop" class="w-100 h-100" style="object-fit: cover;" alt="Capa Sapiens">
-                    </div>
-                    <div class="px-1">
-                        <h6 class="fw-bold text-dark mb-1 text-truncate" title="Sapiens">Sapiens</h6>
-                        <p class="text-secondary small mb-0 text-truncate">Yuval Noah Harari</p>
-                    </div>
-                </div>
-
-                <div class="card border border-light-subtle rounded-4 p-3 bg-white flex-shrink-0 efeito-card" style="width: 240px;">
-                    <div class="rounded-3 overflow-hidden mb-3 shadow-sm" style="height: 310px;">
-                        <img src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?q=80&w=240&h=310&fit=crop" class="w-100 h-100" style="object-fit: cover;" alt="Capa">
-                    </div>
-                    <div class="px-1">
-                        <h6 class="fw-bold text-dark mb-1 text-truncate" title="1984">1984</h6>
-                        <p class="text-secondary small mb-0 text-truncate">George Orwell</p>
-                    </div>
-                </div>
-
             </div>
-
-        </div>
-    </section>
+        {% empty %}
+            <div class="col-12 text-center text-muted py-5">
+                <i class="bi bi-star mb-2 fs-3 d-block"></i>
+                <p class="mb-0">Nenhum livro em destaque no momento</p>
+            </div>
+        {% endfor %}
+    </div>
+</section>
 {% endblock %}

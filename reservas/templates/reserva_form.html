@@ -20,14 +20,18 @@
                                 {% endif %}
                                 <div class="row g-3">
                                     <div class="col-12 col-md-6">
-                                        {% bootstrap_field form.copia wrapper_class='mb-2 fw-semibold text-secondary' %}
-                                    </div>
-                                    <div class="col-12 col-md-6">
                                         {% bootstrap_field form.cliente wrapper_class='mb-2 fw-semibold text-secondary' %}
                                     </div>
                                     <div class="col-12 col-md-6">
                                         {% bootstrap_field form.data_prevista_reserva wrapper_class='mb-2 fw-semibold text-secondary' %}
                                     </div>
+                                </div>
+                                <div class="mt-4">
+                                    <h4 class="fw-bold text-dark mb-2" style="font-size: 1.25rem;">
+                                        <i class="bi bi-book me-1 text-secondary"></i> Cópias disponíveis para reserva
+                                    </h4>
+                                   <span class="small text-secondary">Selecione a(s) cópia(s) reservadas.</span>
+                                    {% bootstrap_field form.copias show_label=False wrapper_class='mb-2 mt-3 fw-semibold text-secondary' %}
                                 </div>
                                 <hr class="text-light-subtle my-4">
                                 <div class="d-flex justify-content-end gap-2">

@@ -36,8 +36,8 @@
                     <table class="table table-hover align-middle mb-0 custom-table">
                         <thead>
                             <tr>
-                                <th>Data prevista para retirada</th>
-                                <th>Cópia</th>
+                                <th>Previsão de retirada</th>
+                                <th>Cópias</th>
                                 <th>Usuário</th>
                                 <th style="width: 150px; text-align: center">Ações</th>
                             </tr>
@@ -45,8 +45,16 @@
                         <tbody>
                             {% for reserva in object_list %}
                                 <tr>
-                                    <td class="text-secondary fw-medium"> {{ reserva.data_prevista_reserva | date:"d/m/Y - H:i" }} </td>
-                                    <td class="fw-semibold text-dark"> {{ reserva.copia.livro.titulo }} </td>
+                                    <td class="fw-semibold text-dark"> {{ reserva.data_prevista_reserva | date:"d/m/Y - H:i" }} </td>
+                                    <td class="text-secondary">
+                                        {% for copia in reserva.copias.all %}
+                                            {% if forloop.last %}
+                                                {{ copia.livro.titulo }}
+                                            {% else %}
+                                                {{ copia.livro.titulo }},
+                                            {% endif %}
+                                        {% endfor %}
+                                    </td>
                                     <td class="text-secondary"> {{ reserva.cliente }} </td>
                                     <td style="text-align: center">
 
@@ -81,30 +89,45 @@
                                                     <div class="modal-body p-4 bg-white">
                                                         <div class="container-fluid p-0">
                                                             <div class="row g-3">
-                                                                <div class="col-12 col-md-6">
+
+                                                                <div class="col-12">
                                                                     <div class="bg-light p-3 rounded-3 border border-light-subtle">
                                                                         <span class="text-muted small d-block fw-semibold text-uppercase mb-1">Usuário</span>
                                                                         <span class="fw-bold text-dark fs-5">{{ reserva.cliente }}</span>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-12 col-md-6">
-                                                                    <div class="bg-light p-3 rounded-3 border border-light-subtle">
-                                                                        <span class="text-muted small d-block fw-semibold text-uppercase mb-1">Livro Cadastrado</span>
-                                                                        <span class="fw-bold text-dark fs-5">{{ reserva.copia.livro.titulo }}</span>
-                                                                    </div>
-                                                                </div>
+
                                                                 <div class="col-12 col-sm-6">
                                                                     <div class="bg-light p-3 rounded-3 border border-light-subtle">
                                                                         <span class="text-muted small d-block fw-semibold text-uppercase mb-1">Horário Agendado</span>
                                                                         <span class="fw-semibold text-primary fs-5">{{ reserva.data_prevista_reserva | date:"d/m/Y H:i" }}</span>
                                                                     </div>
                                                                 </div>
+
                                                                 <div class="col-12 col-sm-6">
                                                                     <div class="bg-light p-3 rounded-3 border border-light-subtle">
                                                                         <span class="text-muted small d-block fw-semibold text-uppercase mb-1">Retirada em</span>
                                                                         <span class="fw-bold text-success fs-5">
-                                                                            <i class="bi bi-calendar-check-fill me-1"></i>{{ reserva.data_retirada | date:"d/m/Y h:i" }}
+                                                                            <i class="bi bi-calendar-check-fill me-1"></i>
+                                                                            {% if reserva.data_retirada %}
+                                                                                {{ reserva.data_retirada | date:"d/m/Y H:i" }}
+                                                                            {% else %}
+                                                                                <span class="text-muted fw-normal fs-6">Pendente</span>
+                                                                            {% endif %}
                                                                         </span>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col-12">
+                                                                    <div class="bg-light p-3 rounded-3 border border-light-subtle">
+                                                                        <span class="text-muted small d-block fw-semibold text-uppercase mb-2">Cópias reservadas</span>
+                                                                        <div class="d-flex flex-wrap gap-2">
+                                                                            {% for copia in reserva.copias.all %}
+                                                                                <span class="badge bg-white text-secondary border border-light-subtle p-2 rounded-2 fw-medium shadow-sm">
+                                                                                    {{ copia }}
+                                                                                </span>
+                                                                            {% endfor %}
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>

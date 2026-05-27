@@ -7,6 +7,7 @@ class Livro(models.Model):
     genero = models.CharField('Gênero', max_length=70)
     autor = models.CharField('Autor', max_length=70)
     editora = models.CharField('Editora', max_length=70)
+    destaque = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = 'Livro'
