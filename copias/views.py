@@ -51,8 +51,19 @@ class CopiaDeleteView(SuccessMessageMixin, DeleteView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         success_url = self.get_success_url()
-        try:
-            return super().post(request, *args, **kwargs)
-        except ProtectedError:
-            messages.error(request, f'A cópia {self.object} não pode ser excluída. ' f'Essa cópia está registrada em algum empréstimo/reserva')
-        return redirect(success_url)
+
+        if self.object.status == 'E':
+            messages.error(
+                request,
+                f'Não é possível excluir a cópia ISBN: {self.object.isbn}! '
+                f'Ela está em posse de um aluno neste momento (Emprestada).'
+            )
+            return redirect(success_url)
+
+        if self.object.status == 'R':
+            messages.error(
+                request,
+                f'Não é possível excluir a cópia ISBN: {self.object.isbn}! '
+                f'Ela está reservada para uma retirada futura.'
+            )
+            return redirect(success_url)

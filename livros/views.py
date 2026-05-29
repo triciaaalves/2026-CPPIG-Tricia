@@ -54,5 +54,5 @@ class LivroDeleteView(SuccessMessageMixin, DeleteView):
         try:
             return super().post(request, *args, **kwargs)
         except ProtectedError:
-            messages.error(request, f'O livro {self.object} não pode ser excluído. ' f'Esse livro possui cópias e/ou está registrado em algum empréstimo/reserva')
+            messages.error(request, f'O livro {self.object} não pode ser excluído. ' f'Esse livro possui cópias.')
         return redirect(success_url)
