@@ -1,0 +1,56 @@
+{% extends 'principal.html' %}
+{% load django_bootstrap5 %}
+{% block main %}
+    <div class="container-fluid">
+         {% block menu %} {% include 'menu.html' %}{% endblock %}
+         {% block content %}
+            <section class="py-4">
+                <div class="container">
+                    <div class="mb-4">
+                        <h1 class="fw-bold mb-1" style="font-size: 2.2rem;">Confirmar Exclusão</h1>
+                    </div>
+                    <div class="card shadow-sm border-light-subtle rounded-3 bg-white mb-5">
+                        <div class="card-body p-4">
+                            <div class="alert alert-warning border-0 rounded-3 d-flex align-items-center mb-4">
+                                <i class="bi bi-exclamation-triangle-fill fs-4 me-3 text-warning"></i>
+                                <div>
+                                    <h6 class="fw-bold mb-0 text-dark">Atenção!</h6>
+                                    <span class="small text-secondary">A remoção desta coleção afetará a organização dos livros que fazem parte dela.</span>
+                                </div>
+                            </div>
+                            <div class="p-3 bg-light rounded-3 border border-light-subtle mb-4">
+                                <div class="row g-3">
+                                    <div class="col-12 col-md-8">
+                                        <span class="text-muted small d-block fw-semibold text-uppercase">Nome da Coleção</span>
+                                        <span class="fw-bold text-dark fs-5">{{ object.nome }}</span>
+                                    </div>
+                                    <div class="col-12 col-md-4">
+                                        <span class="text-muted small d-block fw-semibold text-uppercase">Tipo de Acesso</span>
+                                        <span class="fw-semibold text-secondary">{{ object.get_tipo_display }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="text-dark fw-medium mb-4">
+                                Confirma a exclusão definitiva desta coleção do sistema? (Os livros atrelados a ela não serão apagados).
+                            </p>
+                            <form method="POST" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                {% bootstrap_form form %}
+                                <hr class="text-light-subtle my-4">
+                                <div class="d-flex justify-content-end gap-2">
+                                    <a href="{% url 'colecoes' %}" class="btn btn-light border fw-medium px-4 py-2 rounded-3 text-secondary shadow-sm">
+                                       Cancelar, manter registro
+                                    </a>
+                                    <button type="submit" class="btn btn-danger fw-bold px-4 py-2 rounded-3 shadow-sm">
+                                        <i class="bi bi-trash3-fill me-1"></i> Sim, excluir coleção
+                                    </button>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </section>
+        {% endblock %}
+    </div>
+{% endblock %}

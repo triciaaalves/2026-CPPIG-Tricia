@@ -11,7 +11,9 @@ from emprestimos.models import Emprestimo
 from reservas.models import Reserva
 from django.urls import reverse_lazy
 from django.db.models import Count
-
+from .models import Emprestimo
+from copias.models import Copia
+from django.shortcuts import render, redirect, get_object_or_404
 
 class EmprestimosView(ListView):
     model = Emprestimo
@@ -53,8 +55,10 @@ class EmprestimoAddView(SuccessMessageMixin, CreateView):
 
     def form_valid(self, form):
         cliente = form.cleaned_data.get('cliente')
-        copias_selecionadas = form.cleaned_data.get('copias').count() # quantas cópias selecionadas no formulário
+        copias_selecionadas = form.cleaned_data.get('copias')
+        qtd_copias_selecionadas = copias_selecionadas.count()
 
+        # ---------- VERIFICAÇÃO DE EMPRÉSTIMOS EM ATRASO ---------- #
         tem_atraso = Emprestimo.objects.filter(
             cliente=cliente,
             data_devolucao__isnull=True,
@@ -62,23 +66,20 @@ class EmprestimoAddView(SuccessMessageMixin, CreateView):
         ).exists()
 
         if tem_atraso:
-            form.add_error('cliente', 'Operação cancelada! O usuário possui livros em atraso.')
+            form.add_error('cliente', 'Este usuário possui empréstimos em atraso e não pode retirar livros.')
             return self.form_invalid(form)
 
-        limite_livros = 5
+        # ---------- VERIFICAÇÃO DE LIMITE DE LIVROS ---------- #
+        limite_livros = 7
 
-        copias_ja_emprestadas = Emprestimo.objects.filter(
-            cliente=cliente,
-            data_devolucao__isnull=True
-        ).aggregate(total=Count('copias'))['total'] or 0
+        emprestimos_ativos = Emprestimo.objects.filter(cliente=cliente, data_devolucao__isnull=True)
+        copias_ja_emprestadas = sum(e.copias.count() for e in emprestimos_ativos)
 
-        copias_ja_reservadas = Reserva.objects.filter(
-            cliente=cliente,
-            data_retirada__isnull=True
-        ).aggregate(total=Count('copias'))['total'] or 0
+        reservas_ativas = Reserva.objects.filter(cliente=cliente, data_retirada__isnull=True)
+        copias_ja_reservadas = sum(r.copias.count() for r in reservas_ativas)
 
         total = copias_ja_emprestadas + copias_ja_reservadas
-        total_futuro = total + copias_selecionadas
+        total_futuro = total + qtd_copias_selecionadas
 
         if total_futuro > limite_livros:
             disponivel = limite_livros - total
@@ -88,17 +89,145 @@ class EmprestimoAddView(SuccessMessageMixin, CreateView):
                 mensagem = f'O usuário pode retirar no máximo {limite_livros} cópias.'
             else:
                 mensagem = f'O usuário já tem {total} livro(s). Ele só pode retirar mais {disponivel} cópia(s).'
-
             form.add_error('copias', mensagem)
             return self.form_invalid(form)
 
-        # MUDEII
-        form.instance.data_prevista = timezone.now() + timedelta(days=1)
+        # ---------- VERIFICAÇÃO DE COLEÇÃO EXCLUSIVA ---------- #
+        for copia in copias_selecionadas:
+            # getattr (objeto, nome do atributo, padrão)
+            # Verifica se o livro possui coleção, se não é None para não dar erro
+            colecao = getattr(copia.livro, 'colecao', None)
+
+            if colecao and getattr(colecao, 'tipo', None) == 'E':
+                fim_excl = colecao.fim_exclusividade
+
+                # Se a exclusividade ainda está ativa E o dono não é o cliente atual, bloqueia
+                if fim_excl and fim_excl >= timezone.now().date():
+                    if colecao.dono != cliente:
+                        form.add_error(
+                            'copias',
+                            f'A coleção "{colecao.nome}" está exclusiva até {colecao.fim_exclusividade.strftime("%d/%m/%Y")} para outro usuário: {colecao.dono}.'
+                        )
+                        return self.form_invalid(form)
+
+        # Define prazo previsto padrão do empréstimo (7 dias)
+        form.instance.data_prevista = timezone.now() + timedelta(days=7)
         resposta = super().form_valid(form)
+
+        # ---------- SALVAMENTO E ATUALIZAÇÃO DOS STATUS ---------- #
         for copia in self.object.copias.all():
             copia.status = 'E'
             copia.save()
+
+            # Gerencia o ciclo de exclusividade da Coleção
+            colecao = getattr(copia.livro, 'colecao', None)
+            if colecao and getattr(colecao, 'tipo', None) == 'E':
+                if not colecao.fim_exclusividade or colecao.fim_exclusividade < timezone.now().date():
+                    colecao.dono = cliente
+                    colecao.fim_exclusividade = timezone.now().date() + timedelta(days=10)
+                    colecao.save()
+
+        # ---------- VERIFIÇÃO DE COLEÇÃO (SUGESTÃO DE COMBOS) ---------- #
+        livros_emprestados_ids = [c.livro.id for c in self.object.copias.all()]
+        colecoes_encontradas = []
+
+        for copia in self.object.copias.all():
+            if hasattr(copia.livro, 'colecao') and copia.livro.colecao:
+                if copia.livro.colecao not in colecoes_encontradas:
+                    colecoes_encontradas.append(copia.livro.colecao)
+
+        if colecoes_encontradas:
+            # Verifica se existem OUTRAS cópias no acervo que estão DISPONÍVEIS ('D') destas coleções
+            outras_copias_disponiveis = Copia.objects.filter(
+                livro__colecao__in=colecoes_encontradas,
+                status='D'
+            ).exclude(livro__id__in=livros_emprestados_ids).exists()
+
+            # Se houver sugestões viáveis, desvia o caminho tradicional e joga para a tela de combos
+            if outras_copias_disponiveis:
+                return redirect('emprestimo_sugestao', pk=self.object.pk)
+
         return resposta
+
+class EmprestimoSugestaoView(View):
+    template_name = 'emprestimo_sugestao.html'
+
+    def obter_dados_contexto(self, emprestimo):
+        # Identifica os IDs dos livros já levados no empréstimo original
+        livros_emprestados_ids = [c.livro.id for c in emprestimo.copias.all()]
+
+        # Captura as coleções envolvidas
+        colecoes = [c.livro.colecao for c in emprestimo.copias.all() if hasattr(c.livro, 'colecao') and c.livro.colecao]
+        colecoes = list(set(colecoes))  # Remove duplicadas
+
+        # Filtra cópias disponíveis dos outros livros que pertencem àquela coleção
+        copias_sugeridas = Copia.objects.filter(
+            livro__colecao__in=colecoes,
+            status='D'
+        ).exclude(livro__id__in=livros_emprestados_ids).select_related('livro')
+
+        # Recalcula a cota atual do cliente (lembrando que o empréstimo atual já foi salvo)
+        emprestimos_ativos = Emprestimo.objects.filter(cliente=emprestimo.cliente, data_devolucao__isnull=True)
+        copias_ja_emprestadas = sum(e.copias.count() for e in emprestimos_ativos)
+
+        reservas_ativas = Reserva.objects.filter(cliente=emprestimo.cliente, data_retirada__isnull=True)
+        copias_ja_reservadas = sum(r.copias.count() for r in reservas_ativas)
+
+        vagas_restantes = 7 - (copias_ja_emprestadas + copias_ja_reservadas)
+
+        return {
+            'emprestimo': emprestimo,
+            'copias_sugeridas': copias_sugeridas,
+            'vagas_restantes': vagas_restantes,
+            'colecoes': colecoes
+        }
+
+    def get(self, request, pk):
+        num_emprestimo = get_object_or_404(Emprestimo, pk=pk)
+        contexto = self.obter_dados_contexto(num_emprestimo)
+
+        # Se por acaso não restarem vagas, encerra e vai para a listagem
+        if not contexto['copias_sugeridas'].exists() or contexto['vagas_restantes'] <= 0:
+            return redirect('emprestimos')
+        return render(request, self.template_name, contexto)
+
+    def post(self, request, pk):
+        emprestimo = get_object_or_404(Emprestimo, pk=pk)
+        copias_ids = request.POST.getlist('copias_sugeridas')
+
+        # Carrega o contexto novamente caso precise recarregar a página com erro
+        contexto = self.obter_dados_contexto(emprestimo)
+        vagas_restantes = contexto['vagas_restantes']
+
+        if copias_ids:
+            # Se o usuário marcou mais caixas do que a cota restante
+            if len(copias_ids) > vagas_restantes:
+                messages.error(
+                    request,
+                    f'Operação recusada! Você selecionou {len(copias_ids)} livro(s), mas este usuário só tem limite para mais {vagas_restantes}.'
+                )
+                # Recarrega a página de sugestão exibindo a mensagem de erro acima
+                return render(request, self.template_name, contexto)
+
+            # Se passou na validação, processa os empréstimos normalmente
+            copias_para_adicionar = Copia.objects.filter(id__in=copias_ids, status='D')
+
+            total_adicionado = 0
+            for copia in copias_para_adicionar:
+                copia.status = 'E'
+                copia.save()
+                emprestimo.copias.add(copia)
+                total_adicionado += 1
+
+            if total_adicionado > 0:
+                messages.success(
+                    request,
+                    f'Combo aplicado com sucesso! Mais {total_adicionado} livro(s) da coleção foram adicionados ao empréstimo.'
+                )
+        else:
+            messages.success(request, 'Empréstimo finalizado sem itens adicionais.')
+
+        return redirect('emprestimos')
 
 class EmprestimoDevolucao(View):
     template_name = 'emprestimo_devolver.html'

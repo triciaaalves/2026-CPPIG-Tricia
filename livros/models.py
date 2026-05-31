@@ -1,6 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.db import models
 from stdimage import StdImageField
+import colecoes.models
 
 class Livro(models.Model):
     GENERO_CHOICES = [
@@ -22,6 +23,7 @@ class Livro(models.Model):
     autor = models.CharField('Autor', max_length=70)
     editora = models.CharField('Editora', max_length=70)
     destaque = models.BooleanField(default=False)
+    colecao = models.ForeignKey(colecoes.models.Colecao, verbose_name='Coleção', on_delete=models.SET_NULL, null=True, blank=True, related_name='livros')
 
     class Meta:
         verbose_name = 'Livro'
@@ -30,22 +32,3 @@ class Livro(models.Model):
 
     def __str__(self):
         return self.titulo
-
-    def clean(self):
-        super().clean()
-
-        # Se o usuário tentou marcar este livro como destaque
-        if self.destaque:
-            # Conta quantos livros já estão destacados no banco de dados
-            total_destacados = Livro.objects.filter(destaque=True)
-
-            # Se estivermos editando um livro existente, desconsideramos ele mesmo da contagem
-            if self.pk:
-                total_destacados = total_destacados.exclude(pk=self.pk)
-
-            # Se já existirem 5 ou mais, barra o salvamento
-            if total_destacados.count() >= 5:
-                raise ValidationError({
-                    'destaque': 'Limite atingido! Já existem 5 livros em destaque na página inicial. '
-                                'Desmarque o destaque de algum outro livro antes de ativar este.'
-                })

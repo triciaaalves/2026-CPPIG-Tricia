@@ -12,17 +12,15 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Secretario',
+            name='Colecao',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('nome', models.CharField(max_length=50, verbose_name='Nome')),
-                ('data_nascimento', models.DateField()),
-                ('email', models.EmailField(max_length=100, unique=True, verbose_name='E-mail')),
-                ('senha', models.CharField(max_length=50, verbose_name='Senha')),
+                ('nome', models.CharField(max_length=100, verbose_name='Nome')),
+                ('tipo', models.CharField(choices=[('C', 'Comunitária'), ('E', 'Exclusiva')], default='C', max_length=1, verbose_name='Tipo')),
             ],
             options={
-                'verbose_name': 'Secretário',
-                'verbose_name_plural': 'Secretários',
+                'verbose_name': 'Coleção',
+                'verbose_name_plural': 'Coleções',
                 'ordering': ['nome'],
             },
         ),

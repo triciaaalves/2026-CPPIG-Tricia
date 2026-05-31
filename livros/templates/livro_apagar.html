@@ -39,14 +39,26 @@
                                                 <span class="text-muted small d-block fw-semibold text-uppercase">Autor(a)</span>
                                                 <span class="fw-semibold text-secondary">{{ object.autor }}</span>
                                             </div>
-                                            <div class="col-12 col-md-6">
+                                            <div class="col-12 col-md-4">
                                                 <span class="text-muted small d-block fw-semibold text-uppercase">Gênero</span>
                                                 <span class="fw-semibold text-secondary">{{ object.genero }}</span>
                                             </div>
-                                            <div class="col-12 col-md-6">
+                                            <div class="col-12 col-md-4">
                                                 <span class="text-muted small d-block fw-semibold text-uppercase">Editora</span>
                                                 <span class="fw-semibold text-secondary">{{ object.editora }}</span>
                                             </div>
+
+                                            <div class="col-12 col-md-4">
+                                                <span class="text-muted small d-block fw-semibold text-uppercase">Coleção</span>
+                                                <span class="fw-semibold text-secondary">
+                                                    {% if object.colecao %}
+                                                        {{ object.colecao.nome }}
+                                                    {% else %}
+                                                        Nenhuma
+                                                    {% endif %}
+                                                </span>
+                                            </div>
+
                                         </div>
                                     </div>
 

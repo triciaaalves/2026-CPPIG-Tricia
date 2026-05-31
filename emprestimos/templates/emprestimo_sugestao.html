@@ -1,0 +1,104 @@
+{% extends 'principal.html' %}
+{% load django_bootstrap5 %}
+{% block main %}
+    <div class="container-fluid">
+         {% block menu %} {% include 'menu.html' %}{% endblock %}
+         {% block content %}
+            <section class="py-4">
+                <div class="container">
+                    <div class="mb-4">
+                        <h1 class="fw-bold mb-1 text-dark" style="font-size: 2.2rem;">Sugestão do Sistema</h1>
+                    </div>
+
+                    <div class="card shadow-sm border-light-subtle rounded-3 bg-white mb-5">
+                        <div class="card-body p-4">
+
+                            <div class="alert alert-info border-0 rounded-3 d-flex align-items-center mb-4" style="background-color: rgba(8, 171, 159, 0.1); color: #08AB9F;">
+                                <i class="bi bi-lightbulb-fill fs-4 me-3"></i>
+                                <div>
+                                    <h6 class="fw-bold mb-0">Combo de Coleção Disponível!</h6>
+                                    <span class="small">
+                                        O usuário está levando livro(s) que pertencem à(s) coleção(ões):
+                                        <strong>
+                                            {% for colecao in colecoes %}
+                                                {{ colecao.nome }}{% if not forloop.last %}, {% endif %}
+                                            {% endfor %}
+                                        </strong>
+                                        <br>Deseja aproveitar e realizar o empréstimo dos outros livros disponíveis desse box?
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="p-3 bg-light rounded-3 border mb-4 d-flex justify-content-between align-items-center">
+                                <span class="text-secondary fw-semibold">Disponibilidade na cota do usuário:</span>
+                                <span class="badge rounded-pill px-3 py-2 fw-semibold fs-6" style="background-color: rgba(8, 171, 159, 0.1); color: #08AB9F;">Pode levar mais {{ vagas_restantes }} livro(s)</span>
+                            </div>
+
+                            <form method="POST" id="formCombo">
+                                {% csrf_token %}
+
+                                {% if copias_sugeridas %}
+                                    <p class="text-secondary fw-semibold small text-uppercase mb-3">Selecione os livros que deseja incluir:</p>
+                                    <div class="table-responsive border border-light-subtle rounded-3 shadow-sm bg-white mb-4">
+                                        <table class="table table-hover align-middle mb-0 custom-table">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 50px; text-align: center;">Incluir</th>
+                                                    <th>Livro</th>
+                                                    <th>ISBN da Cópia</th>
+                                                    <th>Autor(a)</th>
+                                                    <th>Coleção</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for copia in copias_sugeridas %}
+                                                    <tr>
+                                                        <td style="text-align: center;">
+                                                            <input class="form-check-input" type="checkbox" name="copias_sugeridas" value="{{ copia.id }}" id="copia_{{ copia.id }}">
+                                                        </td>
+                                                        <td>
+                                                            <label class="fw-semibold text-dark form-check-label" for="copia_{{ copia.id }}">
+                                                                {{ copia.livro.titulo }}
+                                                            </label>
+                                                        </td>
+                                                        <td class="text-secondary fw-medium">{{ copia.isbn }}</td>
+                                                        <td class="text-secondary">{{ copia.livro.autor }}</td>
+                                                        <td>
+                                                            <span class="badge bg-success-subtle text-success-emphasis rounded-pill px-3 py-2 fw-semibold">
+                                                                {{ copia.livro.colecao.nome }}
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                {% else %}
+                                    <div class="p-4 bg-light rounded-3 text-center border mb-4">
+                                        <i class="bi bi-info-circle text-muted fs-3 mb-2 d-block"></i>
+                                        <p class="text-secondary mb-0">Os outros livros das coleções mapeadas estão todos emprestados ou reservados no momento.</p>
+                                    </div>
+                                {% endif %}
+
+                                <hr class="text-light-subtle my-4">
+                                <div class="d-flex justify-content-end gap-2">
+                                    <a href="{% url 'emprestimos' %}" class="btn btn-light border fw-medium px-4 py-2 rounded-3 text-secondary shadow-sm">
+                                       Não, obrigado (Apenas o original)
+                                    </a>
+
+                                    {% if copias_sugeridas %}
+                                    <button type="submit" class="btn text-white fw-bold px-4 py-2 rounded-3 shadow-sm" style="background-color: #ec9d32;">
+                                        <i class="bi bi-check-lg me-1"></i> Confirmar Empréstimo
+                                    </button>
+                                    {% endif %}
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </section>
+          {% endblock %}
+       </div>
+    </div>
+{% endblock %}

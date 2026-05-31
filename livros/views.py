@@ -5,7 +5,7 @@ from django.db.models import ProtectedError
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
-
+from colecoes.models import Colecao
 from .forms import LivroModelForm
 from .models import Livro
 
@@ -35,12 +35,71 @@ class LivroAddView(SuccessMessageMixin, CreateView):
     success_url = reverse_lazy('livros')
     success_message = 'Livro cadastrado com sucesso!'
 
+    def form_valid(self, form):
+        destaque = form.cleaned_data.get('destaque')
+        colecao = form.cleaned_data.get('colecao')
+
+        # Validação de destaque
+        if destaque:
+            total_destacados = Livro.objects.filter(destaque=True).count()
+
+            if total_destacados >= 5:
+                form.add_error(
+                    'destaque',
+                    'Limite atingido! Já existem 5 livros em destaque na página inicial.'
+                )
+                return self.form_invalid(form)
+
+        # Validação de coleção
+        if colecao:
+            livros_na_colecao = Livro.objects.filter(
+                colecao=colecao
+            ).count()
+
+            if livros_na_colecao >= 5:
+                form.add_error(
+                    'colecao',
+                    f'A coleção "{colecao}" já possui o máximo de 5 livros associados.'
+                )
+                return self.form_invalid(form)
+
+        return super().form_valid(form)
+
 class LivroUpdateView(SuccessMessageMixin, UpdateView):
     model = Livro
     form_class = LivroModelForm
     template_name = 'livro_form.html'
     success_url = reverse_lazy('livros')
     success_message = 'Livro alterado com sucesso!'
+
+    def form_valid(self, form):
+        destaque = form.cleaned_data.get('destaque')
+        colecao = form.cleaned_data.get('colecao')
+        livro = self.get_object()
+
+        # Validação de destaque
+        if destaque:
+            total_destacados = Livro.objects.filter(
+                destaque=True
+            ).exclude(pk=livro.pk).count()
+            if total_destacados >= 5:
+                form.add_error(
+                    'destaque', 'Limite atingido! Já existem 5 livros em destaque na página inicial.'
+                )
+                return self.form_invalid(form)
+
+        # Validação de coleção
+        if colecao:
+            livros_na_colecao = Livro.objects.filter(
+                colecao=colecao
+            ).exclude(pk=livro.pk).count()
+            if livros_na_colecao >= 5:
+                form.add_error(
+                    'colecao', f'A coleção "{colecao}" já possui o máximo de 5 livros associados.'
+                )
+                return self.form_invalid(form)
+
+        return super().form_valid(form)
 
 class LivroDeleteView(SuccessMessageMixin, DeleteView):
     model = Livro

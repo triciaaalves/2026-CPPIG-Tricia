@@ -39,6 +39,7 @@
                                     <th>Gênero</th>
                                     <th>Autor(a)</th>
                                     <th>Editora</th>
+                                    <th>Coleção</th>
                                     <th>Quantidade de cópias</th>
                                     <th style="width: 120px; text-align: center">Ações</th>
                                 </tr>
@@ -54,6 +55,15 @@
                                         <td class="text-secondary"> {{ livro.genero }} </td>
                                         <td class="text-secondary fw-medium"> {{ livro.autor }} </td>
                                         <td class="text-secondary"> {{ livro.editora }} </td>
+
+                                        <td class="text-secondary">
+                                            {% if livro.colecao %}
+                                                <span class="badge bg-success-subtle text-success-emphasis rounded-pill px-3 py-2 fw-semibold">{{ livro.colecao.nome }}</span>
+                                            {% else %}
+                                                -
+                                            {% endif %}
+                                        </td>
+
                                         <td class="text-secondary fw-semibold"> {{ livro.livro.count }} </td>
                                         <td style="text-align: center">
                                             <a role="button" class="btn btn-sm rounded-3 me-1" style="background-color: rgba(8, 171, 159, 0.15); color: #08AB9F" href="{% url 'livro_editar' livro.pk %}">
@@ -107,6 +117,19 @@
                                                                             <div class="bg-light p-3 rounded-3 border border-light-subtle h-100">
                                                                                 <span class="text-muted small d-block fw-semibold text-uppercase mb-1">Editora</span>
                                                                                 <span class="fw-semibold text-secondary">{{ livro.editora }}</span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-12">
+                                                                            <div class="bg-light p-3 rounded-3 border border-light-subtle h-100">
+                                                                                <span class="text-muted small d-block fw-semibold text-uppercase mb-1">Coleção / box</span>
+                                                                                <span class="fw-semibold text-secondary">
+                                                                                    {% if livro.colecao %}
+                                                                                        {{ livro.colecao.nome }}
+                                                                                        <span class="badge bg-secondary ms-1">{{ livro.colecao.get_tipo_display }}</span>
+                                                                                    {% else %}
+                                                                                        Não pertence a nenhuma coleção
+                                                                                    {% endif %}
+                                                                                </span>
                                                                             </div>
                                                                         </div>
                                                                     </div>

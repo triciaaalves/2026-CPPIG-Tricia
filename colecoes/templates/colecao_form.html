@@ -1,0 +1,46 @@
+{% extends 'principal.html' %}
+{% load django_bootstrap5 %}
+{% block main %}
+    <div class="container-fluid">
+         {% block menu %} {% include 'menu.html' %}{% endblock %}
+         {% block content %}
+            <section class="py-4">
+                <div class="container">
+                    <div class="mb-4">
+                        <h1 class="fw-bold mb-1 text-dark" style="font-size: 2.2rem;">Cadastro de Coleções</h1>
+                    </div>
+                    <div class="card shadow-sm border-light-subtle rounded-3 bg-white mb-5">
+                        <div class="card-body p-4">
+                            <form method="POST" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                {% if form.non_field_errors %}
+                                    <div class="alert alert-danger rounded-3">
+                                        {{ form.non_field_errors }}
+                                    </div>
+                                {% endif %}
+                                <div class="row g-3">
+                                    <div class="col-12 col-md-8">
+                                        {% bootstrap_field form.nome wrapper_class='mb-2 fw-semibold text-secondary' %}
+                                    </div>
+                                    <div class="col-12 col-md-4">
+                                        {% bootstrap_field form.tipo wrapper_class='mb-2 fw-semibold text-secondary' %}
+                                    </div>
+                                </div>
+                                <hr class="text-light-subtle my-4">
+                                <div class="d-flex justify-content-end gap-2">
+                                    <a href="{% url 'colecoes' %}" class="btn btn-light border fw-medium px-4 py-2 rounded-3 text-secondary shadow-sm">
+                                       Cancelar
+                                    </a>
+                                    <button type="submit" class="btn text-white fw-bold px-4 py-2 rounded-3 shadow-sm" style="background-color: #ec9d32;">
+                                        <i class="bi bi-check-lg me-1"></i> Salvar Coleção
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+          {% endblock %}
+       </div>
+    </div>
+{% endblock %}

@@ -67,3 +67,5 @@ class CopiaDeleteView(SuccessMessageMixin, DeleteView):
                 f'Ela está reservada para uma retirada futura.'
             )
             return redirect(success_url)
+
+        return super().post(request, *args, **kwargs)

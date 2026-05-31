@@ -122,7 +122,7 @@
                                                                         {% if emprestimo.data_devolucao %}
                                                                             {% if emprestimo.data_devolucao > emprestimo.data_prevista %}
                                                                                 <span class="fw-bold text-danger fs-5 d-block">{{ emprestimo.data_devolucao | date:"d/m/Y" }}</span>
-                                                                                <span class="badge bg-danger-subtle text-danger border border-danger mt-1">
+                                                                                <span class="badge bg-danger-subtle text-danger mt-1">
                                                                                     <i class="bi bi-exclamation-triangle-fill me-1"></i>Com Atraso
                                                                                 </span>
                                                                             {% else %}
@@ -133,7 +133,7 @@
                                                                             {% endif %}
                                                                         {% else %}
                                                                             <span class="text-secondary d-block fs-5 fw-medium">—</span>
-                                                                            <span class="badge bg-warning text-dark border border-warning mt-1">
+                                                                            <span class="badge bg-warning-subtle text-dark mt-1">
                                                                                 <i class="bi bi-clock-history me-1"></i>Pendente
                                                                             </span>
                                                                         {% endif %}

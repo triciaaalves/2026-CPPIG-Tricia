@@ -1,10 +1,9 @@
+from datetime import timedelta
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.paginator import Paginator
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.contrib import messages
-from datetime import timedelta
-from django.db import transaction
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 from django.views import View
 from copias.models import Copia
@@ -12,8 +11,7 @@ from reservas.forms import ReservaModelForm, ReservaListForm
 from reservas.models import Reserva
 from emprestimos.models import Emprestimo
 from django.urls import reverse_lazy
-from django.contrib.auth.models import User
-from django.db.models import Count
+
 
 class ReservasView(ListView):
     model = Reserva
@@ -29,18 +27,15 @@ class ReservasView(ListView):
         return context
 
     def get_queryset(self):
-        # Calcula o limite tolerável (Hora atual menos 15 minutos)
         limite_atraso = timezone.now() - timedelta(minutes=15)
 
-        # Busca reservas não retiradas que já passaram desse limite
+        # Busca reservas não retiradas que já passaram do limite de 15 minutos
         reservas_expiradas = Reserva.objects.filter(
             data_retirada__isnull=True,
-            # __lt = less than
-            # Ele tá pegando a data prevista do usuário e vendo se é menor que o limite atraso
             data_prevista_reserva__lt=limite_atraso
         )
 
-        # Libera as cópias e deletamos as reservas expiradas
+        # Libera as cópias de volta para 'D' (Disponível) e deleta as reservas expiradas
         for r in reservas_expiradas:
             r.copias.update(status='D')
             r.delete()
@@ -59,6 +54,7 @@ class ReservasView(ListView):
         else:
             return messages.info(self.request, 'Não existem reservas cadastradas!')
 
+
 class ReservaAddView(SuccessMessageMixin, CreateView):
     model = Reserva
     form_class = ReservaModelForm
@@ -68,9 +64,10 @@ class ReservaAddView(SuccessMessageMixin, CreateView):
 
     def form_valid(self, form):
         cliente = form.cleaned_data.get('cliente')
-        copias_selecionadas = form.cleaned_data.get('copias').count()
+        copias_selecionadas = form.cleaned_data.get('copias')
+        qtd_copias_selecionadas = copias_selecionadas.count()
 
-        # Bloqueia criação de reserva se possuir livro em atraso
+        # ---------- VERIFICAÇÃO DE EMPRÉSTIMOS EM ATRASO ---------- #
         tem_atraso = Emprestimo.objects.filter(
             cliente=cliente,
             data_devolucao__isnull=True,
@@ -78,22 +75,20 @@ class ReservaAddView(SuccessMessageMixin, CreateView):
         ).exists()
 
         if tem_atraso:
-            # Mostra o erro direto no campo "cliente" do formulário HTML
             form.add_error('cliente', 'Este usuário possui empréstimos em atraso e não pode reservar livros.')
             return self.form_invalid(form)
 
-        limite_livros = 5
+        # ---------- VERIFICAÇÃO DE LIMITE DE LIVROS ---------- #
+        limite_livros = 7
 
-        copias_ja_emprestadas = Emprestimo.objects.filter(
-            cliente=cliente, data_devolucao__isnull=True
-        ).aggregate(total=Count('copias'))['total'] or 0
+        emprestimos_ativos = Emprestimo.objects.filter(cliente=cliente, data_devolucao__isnull=True)
+        copias_ja_emprestadas = sum(e.copias.count() for e in emprestimos_ativos)
 
-        copias_ja_reservadas = Reserva.objects.filter(
-            cliente=cliente, data_retirada__isnull=True
-        ).aggregate(total=Count('copias'))['total'] or 0
+        reservas_ativas = Reserva.objects.filter(cliente=cliente, data_retirada__isnull=True)
+        copias_ja_reservadas = sum(r.copias.count() for r in reservas_ativas)
 
         total = copias_ja_emprestadas + copias_ja_reservadas
-        total_futuro = total + copias_selecionadas
+        total_futuro = total + qtd_copias_selecionadas
 
         if total_futuro > limite_livros:
             disponivel = limite_livros - total
@@ -107,9 +102,126 @@ class ReservaAddView(SuccessMessageMixin, CreateView):
             form.add_error('copias', mensagem)
             return self.form_invalid(form)
 
+        # ---------- VERIFICAÇÃO DE COLEÇÃO EXCLUSIVA ---------- #
+        for copia in copias_selecionadas:
+            colecao = getattr(copia.livro, 'colecao', None)
+
+            if colecao and getattr(colecao, 'tipo', None) == 'E':
+                fim_excl = colecao.fim_exclusividade
+
+                if fim_excl and fim_excl >= timezone.now().date():
+                    if colecao.dono != cliente:
+                        form.add_error(
+                            'copias',
+                            f'A coleção "{colecao.nome}" está exclusiva até {colecao.fim_exclusividade.strftime("%d/%m/%Y")} para outro usuário: {colecao.dono}.'
+                        )
+                        return self.form_invalid(form)
+
+        # Salva a reserva inicial se passou em tudo
         resposta = super().form_valid(form)
-        self.object.copias.update(status='R')
+
+        # ---------- SALVAMENTO E ATUALIZAÇÃO DOS STATUS ---------- #
+        for copia in self.object.copias.all():
+            copia.status = 'R'  # Status: Reservado
+            copia.save()
+
+            colecao = getattr(copia.livro, 'colecao', None)
+            if colecao and getattr(colecao, 'tipo', None) == 'E':
+                if not colecao.fim_exclusividade or colecao.fim_exclusividade < timezone.now().date():
+                    colecao.dono = cliente
+                    colecao.fim_exclusividade = timezone.now().date() + timedelta(days=10)
+                    colecao.save()
+
+        # ---------- VERIFICAÇÃO DE COLEÇÃO (SUGESTÃO DE COMBOS) ---------- #
+        livros_reservados_ids = [c.livro.id for c in self.object.copias.all()]
+        colecoes_encontradas = []
+
+        for copia in self.object.copias.all():
+            if hasattr(copia.livro, 'colecao') and copia.livro.colecao:
+                if copia.livro.colecao not in colecoes_encontradas:
+                    colecoes_encontradas.append(copia.livro.colecao)
+
+        if colecoes_encontradas:
+            outras_copias_disponiveis = Copia.objects.filter(
+                livro__colecao__in=colecoes_encontradas,
+                status='D'
+            ).exclude(livro__id__in=livros_reservados_ids).exists()
+
+            if outras_copias_disponiveis:
+                return redirect('reserva_sugestao', pk=self.object.pk)
+
         return resposta
+
+class ReservaSugestaoView(View):
+    template_name = 'reserva_sugestao.html'
+
+    def obter_dados_contexto(self, reserva):
+        livros_reservados_ids = [c.livro.id for c in reserva.copias.all()]
+
+        colecoes = [c.livro.colecao for c in reserva.copias.all() if hasattr(c.livro, 'colecao') and c.livro.colecao]
+        colecoes = list(set(colecoes))
+
+        copias_sugeridas = Copia.objects.filter(
+            livro__colecao__in=colecoes,
+            status='D'
+        ).exclude(livro__id__in=livros_reservados_ids).select_related('livro')
+
+        emprestimos_ativos = Emprestimo.objects.filter(cliente=reserva.cliente, data_devolucao__isnull=True)
+        copias_ja_emprestadas = sum(e.copias.count() for e in emprestimos_ativos)
+
+        reservas_ativas = Reserva.objects.filter(cliente=reserva.cliente, data_retirada__isnull=True)
+        copias_ja_reservadas = sum(r.copias.count() for r in reservas_ativas)
+
+        vagas_restantes = 7 - (copias_ja_emprestadas + copias_ja_reservadas)
+
+        return {
+            'reserva': reserva,
+            'copias_sugeridas': copias_sugeridas,
+            'vagas_restantes': vagas_restantes,
+            'colecoes': colecoes
+        }
+
+    def get(self, request, pk):
+        num_reserva = get_object_or_404(Reserva, pk=pk)
+        contexto = self.obter_dados_contexto(num_reserva)
+
+        if not contexto['copias_sugeridas'].exists() or contexto['vagas_restantes'] <= 0:
+            return redirect('reservas')
+        return render(request, self.template_name, contexto)
+
+    def post(self, request, pk):
+        reserva = get_object_or_404(Reserva, pk=pk)
+        copias_ids = request.POST.getlist('copias_sugeridas')
+
+        contexto = self.obter_dados_contexto(reserva)
+        vagas_restantes = contexto['vagas_restantes']
+
+        if copias_ids:
+            if len(copias_ids) > vagas_restantes:
+                messages.error(
+                    request,
+                    f'Operação recusada! Você selecionou {len(copias_ids)} livro(s), mas este usuário só tem limite para mais {vagas_restantes}.'
+                )
+                return render(request, self.template_name, contexto)
+
+            copias_para_adicionar = Copia.objects.filter(id__in=copias_ids, status='D')
+
+            total_adicionado = 0
+            for copia in copias_para_adicionar:
+                copia.status = 'R'  # Marca como Reservado!
+                copia.save()
+                reserva.copias.add(copia)
+                total_adicionado += 1
+
+            if total_adicionado > 0:
+                messages.success(
+                    request,
+                    f'Combo aplicado com sucesso! Mais {total_adicionado} livro(s) da coleção foram reservados.'
+                )
+        else:
+            messages.success(request, 'Reserva finalizada sem itens adicionais.')
+
+        return redirect('reservas')
 
 class ReservaUpdateView(SuccessMessageMixin, UpdateView):
     model = Reserva
@@ -128,6 +240,7 @@ class ReservaDeleteView(SuccessMessageMixin, DeleteView):
         reserva = self.get_object()
         reserva.copias.update(status='D')
         return super().form_valid(form)
+
 
 class ReservaRetirada(View):
     template_name = 'reserva_retirar.html'
@@ -176,8 +289,10 @@ class ReservaRetirada(View):
             cliente=reserva.cliente,
             data_retirada=timezone.now(),
             data_prevista=timezone.now() + timedelta(days=7)
-            # como faço para o secretário???
+            # colocar secretário aqui depois que implementar o login e tal
         )
         for copia in reserva.copias.all():
             novo_emprestimo.copias.add(copia)
+
+        messages.success(request, f'Reserva convertida em empréstimo com sucesso por {request.user.username}!')
         return redirect('reservas')
