@@ -1,7 +1,7 @@
 from datetime import timedelta
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.paginator import Paginator
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, DeleteView
 from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
@@ -222,13 +222,6 @@ class ReservaSugestaoView(View):
             messages.success(request, 'Reserva finalizada sem itens adicionais.')
 
         return redirect('reservas')
-
-class ReservaUpdateView(SuccessMessageMixin, UpdateView):
-    model = Reserva
-    form_class = ReservaModelForm
-    template_name = 'reserva_form.html'
-    success_url = reverse_lazy('reservas')
-    success_message = 'Reserva alterada com sucesso!'
 
 class ReservaDeleteView(SuccessMessageMixin, DeleteView):
     model = Reserva
