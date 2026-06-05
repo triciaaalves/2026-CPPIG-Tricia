@@ -138,7 +138,7 @@ class ReservaAddView(PermissionRequiredMixin, SuccessMessageMixin, CreateView):
                     colecao.save()
 
         # ---------- VERIFICAÇÃO DE COLEÇÃO (SUGESTÃO DE COMBOS) ---------- #
-        livros_reservados_ids = [c.livro.id for c in self.object.copias.all()]
+        copias_reservadas_ids = [c.id for c in self.object.copias.all()]
         colecoes_encontradas = []
 
         for copia in self.object.copias.all():
@@ -150,7 +150,7 @@ class ReservaAddView(PermissionRequiredMixin, SuccessMessageMixin, CreateView):
             outras_copias_disponiveis = Copia.objects.filter(
                 livro__colecao__in=colecoes_encontradas,
                 status='D'
-            ).exclude(livro__id__in=livros_reservados_ids).exists()
+            ).exclude(id__in=copias_reservadas_ids).exists()
 
             if outras_copias_disponiveis:
                 return redirect('reserva_sugestao', pk=self.object.pk)
@@ -161,7 +161,7 @@ class ReservaSugestaoView(View):
     template_name = 'reserva_sugestao.html'
 
     def obter_dados_contexto(self, reserva):
-        livros_reservados_ids = [c.livro.id for c in reserva.copias.all()]
+        copias_reservadas_ids = [c.id for c in reserva.copias.all()]
 
         colecoes = [c.livro.colecao for c in reserva.copias.all() if hasattr(c.livro, 'colecao') and c.livro.colecao]
         colecoes = list(set(colecoes))
@@ -169,7 +169,7 @@ class ReservaSugestaoView(View):
         copias_sugeridas = Copia.objects.filter(
             livro__colecao__in=colecoes,
             status='D'
-        ).exclude(livro__id__in=livros_reservados_ids).select_related('livro')
+        ).exclude(id__in=copias_reservadas_ids).select_related('livro')
 
         emprestimos_ativos = Emprestimo.objects.filter(cliente=reserva.cliente, data_devolucao__isnull=True)
         copias_ja_emprestadas = sum(e.copias.count() for e in emprestimos_ativos)
@@ -213,7 +213,7 @@ class ReservaSugestaoView(View):
 
             total_adicionado = 0
             for copia in copias_para_adicionar:
-                copia.status = 'R'  # Marca como Reservado!
+                copia.status = 'R'
                 copia.save()
                 reserva.copias.add(copia)
                 total_adicionado += 1
@@ -289,7 +289,7 @@ class ReservaRetirada(View):
             cliente=reserva.cliente,
             data_retirada=timezone.now(),
             data_prevista=timezone.now() + timedelta(days=7)
-            # colocar secretário aqui depois que implementar o login e tal
+            # colocar secretário aqui depois
         )
         for copia in reserva.copias.all():
             novo_emprestimo.copias.add(copia)

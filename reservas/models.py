@@ -12,7 +12,7 @@ class Reserva(models.Model):
         permissions = (('retirada_reserva', 'Permite fazer a retirada de uma reserva'),)
         verbose_name = 'Reserva'
         verbose_name_plural = 'Reservas'
-        ordering = ['-data_prevista_reserva']
+        ordering = ['data_prevista_reserva']
 
     def __str__(self):
         return f"Reserva de {self.cliente} - {self.data_prevista_reserva.strftime('%d/%m/%Y %H:%M')}"
