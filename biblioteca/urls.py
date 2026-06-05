@@ -19,6 +19,9 @@ from django.contrib import admin
 from django.conf.urls.static import static
 from django.urls import path, include
 
+admin.site.site_header = "Sistema de retirada e empréstimo de livros"
+admin.site.index_title = "Biblioteca - Sistema"
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('home.urls')),

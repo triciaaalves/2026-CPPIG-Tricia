@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.paginator import Paginator
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
@@ -9,7 +10,9 @@ from secretarios.forms import SecretarioModelForm
 from secretarios.models import Secretario
 
 
-class SecretariosView(ListView):
+class SecretariosView(PermissionRequiredMixin, ListView):
+    permission_required = 'secretarios.view_secretario'
+    permission_denied_message = 'Visualizar secretário'
     model = Secretario
     template_name = 'secretarios.html'
 
@@ -27,21 +30,27 @@ class SecretariosView(ListView):
         else:
             return messages.info(self.request, 'Não existem secretários cadastrados!')
 
-class SecretarioAddView(SuccessMessageMixin, CreateView):
+class SecretarioAddView(PermissionRequiredMixin, SuccessMessageMixin, CreateView):
+    permission_required = 'secretarios.add_secretario'
+    permission_denied_message = 'Cadastrar secretário'
     model = Secretario
     form_class = SecretarioModelForm
     template_name = 'secretario_form.html'
     success_url = reverse_lazy('secretarios')
     success_message = 'Secretário cadastrado com sucesso!'
 
-class SecretarioUpdateView(SuccessMessageMixin, UpdateView):
+class SecretarioUpdateView(PermissionRequiredMixin, SuccessMessageMixin, UpdateView):
+    permission_required = 'secretarios.update_secretario'
+    permission_denied_message = 'Editar secretário'
     model = Secretario
     form_class = SecretarioModelForm
     template_name = 'secretario_form.html'
     success_url = reverse_lazy('secretarios')
     success_message = 'Secretário alterado com sucesso!'
 
-class SecretarioDeleteView(SuccessMessageMixin, DeleteView):
+class SecretarioDeleteView(PermissionRequiredMixin, SuccessMessageMixin, DeleteView):
+    permission_required = 'secretarios.delete_secretario'
+    permission_denied_message = 'Excluir secretário'
     model = Secretario
     template_name = 'secretario_apagar.html'
     success_url = reverse_lazy('secretarios')

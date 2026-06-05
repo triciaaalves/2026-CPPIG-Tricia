@@ -9,15 +9,15 @@
                     <div class="mb-4">
                         <h1 class="fw-bold mb-1" style="font-size: 2.2rem;">Confirmar Retirada</h1>
                     </div>
-                    <div class="card shadow-sm border-light-subtle rounded-3 bg-white mb-5">
+                    <div class="card shadow-sm border-light-subtle rounded-4 bg-white mb-5">
                         <div class="card-body p-4">
-                            <div class="alert alert-warning border-0 rounded-3 d-flex align-items-center mb-4">
+                            <div class="alert alert-warning border-0 rounded-4 d-flex align-items-center mb-4">
                                 <i class="bi bi-exclamation-triangle-fill fs-4 me-3 text-warning"></i>
                                 <div>
                                     <h6 class="fw-bold mb-0 text-dark">Atenção!</h6>
                                 </div>
                             </div>
-                            <div class="p-3 bg-light rounded-3 border border-light-subtle mb-4">
+                            <div class="p-3 bg-light rounded-4 border border-light-subtle mb-4">
                                 <div class="row g-3">
                                     <div class="col-12 col-md-5">
                                         <span class="text-muted small d-block fw-semibold text-uppercase">Data Prevista para Retirada</span>
@@ -28,7 +28,7 @@
                                         <span class="fw-semibold text-secondary">{{ reserva.cliente }}</span>
                                     </div>
                                     <div class="col-12 mt-3 pt-3 border-top border-light-subtle">
-                                        <span class="text-muted small d-block fw-semibold text-uppercase mb-2">Cópia(s) a Reservar</span>
+                                        <span class="text-muted small d-block fw-semibold text-uppercase mb-2">Cópia(s) a retirar</span>
                                         <div class="d-flex flex-wrap gap-2">
                                             {% for copia in reserva.copias.all %}
                                                 <span class="badge bg-white text-secondary border border-light-subtle p-2 rounded-2 fw-medium shadow-sm">
@@ -46,10 +46,10 @@
                                 {% csrf_token %}
                                 <hr class="text-light-subtle my-4">
                                 <div class="d-flex justify-content-end gap-2">
-                                    <a href="{% url 'reservas' %}" class="btn btn-light border fw-medium px-4 py-2 rounded-3 text-secondary shadow-sm">
+                                    <a href="{% url 'reservas' %}" class="btn btn-light border fw-medium px-4 py-2 rounded-4 text-secondary shadow-sm">
                                        Cancelar, manter reserva
                                     </a>
-                                    <button type="submit" class="btn btn-success fw-bold px-4 py-2 rounded-3 shadow-sm">
+                                    <button type="submit" class="btn btn-success fw-bold px-4 py-2 rounded-4 shadow-sm">
                                         Sim, realizar retirada
                                     </button>
                                 </div>

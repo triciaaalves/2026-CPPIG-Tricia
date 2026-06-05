@@ -1,4 +1,6 @@
 from datetime import timedelta
+
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
@@ -15,7 +17,9 @@ from .models import Emprestimo
 from copias.models import Copia
 from django.shortcuts import render, redirect, get_object_or_404
 
-class EmprestimosView(ListView):
+class EmprestimosView(PermissionRequiredMixin, ListView):
+    permission_required = 'emprestimos.view_emprestimo'
+    permission_denied_message = 'Visualizar empréstimo'
     model = Emprestimo
     template_name = 'emprestimos.html'
 
@@ -46,7 +50,9 @@ class EmprestimosView(ListView):
         else:
             return messages.info(self.request, 'Não existem empréstimos cadastrados!')
 
-class EmprestimoAddView(SuccessMessageMixin, CreateView):
+class EmprestimoAddView(PermissionRequiredMixin, SuccessMessageMixin, CreateView):
+    permission_required = 'emprestimos.add_emprestimo'
+    permission_denied_message = 'Cadastrar empréstimo'
     model = Emprestimo
     form_class = EmprestimoModelForm
     template_name = 'emprestimo_form.html'

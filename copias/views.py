@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.paginator import Paginator
 from django.urls import reverse_lazy
@@ -9,7 +10,9 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from .forms import CopiaModelForm
 from .models import Copia
 
-class CopiasView(ListView):
+class CopiasView(PermissionRequiredMixin, ListView):
+    permission_required = 'copias.view_copia'
+    permission_denied_message = 'Visualizar cópia'
     model = Copia
     template_name = 'copias.html'
 
@@ -28,21 +31,27 @@ class CopiasView(ListView):
             return messages.info(self.request, 'Não existem cópias cadastradas!')
 
 
-class CopiaAddView(SuccessMessageMixin, CreateView):
+class CopiaAddView(PermissionRequiredMixin, SuccessMessageMixin, CreateView):
+    permission_required = 'copias.add_copia'
+    permission_denied_message = 'Cadastrar cópia'
     model = Copia
     form_class = CopiaModelForm
     template_name = 'copia_form.html'
     success_url = reverse_lazy('copias')
     success_message = 'Cópia cadastrada com sucesso!'
 
-class CopiaUpdateView(SuccessMessageMixin, UpdateView):
+class CopiaUpdateView(PermissionRequiredMixin, SuccessMessageMixin, UpdateView):
+    permission_required = 'copias.update_copia'
+    permission_denied_message = 'Editar cópia'
     model = Copia
     form_class = CopiaModelForm
     template_name = 'copia_form.html'
     success_url = reverse_lazy('copias')
     success_message = 'Cópia alterada com sucesso!'
 
-class CopiaDeleteView(SuccessMessageMixin, DeleteView):
+class CopiaDeleteView(PermissionRequiredMixin, SuccessMessageMixin, DeleteView):
+    permission_required = 'copias.delete_copia'
+    permission_denied_message = 'Excluir cópia'
     model = Copia
     template_name = 'copia_apagar.html'
     success_url = reverse_lazy('copias')

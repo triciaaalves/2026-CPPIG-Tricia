@@ -11,10 +11,38 @@
              <a class="navbar-brand px-4" href="{% url 'index' %}">
                <img src="{% static 'img/logo.png' %}" alt="Logo" width="150">
              </a>
-             <div class="d-flex gap-2">
-                  <a class="btn btn-azul text-white rounded-5 fw-semibold py-2 px-3 shadow-sm transition-effect" href="{% url 'painel' %}">
-                     <i class="bi bi-person-gear me-2"></i>Painel Administrativo
-                  </a>
+            <div class="d-flex gap-2">
+                {% if request.user.is_authenticated %}
+                    <a class="btn btn-azul btn-secondary text-white rounded-pill fw-semibold px-4 shadow-sm transition-effect d-flex align-items-center" href="{% url 'painel' %}">
+                       <i class="bi bi-person-gear me-2 fs-5"></i>Painel Administrativo
+                    </a>
+
+                    <div class="dropdown">
+                        <a class="btn btn-azul btn-secondary text-white dropdown-toggle rounded-pill px-4 d-flex align-items-center gap-2 shadow-sm transition-effect" href="#" id="navbarLogin" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-person-circle fs-5 text-white"></i>
+                            <span class="text-white fw-semibold">{{ request.user.username }}</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2 rounded-3">
+                            <li>
+                                <a class="dropdown-item py-2 d-flex align-items-center" href="{% url 'alterar_senha' %}">
+                                    <i class="bi bi-shield-lock me-2 text-muted"></i>Alterar senha
+                                </a>
+                            </li>
+                            <li>
+                                <form action="{% url 'logout' %}" method="post" class="m-0">
+                                    {% csrf_token %}
+                                    <button class="dropdown-item py-2 text-danger d-flex align-items-center" type="submit">
+                                        <i class="bi bi-box-arrow-right me-2"></i>Sair
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                {% else %}
+                    <a class="btn btn-azul text-white rounded-pill fw-semibold py-2 px-4 transition-effect shadow-sm" href="{% url 'login' %}">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>Acessar Sistema
+                    </a>
+                {% endif %}
              </div>
           </div>
        </nav>

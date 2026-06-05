@@ -1,4 +1,5 @@
 from datetime import timedelta
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.paginator import Paginator
 from django.views.generic import ListView, CreateView, DeleteView
@@ -13,7 +14,9 @@ from emprestimos.models import Emprestimo
 from django.urls import reverse_lazy
 
 
-class ReservasView(ListView):
+class ReservasView(PermissionRequiredMixin, ListView):
+    permission_required = 'reservas.view_reserva'
+    permission_denied_message = 'Visualizar reserva'
     model = Reserva
     template_name = 'reservas.html'
 
@@ -55,7 +58,9 @@ class ReservasView(ListView):
             return messages.info(self.request, 'Não existem reservas cadastradas!')
 
 
-class ReservaAddView(SuccessMessageMixin, CreateView):
+class ReservaAddView(PermissionRequiredMixin, SuccessMessageMixin, CreateView):
+    permission_required = 'reservas.add_reserva'
+    permission_denied_message = 'Cadastrar reserva'
     model = Reserva
     form_class = ReservaModelForm
     template_name = 'reserva_form.html'
@@ -223,7 +228,9 @@ class ReservaSugestaoView(View):
 
         return redirect('reservas')
 
-class ReservaDeleteView(SuccessMessageMixin, DeleteView):
+class ReservaDeleteView(PermissionRequiredMixin, SuccessMessageMixin, DeleteView):
+    permission_required = 'reservas.delete_reserva'
+    permission_denied_message = 'Excluir reserva'
     model = Reserva
     template_name = 'reserva_apagar.html'
     success_url = reverse_lazy('reservas')
@@ -287,5 +294,4 @@ class ReservaRetirada(View):
         for copia in reserva.copias.all():
             novo_emprestimo.copias.add(copia)
 
-        messages.success(request, f'Reserva convertida em empréstimo com sucesso por {request.user.username}!')
         return redirect('reservas')

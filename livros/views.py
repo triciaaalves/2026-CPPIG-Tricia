@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.paginator import Paginator
 from django.db.models import ProtectedError
@@ -9,7 +10,9 @@ from colecoes.models import Colecao
 from .forms import LivroModelForm
 from .models import Livro
 
-class LivrosView(ListView):
+class LivrosView(PermissionRequiredMixin, ListView):
+    permission_required = 'livros.view_livro'
+    permission_denied_message = 'Visualizar livro'
     model = Livro
     template_name = 'livros.html'
 
@@ -28,7 +31,9 @@ class LivrosView(ListView):
             return messages.info(self.request, 'Não existem livros cadastrados!')
 
 
-class LivroAddView(SuccessMessageMixin, CreateView):
+class LivroAddView(PermissionRequiredMixin, SuccessMessageMixin, CreateView):
+    permission_required = 'livros.add_livro'
+    permission_denied_message = 'Cadastrar livro'
     model = Livro
     form_class = LivroModelForm
     template_name = 'livro_form.html'
@@ -65,7 +70,9 @@ class LivroAddView(SuccessMessageMixin, CreateView):
 
         return super().form_valid(form)
 
-class LivroUpdateView(SuccessMessageMixin, UpdateView):
+class LivroUpdateView(PermissionRequiredMixin, SuccessMessageMixin, UpdateView):
+    permission_required = 'livros.update_livro'
+    permission_denied_message = 'Editar livro'
     model = Livro
     form_class = LivroModelForm
     template_name = 'livro_form.html'
@@ -101,7 +108,9 @@ class LivroUpdateView(SuccessMessageMixin, UpdateView):
 
         return super().form_valid(form)
 
-class LivroDeleteView(SuccessMessageMixin, DeleteView):
+class LivroDeleteView(PermissionRequiredMixin, SuccessMessageMixin, DeleteView):
+    permission_required = 'livros.delete_livro'
+    permission_denied_message = 'Excluir livro'
     model = Livro
     template_name = 'livro_apagar.html'
     success_url = reverse_lazy('livros')

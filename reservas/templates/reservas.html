@@ -12,7 +12,7 @@
                             <h1 class="fw-bold mb-1" style="font-size: 2.2rem;">Reservas</h1>
                         </div>
                         <div>
-                            <a href="{% url 'reserva_adicionar' %}" class="btn text-white px-3 py-2 rounded-3 shadow-sm" style="background-color: #ec9d32;">
+                            <a href="{% url 'reserva_adicionar' %}" class="btn text-white px-3 py-2 rounded-4 shadow-sm" style="background-color: #ec9d32;">
                                 <i class="bi bi-plus-lg me-2"></i>Nova Reserva
                             </a>
                         </div>
@@ -20,10 +20,10 @@
                 <form action="" method="GET" class="mb-4">
                     <div class="row g-3 align-items-center">
                         <div class="col-12 col-md-6 col-lg-4">
-                            {% bootstrap_field form.cliente layout='horizontal' label_class='col-auto text-secondary fw-semibold' field_class='col shadow-sm rounded-3' wrapper_class='mb-0 align-items-center' %}
+                            {% bootstrap_field form.cliente layout='horizontal' label_class='col-auto text-secondary fw-semibold' field_class='col shadow-sm rounded-4' wrapper_class='mb-0 align-items-center' %}
                         </div>
                         <div class="col-12 col-md-auto">
-                            <button type="submit" class="btn text-white px-4 py-2 rounded-3 shadow-sm" style="background-color: #ec9d32;">
+                            <button type="submit" class="btn text-white px-4 py-2 rounded-4 shadow-sm" style="background-color: #ec9d32;">
                                 <i class="bi bi-filter me-1"></i> Filtrar
                             </button>
                         </div>
@@ -32,7 +32,7 @@
 
                 <div class="card-body">
                 {% if object_list %}
-                <div class="table-responsive border border-light-subtle rounded-3 shadow-sm bg-white">
+                <div class="table-responsive border border-light-subtle rounded-4 shadow-sm bg-white">
                     <table class="table table-hover align-middle mb-0 custom-table">
                         <thead>
                             <tr>
@@ -57,27 +57,37 @@
                                     </td>
                                     <td class="text-secondary"> {{ reserva.cliente }} </td>
                                     <td style="text-align: center">
-                                        {% if not reserva.data_retirada %}
-                                            <a role="button" class="btn btn-sm rounded-3 me-1" style="background-color: rgba(8, 171, 159, 0.15); color: #08AB9F" href="{% url 'reserva_retirar' reserva.pk %}" title="Confirmar Retirada">
-                                                <i class="bi bi-check-circle-fill"></i>
-                                            </a>
-                                            <a role="button" class="btn btn-sm rounded-3 me-1" style="background-color: rgba(8, 171, 159, 0.15); color: #08AB9F;" href="{% url 'reserva_apagar' reserva.pk %}">
-                                                <i class="bi bi-trash-fill"></i>
-                                            </a>
-                                            <a href="#" data-bs-toggle="modal" data-bs-target="#modalReserva{{reserva.id}}" role="button" class="btn btn-sm rounded-3" style="background-color: rgba(236, 157, 50, 0.15); color: #ec9d32;" title="Visualizar Detalhes">
-                                                <i class="bi bi-eye-fill"></i>
-                                            </a>
-                                        {% else %}
-                                            <span class="btn btn-sm rounded-3 me-1 disabled" style="background-color: rgba(108, 117, 125, 0.1); border:none; color: #6c757d; cursor: not-allowed;">
+                                        {% if reserva.data_retirada %}
+                                            <span class="btn btn-sm rounded-3 me-1 disabled" style="background-color: rgba(108, 117, 125, 0.1); border:none; color: #6c757d; cursor: not-allowed;" title="Retirada já realizada">
                                                 <i class="bi bi-check-circle-fill"></i>
                                             </span>
-                                            <a href="#" data-bs-toggle="modal" data-bs-target="#modalReserva{{reserva.id}}" role="button" class="btn btn-sm rounded-3" style="background-color: rgba(236, 157, 50, 0.15); color: #ec9d32;" title="Visualizar Detalhes">
-                                                <i class="bi bi-eye-fill"></i>
+                                            <span class="btn btn-sm rounded-3 me-1 disabled" style="background-color: rgba(108, 117, 125, 0.1); border:none; color: #6c757d; cursor: not-allowed;" title="Retirada já realizada">
+                                                <i class="bi bi-trash-fill"></i>
+                                            </span>
+                                        {% else %}
+                                            {% if perms.reservas.retirada_reserva %}
+                                                <a role="button" class="btn btn-sm rounded-3 me-1" style="background-color: rgba(8, 171, 159, 0.15); color: #08AB9F;" href="{% url 'reserva_retirar' reserva.pk %}" title="Confirmar Retirada">
+                                                    <i class="bi bi-check-circle-fill"></i>
+                                                </a>
+                                            {% else %}
+                                                <button class="btn btn-sm rounded-3 me-1 disabled" style="background-color: rgba(108, 117, 125, 0.1); border:none; color: #6c757d; cursor: not-allowed;" title="Sem permissão para realizar retirada" disabled>
+                                                    <i class="bi bi-check-circle-fill"></i>
+                                                </button>
+                                            {% endif %}
+                                        {% endif %}
+                                        {% if not reserva.data_retirada %}
+                                            <a role="button" class="btn btn-sm rounded-3 me-1" style="background-color: rgba(236, 157, 50, 0.15); color: #ec9d32;" href="{% url 'reserva_apagar' reserva.pk %}" title="Excluir Reserva">
+                                                <i class="bi bi-trash-fill"></i>
                                             </a>
                                         {% endif %}
+
+                                        <a href="#" data-bs-toggle="modal" data-bs-target="#modalReserva{{reserva.id}}" role="button" class="btn btn-sm rounded-3" style="background-color: rgba(236, 157, 50, 0.15); color: #ec9d32;" title="Visualizar Detalhes">
+                                            <i class="bi bi-eye-fill"></i>
+                                        </a>
+
                                         <div class="modal fade text-start" tabindex="-1" id="modalReserva{{reserva.id}}" aria-hidden="true">
                                             <div class="modal-dialog modal-lg modal-dialog-centered">
-                                                <div class="modal-content border-0 shadow-lg rounded-3 overflow-hidden">
+                                                <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
                                                     <div class="modal-header bg-light border-bottom border-light-subtle py-3 px-4">
                                                         <h5 class="modal-title fs-5 fw-bold text-dark">
                                                             <i class="bi bi-info-circle-fill text-secondary me-2"></i>Comprovante de Reserva
@@ -133,7 +143,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="modal-footer bg-light border-top border-light-subtle py-2 px-4">
-                                                        <button type="button" class="btn btn-secondary rounded-3" data-bs-dismiss="modal">Fechar</button>
+                                                        <button type="button" class="btn btn-secondary rounded-4" data-bs-dismiss="modal">Fechar</button>
                                                     </div>
                                                 </div>
                                             </div>

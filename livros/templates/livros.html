@@ -13,7 +13,7 @@
                             <h1 class="fw-bold mb-1" style="font-size: 2.2rem;">Livros</h1>
                         </div>
                         <div>
-                            <a href="{% url 'livro_adicionar' %}" class="btn text-white px-3 py-2 rounded-3 shadow-sm" style="background-color: #ec9d32;">
+                            <a href="{% url 'livro_adicionar' %}" class="btn text-white px-3 py-2 rounded-4 shadow-sm" style="background-color: #ec9d32;">
                                 <i class="bi bi-plus-lg me-2"></i>Novo Livro
                             </a>
                         </div>
@@ -31,7 +31,7 @@
 
                     <div class="card-body">
                     {% if object_list %}
-                    <div class="table-responsive border border-light-subtle rounded-3 shadow-sm bg-white">
+                    <div class="table-responsive border border-light-subtle rounded-4 shadow-sm bg-white">
                         <table class="table table-hover align-middle mb-0 custom-table">
                             <thead>
                                 <tr>
@@ -76,7 +76,7 @@
 
                                         <div class="modal fade" tabindex="-1" id="modal{{livro.id}}" aria-hidden="true">
                                             <div class="modal-dialog modal-lg modal-dialog-centered">
-                                                <div class="modal-content border-0 shadow-lg rounded-3 overflow-hidden">
+                                                <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
 
                                                     <div class="modal-header bg-white border-bottom border-light-subtle py-3 px-4">
                                                         <h5 class="modal-title fs-5 fw-bold text-dark d-flex align-items-center"> {{ livro.titulo }} </h5>

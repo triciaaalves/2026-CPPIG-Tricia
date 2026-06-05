@@ -16,10 +16,6 @@
   color: white;
 }
 
-.btn-azul:focus {
-  box-shadow: 0 0 0 0.2rem rgba(8, 171, 159, 0.4);
-}
-
 .transition-effect {
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
@@ -64,16 +60,16 @@
     text-transform: uppercase;
     letter-spacing: 0.5px;
     font-weight: 700;
-    padding-top: 14px;
-    padding-bottom: 14px;
-    padding-left: 14px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    padding-left: 15px;
     border-bottom: 2px solid #ebd9d900;
 }
 
 .custom-table tbody tr td {
     padding-top: 16px;
     padding-bottom: 16px;
-    padding-left: 14px;
+    padding-left: 16px;
     border-bottom: 1px solid #f1f3f5;
 }
 

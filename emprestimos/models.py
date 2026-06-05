@@ -13,9 +13,10 @@ class Emprestimo(models.Model):
     copias = models.ManyToManyField(Copia)
 
     class Meta:
+        permissions = (('devolucao_emprestimo', 'Permite fazer a devolução de um empréstimo'),)
         verbose_name = 'Empréstimo'
         verbose_name_plural = 'Empréstimos'
         ordering = ['-data_retirada']
 
     def __str__(self):
-        return self.data_retirada
+        return f"Empréstimo de {self.cliente} ({self.data_retirada.strftime('%d/%m/%Y')})"
