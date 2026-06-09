@@ -12,6 +12,7 @@ from reservas.forms import ReservaModelForm, ReservaListForm
 from reservas.models import Reserva
 from emprestimos.models import Emprestimo
 from django.urls import reverse_lazy
+from .reserva import scheduler, verificar_reserva_expirada
 
 
 class ReservasView(PermissionRequiredMixin, ListView):
@@ -30,19 +31,6 @@ class ReservasView(PermissionRequiredMixin, ListView):
         return context
 
     def get_queryset(self):
-        limite_atraso = timezone.now() - timedelta(minutes=15)
-
-        # Busca reservas não retiradas que já passaram do limite de 15 minutos
-        reservas_expiradas = Reserva.objects.filter(
-            data_retirada__isnull=True,
-            data_prevista_reserva__lt=limite_atraso
-        )
-
-        # Libera as cópias de volta para 'D' (Disponível) e deleta as reservas expiradas
-        for r in reservas_expiradas:
-            r.copias.update(status='D')
-            r.delete()
-
         qs = super(ReservasView, self).get_queryset()
         if self.request.GET:
             form = ReservaListForm(self.request.GET)
@@ -71,6 +59,7 @@ class ReservaAddView(PermissionRequiredMixin, SuccessMessageMixin, CreateView):
         cliente = form.cleaned_data.get('cliente')
         copias_selecionadas = form.cleaned_data.get('copias')
         qtd_copias_selecionadas = copias_selecionadas.count()
+        reserva = form.save(commit=False)
 
         # ---------- VERIFICAÇÃO DE EMPRÉSTIMOS EM ATRASO ---------- #
         tem_atraso = Emprestimo.objects.filter(
@@ -136,6 +125,18 @@ class ReservaAddView(PermissionRequiredMixin, SuccessMessageMixin, CreateView):
                     colecao.dono = cliente
                     colecao.fim_exclusividade = timezone.now().date() + timedelta(days=10)
                     colecao.save()
+
+        # ---------- VERIFICAÇÃO DE ATRASO PARA RETIRADA (15 MIN) ---------- #
+        horario_limite = self.object.data_prevista_reserva + timedelta(minutes=1)
+
+        scheduler.add_job(
+            verificar_reserva_expirada,
+            'date',
+            run_date=horario_limite,
+            args=[self.object.id]
+        )
+        scheduler.get_jobs()
+        reserva.save()
 
         # ---------- VERIFICAÇÃO DE COLEÇÃO (SUGESTÃO DE COMBOS) ---------- #
         copias_reservadas_ids = [c.id for c in self.object.copias.all()]

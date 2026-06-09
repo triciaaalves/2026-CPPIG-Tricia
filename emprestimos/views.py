@@ -101,20 +101,20 @@ class EmprestimoAddView(PermissionRequiredMixin, SuccessMessageMixin, CreateView
         # ---------- VERIFICAÇÃO DE COLEÇÃO EXCLUSIVA ---------- #
         for copia in copias_selecionadas:
             # getattr (objeto, nome do atributo, padrão)
-            # Verifica se o livro possui coleção, se não é None para não dar erro
+            # Verifica se o livro possui coleção, se não possui é None para não dar erro
             colecao = getattr(copia.livro, 'colecao', None)
 
             if colecao and getattr(colecao, 'tipo', None) == 'E':
                 fim_excl = colecao.fim_exclusividade
 
+                # A coleção já está exclusiva para outra pessoa
                 # Se a exclusividade ainda está ativa E o dono não é o cliente atual, bloqueia
-                if fim_excl and fim_excl >= timezone.now().date():
-                    if colecao.dono != cliente:
-                        form.add_error(
-                            'copias',
-                            f'A coleção "{colecao.nome}" está exclusiva até {colecao.fim_exclusividade.strftime("%d/%m/%Y")} para outro usuário: {colecao.dono}.'
-                        )
-                        return self.form_invalid(form)
+                if fim_excl and fim_excl >= timezone.now().date() and colecao.dono != cliente:
+                    form.add_error(
+                        'copias',
+                        f'A coleção "{colecao.nome}" está exclusiva até {colecao.fim_exclusividade.strftime("%d/%m/%Y")} para outro usuário: {colecao.dono}.'
+                    )
+                    return self.form_invalid(form)
 
         # Define prazo previsto padrão do empréstimo (7 dias)
         form.instance.data_prevista = timezone.now() + timedelta(days=7)
