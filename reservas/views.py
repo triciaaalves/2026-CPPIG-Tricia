@@ -127,7 +127,7 @@ class ReservaAddView(PermissionRequiredMixin, SuccessMessageMixin, CreateView):
                     colecao.save()
 
         # ---------- VERIFICAÇÃO DE ATRASO PARA RETIRADA (15 MIN) ---------- #
-        horario_limite = self.object.data_prevista_reserva + timedelta(minutes=1)
+        horario_limite = self.object.data_prevista_reserva + timedelta(minutes=2)
 
         scheduler.add_job(
             verificar_reserva_expirada,

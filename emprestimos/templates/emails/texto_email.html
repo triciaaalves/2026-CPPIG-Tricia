@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lembrete de Devolução</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #f4f6f8; font-family: Arial, sans-serif; color: #333333;">
+    <table style="background-color: #f4f6f8; padding: 40px 15px;">
+        <tr>
+            <td>
+                <table max-width="600" style="background-color: #ffffff; max-width: 600px; border-radius: 16px; border: 1px solid #e2e8f0; overflow: hidden;">
+                    <tr>
+                        <td style="padding: 20px 40px 40px 40px;">
+                            <h2 style="margin-top: 0; color: #212529; font-size: 22px;">Olá, <strong>{{ cliente }}</strong>!</h2>
+
+                            <p style="font-size: 16px; line-height: 1.6; color: #495057; margin-bottom: 25px;">
+                                Estamos enviando este e-mail para lembrar que <strong>hoje</strong> é a data prevista para a devolução dos livros que você retirou.
+                            </p>
+
+                            <div style="background-color: #f8f9fa; border-left: 4px solid #ec9d32; border-radius: 8px; padding: 20px; margin-bottom: 25px;">
+                                <h3 style="margin-top: 0; margin-bottom: 15px; color: #212529; font-size: 18px;">Dados do Empréstimo</h3>
+
+                                <p style="margin: 0 0 10px 0; font-size: 15px; color: #495057;">
+                                    <strong>Data prevista:</strong> <span style="color: #ec9d32; font-weight: bold;">{{ data_prevista | date:"d/m/Y" }}</span>
+                                </p>
+
+                                <p style="margin: 0 0 10px 0; font-size: 15px; color: #495057;">
+                                    <strong>Cópias emprestadas:</strong>
+                                </p>
+
+                                <div style="margin-top: 10px;">
+                                    {% for copia in emprestimo.copias.all %}
+                                            📚 {{ copia.livro.titulo }}
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            <p style="font-size: 15px; line-height: 1.6; color: #6c757d; margin-top: 30px; margin-bottom: 0;">
+                                Agradecemos por cuidar do nosso acervo!
+                            </p>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td align="center" style="background-color: #f8f9fa; border-top: 1px solid #e2e8f0; padding: 20px; font-size: 13px; color: #adb5bd;">
+                            Este é um e-mail automático do sistema da Biblioteca Digital. Por favor, não responda.
+                        </td>
+                    </tr>
+
+                </table>
+
+            </td>
+        </tr>
+    </table>
+
+</body>
+</html>

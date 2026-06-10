@@ -1,5 +1,6 @@
 {% extends 'principal.html' %}
 {% load django_bootstrap5 %}
+
 {% block main %}
     <div class="container-fluid">
          {% block menu %} {% include 'menu.html' %}{% endblock %}
@@ -13,44 +14,52 @@
                         <div class="card-body p-4">
                             <form method="POST" enctype="multipart/form-data">
                                 {% csrf_token %}
-                                {% if form.non_field_errors %}
-                                    <div class="alert alert-danger rounded-4">
-                                        {{ form.non_field_errors }}
-                                    </div>
-                                {% endif %}
-                                <div class="row g-3">
-                                    <div class="col-12">
-                                        {% bootstrap_field form.titulo wrapper_class='mb-2 fw-semibold text-secondary' %}
-                                    </div>
-                                    <div class="col-12 col-md-6">
-                                        {% bootstrap_field form.autor wrapper_class='mb-2 fw-semibold text-secondary' %}
-                                    </div>
-                                    <div class="col-12 col-md-6">
-                                        {% bootstrap_field form.genero wrapper_class='mb-2 fw-semibold text-secondary' %}
-                                    </div>
-                                    <div class="col-12 col-md-6">
-                                        {% bootstrap_field form.editora wrapper_class='mb-2 fw-semibold text-secondary' %}
-                                    </div>
-                                    <div class="col-12 col-md-6">
-                                        {% bootstrap_field form.foto wrapper_class='mb-2 fw-semibold text-secondary' %}
-                                    </div>
-
-                                    <div class="col-12 col-md-6">
-                                        {% bootstrap_field form.colecao wrapper_class='mb-2 fw-semibold text-secondary' %}
-                                    </div>
-
-                                    <div class="col-12 col-md-6">
-                                        {% bootstrap_field form.destaque wrapper_class='mb-2 fw-semibold text-secondary' %}
-                                    </div>
-
-                                    {% if object.foto.url is not empty %}
-                                    <div class="col-12 mt-2">
-                                        <div class="p-3 bg-light rounded-4 d-inline-block border border-light-subtle">
-                                            <p class="small text-secondary fw-semibold mb-2">Capa atual cadastrada:</p>
-                                            <img src="{{ object.foto.url }}" class="rounded shadow-sm" style="width: 110px; height: 150px; object-fit: cover;" alt="Capa do livro">
+                                <div class="row g-4 mb-4">
+                                    <div class="col-12 col-lg-4">
+                                        <div class="p-4 bg-light rounded-4 border border-light-subtle h-100 d-flex flex-column align-items-center">
+                                            <h6 class="fw-bold text-secondary mb-3 w-100 text-start">
+                                                <i class="bi bi-image me-2"></i>Capa do Livro
+                                            </h6>
+                                            <div class="mt-auto text-center w-100 border-top border-light-subtle py-3">
+                                                {% if object.foto %}
+                                                    <p class="small text-secondary fw-semibold mb-2">Capa atual cadastrada:</p>
+                                                    <img src="{{ object.foto.url }}" class="rounded shadow-sm border" style="width: 140px; height: 200px; object-fit: cover;" alt="Capa do livro">
+                                                {% else %}
+                                                    <div class="d-inline-flex align-items-center justify-content-center bg-white border border-light-subtle rounded shadow-sm" style="width: 140px; height: 200px;">
+                                                        <i class="bi bi-book text-light-subtle" style="font-size: 4rem;"></i>
+                                                    </div>
+                                                    <p class="small text-muted mt-2 mb-0">Nenhuma capa cadastrada</p>
+                                                {% endif %}
+                                            </div>
+                                            <div class="w-100">
+                                                {% bootstrap_field form.foto wrapper_class='fw-semibold text-secondary' show_label=False %}
+                                            </div>
                                         </div>
                                     </div>
-                                    {% endif %}
+                                    <div class="col-12 col-lg-8">
+                                        <div class="row g-3">
+                                            <div class="col-12">
+                                                {% bootstrap_field form.titulo wrapper_class='mb-2 fw-semibold text-secondary' %}
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                {% bootstrap_field form.autor wrapper_class='mb-2 fw-semibold text-secondary' %}
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                {% bootstrap_field form.editora wrapper_class='mb-2 fw-semibold text-secondary' %}
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                {% bootstrap_field form.genero wrapper_class='mb-2 fw-semibold text-secondary' %}
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                {% bootstrap_field form.colecao wrapper_class='mb-2 fw-semibold text-secondary' %}
+                                            </div>
+                                            <div class="col-12 mt-3">
+                                                <div class="p-3 bg-light rounded-4 border border-light-subtle d-flex align-items-center">
+                                                    {% bootstrap_field form.destaque wrapper_class='mb-0 fw-semibold' %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <hr class="text-light-subtle my-4">
                                 <div class="d-flex justify-content-end gap-2">

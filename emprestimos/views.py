@@ -9,10 +9,10 @@ from django.views import View
 from django.views.generic import ListView, CreateView
 from django.contrib import messages
 from emprestimos.forms import EmprestimoModelForm, EmprestimoListForm
-from emprestimos.models import Emprestimo
 from reservas.models import Reserva
 from django.urls import reverse_lazy
-from django.db.models import Count
+
+from .emprestimo import scheduler, enviar_lembrete
 from .models import Emprestimo
 from copias.models import Copia
 from django.shortcuts import render, redirect, get_object_or_404
@@ -63,6 +63,7 @@ class EmprestimoAddView(PermissionRequiredMixin, SuccessMessageMixin, CreateView
         cliente = form.cleaned_data.get('cliente')
         copias_selecionadas = form.cleaned_data.get('copias')
         qtd_copias_selecionadas = copias_selecionadas.count()
+        emprestimo = form.save(commit=False)
 
         # ---------- VERIFICAÇÃO DE EMPRÉSTIMOS EM ATRASO ---------- #
         tem_atraso = Emprestimo.objects.filter(
@@ -117,7 +118,7 @@ class EmprestimoAddView(PermissionRequiredMixin, SuccessMessageMixin, CreateView
                     return self.form_invalid(form)
 
         # Define prazo previsto padrão do empréstimo (7 dias)
-        form.instance.data_prevista = timezone.now() + timedelta(days=7)
+        form.instance.data_prevista = timezone.now() #+ timedelta(days=7)
         resposta = super().form_valid(form)
 
         # ---------- SALVAMENTO E ATUALIZAÇÃO DOS STATUS ---------- #
@@ -132,6 +133,14 @@ class EmprestimoAddView(PermissionRequiredMixin, SuccessMessageMixin, CreateView
                     colecao.dono = cliente
                     colecao.fim_exclusividade = timezone.now().date() + timedelta(days=10)
                     colecao.save()
+
+        # ---------- ENVIAR LEMBRETE NO DIA DA DEVOLUÇÃO ---------- #
+        scheduler.add_job(
+            enviar_lembrete,
+            'date',
+            run_date=emprestimo.data_prevista,
+            args=[self.object.id]
+        )
 
         # ---------- VERIFIÇÃO DE COLEÇÃO (SUGESTÃO DE COMBOS) ---------- #
         livros_emprestados_ids = [c.livro.id for c in self.object.copias.all()]
