@@ -17,7 +17,7 @@ def enviar_lembrete(emprestimo_id):
         dados = {
             'cliente': emprestimo.cliente.nome,
             'data_prevista': emprestimo.data_prevista,
-            'copias': emprestimo.copias,
+            'copias': emprestimo.copias.all(),
         }
 
         texto_email = render_to_string('emails/texto_email.txt', dados)
