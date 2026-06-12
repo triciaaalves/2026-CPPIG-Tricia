@@ -1,9 +1,7 @@
 from datetime import timedelta
-
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.paginator import Paginator
-from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.views import View
 from django.views.generic import ListView, CreateView
@@ -11,7 +9,6 @@ from django.contrib import messages
 from emprestimos.forms import EmprestimoModelForm, EmprestimoListForm
 from reservas.models import Reserva
 from django.urls import reverse_lazy
-
 from .emprestimo import scheduler, enviar_lembrete
 from .models import Emprestimo
 from copias.models import Copia
@@ -118,7 +115,7 @@ class EmprestimoAddView(PermissionRequiredMixin, SuccessMessageMixin, CreateView
                     return self.form_invalid(form)
 
         # Define prazo previsto padrão do empréstimo (7 dias)
-        form.instance.data_prevista = timezone.now() #+ timedelta(days=7)
+        form.instance.data_prevista = timezone.now() + timedelta(days=7)
         resposta = super().form_valid(form)
 
         # ---------- SALVAMENTO E ATUALIZAÇÃO DOS STATUS ---------- #

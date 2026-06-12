@@ -1,0 +1,17 @@
+Biblioteca Digital
+
+Olá, {{cliente}}!
+
+Estamos enviando este e-mail lembrar que hoje é a data prevista para a devolução dos livros que você retirou.
+
+Dados do Empréstimo
+
+Data prevista: {{ data_prevista | date:"d/m/Y" }}
+Cópias emprestadas:
+{% for copia in copias %}
+    {{ copia.livro.titulo }} \n
+{% endfor %}
+
+Agradecemos por cuidar do nosso acervo!
+
+Este é um e-mail automático do sistema da Biblioteca Digital. Por favor, não responda.
