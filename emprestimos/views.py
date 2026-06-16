@@ -4,12 +4,12 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.core.paginator import Paginator
 from django.utils import timezone
 from django.views import View
-from django.views.generic import ListView, CreateView
+from django.views.generic import ListView, CreateView, DeleteView
 from django.contrib import messages
 from emprestimos.forms import EmprestimoModelForm, EmprestimoListForm
 from reservas.models import Reserva
 from django.urls import reverse_lazy
-from .emprestimo import scheduler, enviar_lembrete
+from .emprestimo import scheduler, enviar_lembrete, enviar_atraso
 from .models import Emprestimo
 from copias.models import Copia
 from django.shortcuts import render, redirect, get_object_or_404
@@ -115,7 +115,7 @@ class EmprestimoAddView(PermissionRequiredMixin, SuccessMessageMixin, CreateView
                     return self.form_invalid(form)
 
         # Define prazo previsto padrão do empréstimo (7 dias)
-        form.instance.data_prevista = timezone.now() + timedelta(days=7)
+        form.instance.data_prevista = timezone.now() - timedelta(days=1)
         resposta = super().form_valid(form)
 
         # ---------- SALVAMENTO E ATUALIZAÇÃO DOS STATUS ---------- #
@@ -136,6 +136,14 @@ class EmprestimoAddView(PermissionRequiredMixin, SuccessMessageMixin, CreateView
             enviar_lembrete,
             'date',
             run_date=emprestimo.data_prevista,
+            args=[self.object.id]
+        )
+
+        # ---------- ENVIAR LEMBRETE DE EMPRÉSTIMO EM ATRASO ---------- #
+        scheduler.add_job(
+            enviar_atraso,
+            'date',
+            run_date=emprestimo.data_prevista + timedelta(days=1),
             args=[self.object.id]
         )
 
@@ -264,3 +272,16 @@ class EmprestimoDevolucao(View):
         emprestimo.copias.update(status='D')
         emprestimo.save()
         return redirect('emprestimos')
+
+class EmprestimoDeleteView(PermissionRequiredMixin, SuccessMessageMixin, DeleteView):
+    permission_required = 'emprestimos.delete_emprestimo'
+    permission_denied_message = 'Excluir empréstimo'
+    model = Emprestimo
+    template_name = 'emprestimo_apagar.html'
+    success_url = reverse_lazy('emprestimos')
+    success_message = 'Empréstimo apagada com sucesso!'
+
+    def form_valid(self, form):
+        emprestimo = self.get_object()
+        emprestimo.copias.update(status='D')
+        return super().form_valid(form)

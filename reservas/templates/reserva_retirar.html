@@ -17,8 +17,6 @@
                                     <h6 class="fw-bold mb-0 text-dark">Atenção!</h6>
                                 </div>
                             </div>
-                             <form method="POST" enctype="multipart/form-data">
-                                {% csrf_token %}
                             <div class="p-3 bg-light rounded-4 border border-light-subtle mb-4">
                                 <div class="row g-3">
                                     <div class="col-12 col-md-5">
@@ -29,13 +27,23 @@
                                         <span class="text-muted small d-block fw-semibold text-uppercase">Usuário</span>
                                         <span class="fw-semibold text-secondary">{{ reserva.cliente }}</span>
                                     </div>
+<!--                                    <div class="col-12 col-md-3">-->
+<!--                                        <span class="text-muted small d-block fw-semibold text-uppercase">Secretário</span>-->
+<!--                                            <select name="secretario">-->
+<!--                                                {% for secretario in secretarios %}-->
+<!--                                                    <option value="{{ secretario.id }}">{{ secretario.nome }}</option>-->
+<!--                                                {% endfor %}-->
+<!--                                            </select>-->
+<!--                                    </div>-->
                                     <div class="col-12 col-md-3">
-                                        <span class="text-muted small d-block fw-semibold text-uppercase">Secretário</span>
-                                            <select name="secretario">
-                                                {% for secretario in secretarios %}
-                                                    <option value="{{ secretario.id }}">{{ secretario.nome }}</option>
-                                                {% endfor %}
-                                            </select>
+                                        <label for="secretario_select" class="text-muted small d-block fw-semibold text-uppercase mb-2">Secretário</label>
+
+                                        <select name="secretario" id="secretario_select" class="form-select shadow-sm border-light-subtle fw-medium text-secondary" required>
+                                            <option value="" disabled selected>Selecione...</option>
+                                            {% for secretario in secretarios %}
+                                                <option value="{{ secretario.id }}">{{ secretario.nome }}</option>
+                                            {% endfor %}
+                                        </select>
                                     </div>
                                     <div class="col-12 mt-3 pt-3 border-top border-light-subtle">
                                         <span class="text-muted small d-block fw-semibold text-uppercase mb-2">Cópia(s) a retirar</span>
@@ -52,6 +60,8 @@
                             <p class="text-dark fw-medium mb-4">
                                 Confirma a retirada definitiva da(s) cópia(s) reservada(s)?
                             </p>
+                             <form method="POST" enctype="multipart/form-data">
+                                 {% csrf_token %}
                                 <hr class="text-light-subtle my-4">
                                 <div class="d-flex justify-content-end gap-2">
                                     <a href="{% url 'reservas' %}" class="btn btn-light border fw-medium px-4 py-2 rounded-4 text-secondary shadow-sm">
