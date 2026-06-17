@@ -115,7 +115,7 @@ class EmprestimoAddView(PermissionRequiredMixin, SuccessMessageMixin, CreateView
                     return self.form_invalid(form)
 
         # Define prazo previsto padrão do empréstimo (7 dias)
-        form.instance.data_prevista = timezone.now() - timedelta(days=1)
+        form.instance.data_prevista = timezone.now() + timedelta(days=7)
         resposta = super().form_valid(form)
 
         # ---------- SALVAMENTO E ATUALIZAÇÃO DOS STATUS ---------- #

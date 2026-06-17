@@ -272,17 +272,6 @@ class ReservaRetirada(View):
 
     def post(self, request, pk):
         reserva = Reserva.objects.get(pk=pk)
-
-        # tem_atraso = Emprestimo.objects.filter(
-        #     cliente=reserva.cliente,
-        #     data_devolucao__isnull=True,
-        #     data_prevista__lt=timezone.now()
-        # ).exists()
-        #
-        # if tem_atraso:
-        #     messages.error(request, 'Operação cancelada! O usuário possui livros em atraso.')
-        #     return redirect('reservas')
-
         secretario = request.POST.get('secretario')
         secretario_nome = Secretario.objects.get(pk=secretario)
 

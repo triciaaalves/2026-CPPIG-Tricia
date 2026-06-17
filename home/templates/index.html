@@ -10,12 +10,12 @@
             </p>
             <div class="d-flex justify-content-center mt-4">
                 <div class="input-group w-50">
-                    <input type="text" class="form-control rounded-start-4 px-4 py-2 border border-end-0"
+                    <input type="text" class="form-control rounded-start-4 px-4 py-2 border border-end-0" name="buscar" value="{{ LivrosView.request.GET.buscar }}"
                         placeholder="Buscar livro">
-                    <button class="btn rounded-end-pill border border-start-0"
+                    <a role="button" class="btn rounded-end-pill border border-start-0" href="{% url 'livros' %}"
                         style="background-color: #ffffff;">
                         <i class="bi bi-search" style="color: #FFB145;"></i>
-                    </button>
+                    </a>
                 </div>
             </div>
         </div>

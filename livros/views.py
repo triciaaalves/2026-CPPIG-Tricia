@@ -110,7 +110,7 @@ class LivroUpdateView(PermissionRequiredMixin, SuccessMessageMixin, UpdateView):
 
     def get_form(self, form_class=None):
         form=super().get_form(form_class)
-        form.fields['editora'].widget.attrs['disabled']='disabled'
+        form.fields['editora'].widget.attrs['readonly']='False'
         form.fields['colecao'].widget.attrs['disabled']='disabled'
         return form
 

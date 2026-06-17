@@ -17,6 +17,8 @@
                                     <h6 class="fw-bold mb-0 text-dark">Atenção!</h6>
                                 </div>
                             </div>
+                            <form method="POST" enctype="multipart/form-data">
+                                 {% csrf_token %}
                             <div class="p-3 bg-light rounded-4 border border-light-subtle mb-4">
                                 <div class="row g-3">
                                     <div class="col-12 col-md-5">
@@ -60,8 +62,7 @@
                             <p class="text-dark fw-medium mb-4">
                                 Confirma a retirada definitiva da(s) cópia(s) reservada(s)?
                             </p>
-                             <form method="POST" enctype="multipart/form-data">
-                                 {% csrf_token %}
+
                                 <hr class="text-light-subtle my-4">
                                 <div class="d-flex justify-content-end gap-2">
                                     <a href="{% url 'reservas' %}" class="btn btn-light border fw-medium px-4 py-2 rounded-4 text-secondary shadow-sm">
