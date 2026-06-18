@@ -96,6 +96,29 @@ class EmprestimoAddView(PermissionRequiredMixin, SuccessMessageMixin, CreateView
             form.add_error('copias', mensagem)
             return self.form_invalid(form)
 
+        # ---------- VERIFICA SE O USUÁRIO JÁ É DONO DE UMA COLEÇÃO ---------- #
+        colecao_exclusiva_do_cliente = None
+
+        for emp in emprestimos_ativos:
+            for c in emp.copias.all():
+                col = getattr(c.livro, 'colecao', None)
+                if col and getattr(col, 'tipo', None) == 'E' and getattr(col, 'dono', None) == cliente:
+                    if col.fim_exclusividade and col.fim_exclusividade >= timezone.now().date():
+                        colecao_exclusiva_do_cliente = col
+                        break
+            if colecao_exclusiva_do_cliente: break
+
+        # Se não achou nos empréstimos, busca nas reservas ativas
+        if not colecao_exclusiva_do_cliente:
+            for res in reservas_ativas:
+                for c in res.copias.all():
+                    col = getattr(c.livro, 'colecao', None)
+                    if col and getattr(col, 'tipo', None) == 'E' and getattr(col, 'dono', None) == cliente:
+                        if col.fim_exclusividade and col.fim_exclusividade >= timezone.now().date():
+                            colecao_exclusiva_do_cliente = col
+                            break
+                if colecao_exclusiva_do_cliente: break
+
         # ---------- VERIFICAÇÃO DE COLEÇÃO EXCLUSIVA ---------- #
         for copia in copias_selecionadas:
             # getattr (objeto, nome do atributo, padrão)
@@ -113,6 +136,18 @@ class EmprestimoAddView(PermissionRequiredMixin, SuccessMessageMixin, CreateView
                         f'A coleção "{colecao.nome}" está exclusiva até {colecao.fim_exclusividade.strftime("%d/%m/%Y")} para outro usuário: {colecao.dono}.'
                     )
                     return self.form_invalid(form)
+
+                # O usuário já é dono de uma coleção e está tentando pegar cópias de outra coleção
+                if colecao_exclusiva_do_cliente and colecao != colecao_exclusiva_do_cliente:
+                    form.add_error(
+                        'copias',
+                        f'O usuário já é dono da coleção "{colecao_exclusiva_do_cliente.nome}". Não é permitido possuir mais de uma coleção exclusiva simultaneamente.'
+                    )
+                    return self.form_invalid(form)
+
+                # Armazena a coleção da cópia na variável, para se o usuário selecionar duas cópias em coleções diferentes
+                if not colecao_exclusiva_do_cliente:
+                    colecao_exclusiva_do_cliente = colecao
 
         # Define prazo previsto padrão do empréstimo (7 dias)
         form.instance.data_prevista = timezone.now() + timedelta(days=7)

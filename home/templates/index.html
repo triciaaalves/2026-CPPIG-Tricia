@@ -9,14 +9,15 @@
                 Explore nosso acervo, reserve livros e gerencie seus empréstimos.
             </p>
             <div class="d-flex justify-content-center mt-4">
-                <div class="input-group w-50">
-                    <input type="text" class="form-control rounded-start-4 px-4 py-2 border border-end-0" name="buscar" value="{{ LivrosView.request.GET.buscar }}"
-                        placeholder="Buscar livro">
-                    <a role="button" class="btn rounded-end-pill border border-start-0" href="{% url 'livros' %}"
-                        style="background-color: #ffffff;">
-                        <i class="bi bi-search" style="color: #FFB145;"></i>
-                    </a>
-                </div>
+                <form action="{% url 'livros' %}" method="GET" class="w-50">
+                    <div class="input-group w-100">
+                        <input type="text" class="form-control rounded-start-4 px-4 py-2 border border-end-0" name="buscar" value="{{ request.GET.buscar }}" placeholder="Buscar livro">
+
+                        <button type="submit" class="btn rounded-end-pill border border-start-0" style="background-color: #ffffff;">
+                            <i class="bi bi-search" style="color: #FFB145;"></i>
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </section>
