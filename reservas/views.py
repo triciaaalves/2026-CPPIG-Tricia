@@ -94,9 +94,31 @@ class ReservaAddView(PermissionRequiredMixin, SuccessMessageMixin, CreateView):
                 mensagem = f'O usuário pode reservar no máximo {limite_livros} cópias.'
             else:
                 mensagem = f'O usuário já tem {total} livro(s). Você só pode reservar mais {disponivel} cópia(s) para ele.'
-
             form.add_error('copias', mensagem)
             return self.form_invalid(form)
+
+        # ---------- VERIFICA SE O USUÁRIO JÁ É DONO DE UMA COLEÇÃO ---------- #
+        colecao_exclusiva_do_cliente = None
+
+        for emp in emprestimos_ativos:
+            for c in emp.copias.all():
+                col = getattr(c.livro, 'colecao', None)
+                if col and getattr(col, 'tipo', None) == 'E' and getattr(col, 'dono', None) == cliente:
+                    if col.fim_exclusividade and col.fim_exclusividade >= timezone.now().date():
+                        colecao_exclusiva_do_cliente = col
+                        break
+            if colecao_exclusiva_do_cliente: break
+
+        # Se não achou nos empréstimos, busca nas reservas ativas
+        if not colecao_exclusiva_do_cliente:
+            for res in reservas_ativas:
+                for c in res.copias.all():
+                    col = getattr(c.livro, 'colecao', None)
+                    if col and getattr(col, 'tipo', None) == 'E' and getattr(col, 'dono', None) == cliente:
+                        if col.fim_exclusividade and col.fim_exclusividade >= timezone.now().date():
+                            colecao_exclusiva_do_cliente = col
+                            break
+                if colecao_exclusiva_do_cliente: break
 
         # ---------- VERIFICAÇÃO DE COLEÇÃO EXCLUSIVA ---------- #
         for copia in copias_selecionadas:
@@ -105,20 +127,33 @@ class ReservaAddView(PermissionRequiredMixin, SuccessMessageMixin, CreateView):
             if colecao and getattr(colecao, 'tipo', None) == 'E':
                 fim_excl = colecao.fim_exclusividade
 
-                if fim_excl and fim_excl >= timezone.now().date():
-                    if colecao.dono != cliente:
-                        form.add_error(
-                            'copias',
-                            f'A coleção "{colecao.nome}" está exclusiva até {colecao.fim_exclusividade.strftime("%d/%m/%Y")} para outro usuário: {colecao.dono}.'
-                        )
-                        return self.form_invalid(form)
+                # A coleção já está exclusiva para outra pessoa
+                # Se a exclusividade ainda está ativa E o dono não é o cliente atual, bloqueia
+                if fim_excl and fim_excl >= timezone.now().date() and colecao.dono != cliente:
+                    form.add_error(
+                        'copias',
+                        f'A coleção "{colecao.nome}" está exclusiva até {colecao.fim_exclusividade.strftime("%d/%m/%Y")} para outro usuário: {colecao.dono}.'
+                    )
+                    return self.form_invalid(form)
+
+                # O usuário já é dono de uma coleção e está tentando pegar cópias de outra coleção
+                if colecao_exclusiva_do_cliente and colecao != colecao_exclusiva_do_cliente:
+                    form.add_error(
+                        'copias',
+                        f'O usuário já é dono da coleção "{colecao_exclusiva_do_cliente.nome}". Não é permitido possuir mais de uma coleção exclusiva simultaneamente.'
+                    )
+                    return self.form_invalid(form)
+
+                # Armazena a coleção da cópia na variável, para se o usuário selecionar duas cópias em coleções diferentes
+                if not colecao_exclusiva_do_cliente:
+                    colecao_exclusiva_do_cliente = colecao
 
         # Salva a reserva inicial se passou em tudo
         resposta = super().form_valid(form)
 
         # ---------- SALVAMENTO E ATUALIZAÇÃO DOS STATUS ---------- #
         for copia in self.object.copias.all():
-            copia.status = 'R'  # Status: Reservado
+            copia.status = 'R'
             copia.save()
 
             colecao = getattr(copia.livro, 'colecao', None)
@@ -129,7 +164,7 @@ class ReservaAddView(PermissionRequiredMixin, SuccessMessageMixin, CreateView):
                     colecao.save()
 
         # ---------- VERIFICAÇÃO DE ATRASO PARA RETIRADA (15 MIN) ---------- #
-        horario_limite = self.object.data_prevista_reserva + timedelta(minutes=2)
+        horario_limite = self.object.data_prevista_reserva + timedelta(minutes=15)
 
         scheduler.add_job(
             verificar_reserva_expirada,
@@ -153,7 +188,7 @@ class ReservaAddView(PermissionRequiredMixin, SuccessMessageMixin, CreateView):
             outras_copias_disponiveis = Copia.objects.filter(
                 livro__colecao__in=colecoes_encontradas,
                 status='D'
-            ).exclude(id__in=copias_reservadas_ids).exists()
+            ).exclude(livro__id__in=copias_reservadas_ids).exists()
 
             if outras_copias_disponiveis:
                 return redirect('reserva_sugestao', pk=self.object.pk)

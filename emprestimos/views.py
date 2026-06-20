@@ -183,7 +183,7 @@ class EmprestimoAddView(PermissionRequiredMixin, SuccessMessageMixin, CreateView
         )
 
         # ---------- VERIFIÇÃO DE COLEÇÃO (SUGESTÃO DE COMBOS) ---------- #
-        livros_emprestados_ids = [c.livro.id for c in self.object.copias.all()]
+        copias_emprestadas_ids = [c.id for c in self.object.copias.all()]
         colecoes_encontradas = []
 
         for copia in self.object.copias.all():
@@ -196,7 +196,7 @@ class EmprestimoAddView(PermissionRequiredMixin, SuccessMessageMixin, CreateView
             outras_copias_disponiveis = Copia.objects.filter(
                 livro__colecao__in=colecoes_encontradas,
                 status='D'
-            ).exclude(livro__id__in=livros_emprestados_ids).exists()
+            ).exclude(livro__id__in=copias_emprestadas_ids).exists()
 
             # Se houver sugestões viáveis, desvia o caminho tradicional e joga para a tela de combos
             if outras_copias_disponiveis:
@@ -208,8 +208,8 @@ class EmprestimoSugestaoView(View):
     template_name = 'emprestimo_sugestao.html'
 
     def obter_dados_contexto(self, emprestimo):
-        # Identifica os IDs dos livros já levados no empréstimo original
-        livros_emprestados_ids = [c.livro.id for c in emprestimo.copias.all()]
+        # Identifica os IDs das cópias já levados no empréstimo original
+        copias_emprestadas_ids = [c.id for c in emprestimo.copias.all()]
 
         # Captura as coleções envolvidas
         colecoes = [c.livro.colecao for c in emprestimo.copias.all() if hasattr(c.livro, 'colecao') and c.livro.colecao]
@@ -219,7 +219,7 @@ class EmprestimoSugestaoView(View):
         copias_sugeridas = Copia.objects.filter(
             livro__colecao__in=colecoes,
             status='D'
-        ).exclude(livro__id__in=livros_emprestados_ids).select_related('livro')
+        ).exclude(id__in=copias_emprestadas_ids).select_related('livro')
 
         # Recalcula a cota atual do cliente (lembrando que o empréstimo atual já foi salvo)
         emprestimos_ativos = Emprestimo.objects.filter(cliente=emprestimo.cliente, data_devolucao__isnull=True)

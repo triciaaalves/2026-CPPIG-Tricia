@@ -4,17 +4,13 @@
     <div class="container-fluid">
          {% block menu %} {% include 'menu.html' %}{% endblock %}
          {% block content %}
-
             <section class="py-4">
                 <div class="container">
-
                     <div class="mb-4">
                         <h1 class="fw-bold mb-1" style="font-size: 2.2rem;">Confirmar Exclusão</h1>
                     </div>
-
                     <div class="card shadow-sm border-light-subtle rounded-4 bg-white mb-5">
                         <div class="card-body p-4">
-
                             <div class="alert alert-warning border-0 rounded-4 d-flex align-items-center mb-4">
                                 <i class="bi bi-exclamation-triangle-fill fs-4 me-3 text-warning"></i>
                                 <div>
@@ -22,17 +18,26 @@
                                     <span class="small text-secondary">Certifique-se de que não existem cópias físicas ou reservas associadas a este livro antes de prosseguir.</span>
                                 </div>
                             </div>
-                            <div class="p-3 bg-light rounded-4 border border-light-subtle mb-4">
+                           <div class="p-4 bg-light rounded-4 border border-light-subtle mb-4">
                                 <div class="row g-3 align-items-center">
-                                    {% if object.foto and object.foto.url %}
                                     <div class="col-12 col-md-2 text-center text-md-start">
-                                        <img src="{{ object.foto.url }}" class="rounded shadow-sm border" style="width: 90px; height: 130px; object-fit: cover;" alt="Capa">
+                                        {% if object.foto %}
+                                            <img src="{{ object.foto.url }}"
+                                                 class="rounded shadow-sm border"
+                                                 style="width: 150px; height: 220px; object-fit: cover;"
+                                                 alt="Capa">
+                                        {% else %}
+                                            <div class="rounded d-flex flex-column align-items-center justify-content-center bg-white border border-dashed border-secondary-subtle mx-auto mx-md-0 shadow-sm"
+                                                 style="width: 150px; height: 220px;">
+                                                <i class="bi bi-image text-muted fs-1 mb-2"></i>
+                                                <span class="text-muted small fw-medium">Sem capa</span>
+                                            </div>
+                                        {% endif %}
                                     </div>
-                                    {% endif %}
-                                    <div class="col-12 {% if object.foto and object.foto.url %}col-md-10{% endif %}">
+                                    <div class="col-12 col-md-10">
                                         <div class="row g-3">
                                             <div class="col-12 col-md-6">
-                                                <span class="text-muted small d-block fw-semibold text-uppercase">Título da Obra</span>
+                                                <span class="text-muted small d-block fw-semibold text-uppercase">Título</span>
                                                 <span class="fw-bold text-dark fs-5">{{ object.titulo }}</span>
                                             </div>
                                             <div class="col-12 col-md-6">
@@ -47,7 +52,6 @@
                                                 <span class="text-muted small d-block fw-semibold text-uppercase">Editora</span>
                                                 <span class="fw-semibold text-secondary">{{ object.editora }}</span>
                                             </div>
-
                                             <div class="col-12 col-md-4">
                                                 <span class="text-muted small d-block fw-semibold text-uppercase">Coleção</span>
                                                 <span class="fw-semibold text-secondary">
@@ -58,14 +62,13 @@
                                                     {% endif %}
                                                 </span>
                                             </div>
-
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
+
                             <p class="text-dark fw-medium mb-4">
-                                Confirma a exclusão definitiva do livro <strong>{{ object }}</strong>?
+                                Confirma a exclusão definitiva deste livro do acervo?
                             </p>
                             <form method="POST" enctype="multipart/form-data">
                                 {% csrf_token %}
