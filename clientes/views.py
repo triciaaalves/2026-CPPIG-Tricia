@@ -53,7 +53,7 @@ class ClienteDeleteView(PermissionRequiredMixin, SuccessMessageMixin, DeleteView
     model = Cliente
     template_name = 'cliente_apagar.html'
     success_url = reverse_lazy('clientes')
-    success_message = 'Usuário apagado com sucesso!'
+    success_message = 'Usuário   apagado com sucesso!'
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()

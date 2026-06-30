@@ -56,17 +56,3 @@ class ColecaoDeleteView(PermissionRequiredMixin, SuccessMessageMixin, DeleteView
     template_name = 'colecao_apagar.html'
     success_url = reverse_lazy('colecoes')
     success_message = 'Coleção apagada com sucesso!'
-
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        success_url = self.get_success_url()
-
-        try:
-            return super().post(request, *args, **kwargs)
-        except ProtectedError:
-            messages.error(
-                request,
-                f'Não é possível excluir a coleção {self.object.nome}! '
-                f'Ela possui vínculos de proteção no sistema.'
-            )
-            return redirect(success_url)

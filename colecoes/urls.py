@@ -1,5 +1,4 @@
 from django.urls import path
-
 from colecoes.views import ColecaoAddView, ColecaoUpdateView, ColecaoDeleteView, ColecoesView
 
 urlpatterns = [

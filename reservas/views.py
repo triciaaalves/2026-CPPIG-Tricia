@@ -180,9 +180,10 @@ class ReservaAddView(PermissionRequiredMixin, SuccessMessageMixin, CreateView):
         colecoes_encontradas = []
 
         for copia in self.object.copias.all():
-            if hasattr(copia.livro, 'colecao') and copia.livro.colecao:
-                if copia.livro.colecao not in colecoes_encontradas:
-                    colecoes_encontradas.append(copia.livro.colecao)
+            colecao = getattr(copia.livro, 'colecao', None)
+            if colecao:
+                if colecao not in colecoes_encontradas:
+                    colecoes_encontradas.append(colecao)
 
         if colecoes_encontradas:
             outras_copias_disponiveis = Copia.objects.filter(
@@ -201,8 +202,12 @@ class ReservaSugestaoView(View):
     def obter_dados_contexto(self, reserva):
         copias_reservadas_ids = [c.id for c in reserva.copias.all()]
 
-        colecoes = [c.livro.colecao for c in reserva.copias.all() if hasattr(c.livro, 'colecao') and c.livro.colecao]
-        colecoes = list(set(colecoes))
+        colecoes = []
+        for c in emprestimo.copias.all():
+            colecao = getattr(c.livro, 'colecao', None)
+            if colecao:
+                colecoes.append(colecao)
+        colecoes = list(set(colecoes))  # Remove duplicadas
 
         copias_sugeridas = Copia.objects.filter(
             livro__colecao__in=colecoes,
@@ -278,7 +283,6 @@ class ReservaDeleteView(PermissionRequiredMixin, SuccessMessageMixin, DeleteView
         reserva = self.get_object()
         reserva.copias.update(status='D')
         return super().form_valid(form)
-
 
 class ReservaRetirada(View):
     template_name = 'reserva_retirar.html'

@@ -1,5 +1,4 @@
 from django.urls import path
-
 from copias.views import CopiaAddView, CopiaUpdateView, CopiaDeleteView, CopiasView
 
 urlpatterns = [

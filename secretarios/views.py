@@ -9,7 +9,6 @@ from django.urls import reverse_lazy
 from secretarios.forms import SecretarioModelForm
 from secretarios.models import Secretario
 
-
 class SecretariosView(PermissionRequiredMixin, ListView):
     permission_required = 'secretarios.view_secretario'
     permission_denied_message = 'Visualizar secretário'

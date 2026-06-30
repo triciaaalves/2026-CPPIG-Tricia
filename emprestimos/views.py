@@ -174,7 +174,7 @@ class EmprestimoAddView(PermissionRequiredMixin, SuccessMessageMixin, CreateView
             args=[self.object.id]
         )
 
-        # ---------- ENVIAR LEMBRETE DE EMPRÉSTIMO EM ATRASO ---------- #
+        # ---------- ENVIAR ALERTA DE EMPRÉSTIMO EM ATRASO ---------- #
         scheduler.add_job(
             enviar_atraso,
             'date',
@@ -187,9 +187,10 @@ class EmprestimoAddView(PermissionRequiredMixin, SuccessMessageMixin, CreateView
         colecoes_encontradas = []
 
         for copia in self.object.copias.all():
-            if hasattr(copia.livro, 'colecao') and copia.livro.colecao:
-                if copia.livro.colecao not in colecoes_encontradas:
-                    colecoes_encontradas.append(copia.livro.colecao)
+            colecao = getattr(copia.livro, 'colecao', None)
+            if colecao:
+                if colecao not in colecoes_encontradas:
+                    colecoes_encontradas.append(colecao)
 
         if colecoes_encontradas:
             # Verifica se existem OUTRAS cópias no acervo que estão DISPONÍVEIS ('D') destas coleções
@@ -212,7 +213,11 @@ class EmprestimoSugestaoView(View):
         copias_emprestadas_ids = [c.id for c in emprestimo.copias.all()]
 
         # Captura as coleções envolvidas
-        colecoes = [c.livro.colecao for c in emprestimo.copias.all() if hasattr(c.livro, 'colecao') and c.livro.colecao]
+        colecoes = []
+        for c in emprestimo.copias.all():
+            colecao = getattr(c.livro, 'colecao', None)
+            if colecao:
+                colecoes.append(colecao)
         colecoes = list(set(colecoes))  # Remove duplicadas
 
         # Filtra cópias disponíveis dos outros livros que pertencem àquela coleção
@@ -299,10 +304,6 @@ class EmprestimoDevolucao(View):
 
     def post(self, request, pk):
         emprestimo = Emprestimo.objects.get(pk=pk)
-        # Se o usuário tentar colocar a URL de empréstimos já devolvidos
-        if emprestimo.data_devolucao:
-            messages.warning(request, 'Este empréstimo já foi devolvido anteriormente!')
-            return redirect('emprestimos')
         emprestimo.data_devolucao = timezone.now()
         emprestimo.copias.update(status='D')
         emprestimo.save()

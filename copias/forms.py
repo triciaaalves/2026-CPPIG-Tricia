@@ -8,6 +8,7 @@ class CopiaModelForm(forms.ModelForm):
         fields = ['isbn', 'ano', 'livro']
 
         error_messages = {
-            'isbn': {'required': 'O ISBN da cópia é um campo obrigatório', 'unique': 'Código ISBN já cadastrado'},
+            'isbn': {'required': 'O ISBN da cópia é um campo obrigatório',
+                     'unique': 'Código ISBN já cadastrado'},
             'ano': {'required': 'O ano da cópia é um campo obrigatório'},
         }

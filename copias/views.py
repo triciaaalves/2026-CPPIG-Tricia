@@ -6,7 +6,6 @@ from django.urls import reverse_lazy
 from django.db.models import ProtectedError
 from django.shortcuts import redirect
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
-
 from .forms import CopiaModelForm
 from .models import Copia
 
@@ -65,7 +64,7 @@ class CopiaDeleteView(PermissionRequiredMixin, SuccessMessageMixin, DeleteView):
             messages.error(
                 request,
                 f'Não é possível excluir a cópia ISBN: {self.object.isbn}! '
-                f'Ela está em posse de um aluno neste momento (Emprestada).'
+                f'Ela está em posse de um usuário neste momento.'
             )
             return redirect(success_url)
 

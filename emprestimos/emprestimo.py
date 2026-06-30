@@ -2,7 +2,6 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.utils import timezone
-
 from .models import Emprestimo
 from biblioteca import settings
 
@@ -48,7 +47,7 @@ def enviar_atraso(emprestimo_id):
 
         texto_email = render_to_string('emails/texto_email_atraso.txt', dados)
         html_email = render_to_string('emails/texto_email_atraso.html', dados)
-        send_mail(subject='AVISO: Empréstimo em atraso - Biblioteca Digital',
+        send_mail(subject='Empréstimo em atraso - Biblioteca Digital',
                   message=texto_email,
                   from_email='tricia.alves@acad.ufsm.br',
                   recipient_list=email,

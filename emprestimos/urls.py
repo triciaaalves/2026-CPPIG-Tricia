@@ -1,5 +1,4 @@
 from django.urls import path
-
 from .views import EmprestimosView, EmprestimoAddView, EmprestimoDevolucao, EmprestimoSugestaoView, EmprestimoDeleteView
 
 urlpatterns = [

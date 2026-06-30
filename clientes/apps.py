@@ -1,6 +1,5 @@
 from django.apps import AppConfig
 
-
 class ClientesConfig(AppConfig):
     name = 'clientes'
     verbose_name = 'Controle de Usuários'

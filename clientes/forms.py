@@ -1,8 +1,6 @@
 from datetime import date
-
 from django import forms
 from django.utils import timezone
-
 from .models import Cliente
 
 class ClienteModelForm(forms.ModelForm):
